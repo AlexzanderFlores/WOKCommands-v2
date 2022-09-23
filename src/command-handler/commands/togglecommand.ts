@@ -42,11 +42,17 @@ export default {
     if (disabledCommands.isDisabled(guild!.id, commandName)) {
       await disabledCommands.enable(guild!.id, commandName);
 
-      interaction!.reply(`Command "${commandName}" has been enabled`);
+      return {
+        content: `Command "${commandName}" has been enabled`,
+        ephemeral: true,
+      };
     } else {
       await disabledCommands.disable(guild!.id, commandName);
 
-      interaction!.reply(`Command "${commandName}" has been disabled`);
+      return {
+        content: `Command "${commandName}" has been disabled`,
+        ephemeral: true,
+      };
     }
   },
 };

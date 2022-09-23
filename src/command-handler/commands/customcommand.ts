@@ -103,12 +103,18 @@ export default {
         response
       );
 
-      return `Custom command "${commandName}" has been created!`;
+      return {
+        content: `Custom command "${commandName}" has been created!`,
+        ephemeral: true,
+      };
     } else if (sub === "delete") {
       const commandName = interaction.options.getString("command");
 
       if (commandName === noCommands) {
-        return "There are no custom commands to delete.";
+        return {
+          content: "There are no custom commands to delete.",
+          ephemeral: true,
+        };
       }
 
       await instance.commandHandler.customCommands.delete(
@@ -116,7 +122,10 @@ export default {
         commandName
       );
 
-      return `Custom command "${commandName}" has been deleted!`;
+      return {
+        content: `Custom command "${commandName}" has been deleted!`,
+        ephemeral: true,
+      };
     }
   },
 } as CommandObject;

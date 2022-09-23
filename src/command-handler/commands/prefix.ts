@@ -28,6 +28,9 @@ export default {
 
     instance.commandHandler.prefixHandler.set(guild!.id, prefix);
 
-    return `Set "${prefix}" as the command prefix for this server.`;
+    return {
+      content: `Set "${prefix}" as the command prefix for this server.`,
+      ephemeral: true,
+    };
   },
 } as CommandObject;

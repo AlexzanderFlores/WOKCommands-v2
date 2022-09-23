@@ -55,7 +55,10 @@ export default {
 
     const command = instance.commandHandler.commands.get(commandName);
     if (!command) {
-      return `The command "${commandName}" does not exist.`;
+      return {
+        content: `The command "${commandName}" does not exist.`,
+        ephemeral: true,
+      };
     }
 
     const _id = `${guild!.id}-${command.commandName}`;
@@ -68,13 +71,19 @@ export default {
           ? document.permissions.join(", ")
           : "None.";
 
-      return `Here are the permissions for "${commandName}": ${permissions}`;
+      return {
+        content: `Here are the permissions for "${commandName}": ${permissions}`,
+        ephemeral: true,
+      };
     }
 
     if (permission === clearAllPermissions) {
       await requiredPermissions.deleteOne({ _id });
 
-      return `The command "${commandName}" no longer requires any permissions.`;
+      return {
+        content: `The command "${commandName}" no longer requires any permissions.`,
+        ephemeral: true,
+      };
     }
 
     const alreadyExists = await requiredPermissions.findOne({
@@ -97,7 +106,10 @@ export default {
         }
       );
 
-      return `The command "${commandName}" no longer requires the permission "${permission}"`;
+      return {
+        content: `The command "${commandName}" no longer requires the permission "${permission}"`,
+        ephemeral: true,
+      };
     }
 
     await requiredPermissions.findOneAndUpdate(
@@ -115,6 +127,9 @@ export default {
       }
     );
 
-    return `The command "${commandName}" now requires the permission "${permission}"`;
+    return {
+      content: `The command "${commandName}" now requires the permission "${permission}"`,
+      ephemeral: true,
+    };
   },
 } as CommandObject;

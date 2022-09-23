@@ -52,7 +52,10 @@ export default {
       commandName.toLowerCase()
     );
     if (!command) {
-      return `The command "${commandName}" does not exist.`;
+      return {
+        content: `The command "${commandName}" does not exist.`,
+        ephemeral: true,
+      };
     }
 
     const { channelCommands } = instance.commandHandler;
@@ -78,9 +81,15 @@ export default {
 
     if (availableChannels.length) {
       const channelNames = availableChannels.map((c: string) => `<#${c}> `);
-      return `The command "${commandName}" can now only be ran inside of the following channels: ${channelNames}`;
+      return {
+        content: `The command "${commandName}" can now only be ran inside of the following channels: ${channelNames}`,
+        ephemeral: true,
+      };
     }
 
-    return `The command "${commandName}" can now be ran inside of any text channel.`;
+    return {
+      content: `The command "${commandName}" can now be ran inside of any text channel.`,
+      ephemeral: true,
+    };
   },
 } as CommandObject;

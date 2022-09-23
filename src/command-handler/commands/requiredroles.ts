@@ -48,7 +48,10 @@ export default {
 
     const command = instance.commandHandler.commands.get(commandName);
     if (!command) {
-      return `The command "${commandName}" does not exist.`;
+      return {
+        content: `The command "${commandName}" does not exist.`,
+        ephemeral: true,
+      };
     }
 
     const _id = `${guild!.id}-${command.commandName}`;
@@ -63,6 +66,7 @@ export default {
 
       return {
         content: `Here are the roles for "${commandName}": ${roles}`,
+        ephemeral: true,
         allowedMentions: {
           roles: [],
         },
@@ -91,6 +95,7 @@ export default {
 
       return {
         content: `The command "${commandName}" no longer requires the role <@&${role}>`,
+        ephemeral: true,
         allowedMentions: {
           roles: [],
         },
@@ -114,6 +119,7 @@ export default {
 
     return {
       content: `The command "${commandName}" now requires the role <@&${role}>`,
+      ephemeral: true,
       allowedMentions: {
         roles: [],
       },
