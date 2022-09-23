@@ -1,34 +1,34 @@
-import { CommandInteraction } from 'discord.js'
+import { CommandInteraction } from "discord.js";
 
-import WOKCommands from '../../../..'
+import WOKCommands from "../../../..";
 
 export default async (
   interaction: CommandInteraction,
   instance: WOKCommands
 ) => {
-  const { commandHandler } = instance
+  const { commandHandler } = instance;
   if (!commandHandler) {
-    return
+    return;
   }
 
-  const { commands, customCommands } = commandHandler
+  const { commands, customCommands } = commandHandler;
 
   const args = interaction.options.data.map(({ value }) => {
-    return String(value)
-  })
+    return String(value);
+  });
 
-  const command = commands.get(interaction.commandName)
+  const command = commands.get(interaction.commandName);
   if (!command) {
-    customCommands.run(interaction.commandName, null, interaction)
-    return
+    customCommands.run(interaction.commandName, null, interaction);
+    return;
   }
 
-  const { deferReply } = command.commandObject
+  const { deferReply } = command.commandObject;
 
   if (deferReply) {
     await interaction.deferReply({
-      ephemeral: deferReply === 'ephemeral',
-    })
+      ephemeral: deferReply === "ephemeral",
+    });
   }
 
   const response = await commandHandler.runCommand(
@@ -36,14 +36,14 @@ export default async (
     args,
     null,
     interaction
-  )
+  );
   if (!response) {
-    return
+    return;
   }
 
   if (deferReply) {
-    interaction.editReply(response).catch(() => {})
+    interaction.editReply(response).catch(() => {});
   } else {
-    interaction.reply(response).catch(() => {})
+    interaction.reply(response).catch(() => {});
   }
-}
+};

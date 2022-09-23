@@ -1,39 +1,40 @@
-import { AutocompleteInteraction } from 'discord.js'
-import WOKCommands from '../../../..'
+import { AutocompleteInteraction } from "discord.js";
+
+import WOKCommands from "../../../..";
 
 export default async (
   interaction: AutocompleteInteraction,
   instance: WOKCommands
 ) => {
-  const { commandHandler } = instance
+  const { commandHandler } = instance;
   if (!commandHandler) {
-    return
+    return;
   }
 
-  const { commands } = commandHandler
-  const command = commands.get(interaction.commandName)
+  const { commands } = commandHandler;
+  const command = commands.get(interaction.commandName);
   if (!command) {
-    return
+    return;
   }
 
-  const { autocomplete } = command.commandObject
+  const { autocomplete } = command.commandObject;
   if (!autocomplete) {
-    return
+    return;
   }
 
-  const focusedOption = interaction.options.getFocused(true)
-  const choices = await autocomplete(command, focusedOption.name, interaction)
+  const focusedOption = interaction.options.getFocused(true);
+  const choices = await autocomplete(command, focusedOption.name, interaction);
 
   const filtered = choices
     .filter((choice: string) =>
       choice.toLowerCase().startsWith(focusedOption.value.toLowerCase())
     )
-    .slice(0, 25)
+    .slice(0, 25);
 
   await interaction.respond(
     filtered.map((choice: string) => ({
       name: choice,
       value: choice,
     }))
-  )
-}
+  );
+};

@@ -1,4 +1,4 @@
-import { Schema, model, models } from 'mongoose'
+import { Schema, model, models } from "mongoose";
 
 const customCommandSchema = new Schema({
   // guildId-commandName
@@ -10,7 +10,7 @@ const customCommandSchema = new Schema({
     type: String,
     required: true,
   },
-})
+});
 
-const name = 'custom-commands'
-export default models[name] || model(name, customCommandSchema)
+const name = "custom-commands";
+export default models[name] || model(name, customCommandSchema);

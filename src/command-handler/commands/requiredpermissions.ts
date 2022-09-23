@@ -1,18 +1,14 @@
-import {
-  PermissionFlagsBits,
-  ApplicationCommandOptionType,
-  AutocompleteInteraction,
-} from 'discord.js'
+import { PermissionFlagsBits, ApplicationCommandOptionType } from "discord.js";
 
-import requiredPermissions from '../../models/required-permissions-schema'
-import { CommandObject, CommandUsage } from '../../../typings'
-import Command from '../Command'
-import { CommandType } from '../..'
+import requiredPermissions from "../../models/required-permissions-schema";
+import { CommandObject, CommandUsage } from "../../../typings";
+import Command from "../Command";
+import { CommandType } from "../..";
 
-const clearAllPermissions = 'Clear All Permissions'
+const clearAllPermissions = "Clear All Permissions";
 
 export default {
-  description: 'Sets what commands require what permissions',
+  description: "Sets what commands require what permissions",
 
   type: CommandType.SLASH,
   guildOnly: true,
@@ -21,15 +17,15 @@ export default {
 
   options: [
     {
-      name: 'command',
-      description: 'The command to set permissions to',
+      name: "command",
+      description: "The command to set permissions to",
       type: ApplicationCommandOptionType.String,
       required: true,
       autocomplete: true,
     },
     {
-      name: 'permission',
-      description: 'The permission to set for the command',
+      name: "permission",
+      description: "The permission to set for the command",
       type: ApplicationCommandOptionType.String,
       required: false,
       autocomplete: true,
@@ -37,39 +33,48 @@ export default {
   ],
 
   autocomplete: (command: Command, arg: string) => {
-    if (arg === 'command') {
-      return [...command.instance.commandHandler.commands.keys()]
-    } else if (arg === 'permission') {
-      return [clearAllPermissions, ...Object.keys(PermissionFlagsBits)]
+    if (arg === "command") {
+      return [...command.instance.commandHandler.commands.keys()];
+    } else if (arg === "permission") {
+      return [clearAllPermissions, ...Object.keys(PermissionFlagsBits)];
     }
   },
 
   callback: async (commandUsage: CommandUsage) => {
-    const { instance, guild, args } = commandUsage
-    const [commandName, permission] = args
+    const { instance, guild, args } = commandUsage;
 
-    const command = instance.commandHandler.commands.get(commandName)
-    if (!command) {
-      return `The command "${commandName}" does not exist.`
+    if (!instance.isConnectedToDB) {
+      return {
+        content:
+          "This bot is not connected to a database which is required for this command. Please contact the bot owner.",
+        ephemeral: true,
+      };
     }
 
-    const _id = `${guild!.id}-${command.commandName}`
+    const [commandName, permission] = args;
+
+    const command = instance.commandHandler.commands.get(commandName);
+    if (!command) {
+      return `The command "${commandName}" does not exist.`;
+    }
+
+    const _id = `${guild!.id}-${command.commandName}`;
 
     if (!permission) {
-      const document = await requiredPermissions.findById(_id)
+      const document = await requiredPermissions.findById(_id);
 
       const permissions =
         document && document.permissions?.length
-          ? document.permissions.join(', ')
-          : 'None.'
+          ? document.permissions.join(", ")
+          : "None.";
 
-      return `Here are the permissions for "${commandName}": ${permissions}`
+      return `Here are the permissions for "${commandName}": ${permissions}`;
     }
 
     if (permission === clearAllPermissions) {
-      await requiredPermissions.deleteOne({ _id })
+      await requiredPermissions.deleteOne({ _id });
 
-      return `The command "${commandName}" no longer requires any permissions.`
+      return `The command "${commandName}" no longer requires any permissions.`;
     }
 
     const alreadyExists = await requiredPermissions.findOne({
@@ -77,7 +82,7 @@ export default {
       permissions: {
         $in: [permission],
       },
-    })
+    });
 
     if (alreadyExists) {
       await requiredPermissions.findOneAndUpdate(
@@ -90,9 +95,9 @@ export default {
             permissions: permission,
           },
         }
-      )
+      );
 
-      return `The command "${commandName}" no longer requires the permission "${permission}"`
+      return `The command "${commandName}" no longer requires the permission "${permission}"`;
     }
 
     await requiredPermissions.findOneAndUpdate(
@@ -108,8 +113,8 @@ export default {
       {
         upsert: true,
       }
-    )
+    );
 
-    return `The command "${commandName}" now requires the permission "${permission}"`
+    return `The command "${commandName}" now requires the permission "${permission}"`;
   },
-} as CommandObject
+} as CommandObject;

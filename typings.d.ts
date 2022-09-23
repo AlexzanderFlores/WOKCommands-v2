@@ -1,53 +1,56 @@
 import {
+  ApplicationCommandOption,
   Client,
   CommandInteraction,
   Guild,
   GuildMember,
   TextChannel,
   User,
-} from 'discord.js'
+} from "discord.js";
 
-import Cooldowns from './src/util/Cooldowns'
+import { CommandType, CooldownTypes } from "./src/index";
+import Cooldowns from "./src/util/Cooldowns";
 
 export default class WOKCommands {
-  constructor(options: Options)
+  constructor(options: Options);
 
-  public get testServers(): string[]
-  public get botOwners(): string[]
-  public get cooldowns(): Cooldowns
-  public get disabledDefaultCommands(): string[]
-  public get validations(): Validations
-  public get commandHandler(): CommandHandler
-  public get eventHandler(): EventHandler
-  public get isConnectedToDB(): boolean
+  public get client(): Client;
+  public get testServers(): string[];
+  public get botOwners(): string[];
+  public get cooldowns(): Cooldowns;
+  public get disabledDefaultCommands(): string[];
+  public get validations(): Validations;
+  public get commandHandler(): CommandHandler;
+  public get eventHandler(): EventHandler;
+  public get isConnectedToDB(): boolean;
 }
 
 export interface Options {
-  client: Client
-  mongoUri?: string
-  commandsDir?: string
-  testServers?: string[]
-  botOwners?: string[]
-  cooldownConfig?: CooldownConfig
-  disabledDefaultCommands?: string[]
-  events?: Events
-  validations?: Validations
+  client: Client;
+  mongoUri?: string;
+  commandsDir?: string;
+  testServers?: string[];
+  botOwners?: string[];
+  cooldownConfig?: CooldownConfig;
+  disabledDefaultCommands?: string[];
+  events?: Events;
+  validations?: Validations;
 }
 
 export interface CooldownConfig {
-  errorMessage: string
-  botOwnersBypass: boolean
-  dbRequired: number
+  errorMessage: string;
+  botOwnersBypass: boolean;
+  dbRequired: number;
 }
 
 export interface Events {
-  dir: string
-  [key: string]: any
+  dir: string;
+  [key: string]: any;
 }
 
 export interface Validations {
-  runtime?: string
-  syntax?: string
+  runtime?: string;
+  syntax?: string;
 }
 
 export class Cooldowns {
@@ -55,58 +58,60 @@ export class Cooldowns {
 }
 
 export interface CooldownUsage {
-  errorMessage?: string
-  [key: string]: string
+  errorMessage?: string;
+  type: CooldownTypes;
+  duration: string;
 }
 
 export interface InternalCooldownConfig {
-  cooldownType: string
-  userId: string
-  actionId: string
-  guildId?: string
-  duration?: string
-  errorMessage?: string
+  cooldownType: CooldownTypes;
+  userId: string;
+  actionId: string;
+  guildId?: string;
+  duration?: string;
+  errorMessage?: string;
 }
 
 export interface CommandUsage {
-  instance: WOKCommands
-  message?: Message | null
-  interaction?: CommandInteraction | null
-  args: string[]
-  text: string
-  guild?: Guild | null
-  member?: GuildMember
-  user: User
-  channel?: TextChannel
-  cancelCooldown?: function
-  updateCooldown?: function
+  client: Client;
+  instance: WOKCommands;
+  message?: Message | null;
+  interaction?: CommandInteraction | null;
+  args: string[];
+  text: string;
+  guild?: Guild | null;
+  member?: GuildMember;
+  user: User;
+  channel?: TextChannel;
+  cancelCooldown?: function;
+  updateCooldown?: function;
 }
 
 export interface CommandObject {
-  callback: function
-  type: CommandType
-  description?: string
-  testOnly?: boolean
-  guildOnly?: boolean
-  ownerOnly?: boolean
-  permissions?: bigint[]
-  deferReply?: 'ephemeral' | boolean
-  cooldowns?: CooldownUsage
-  minArgs?: number
-  maxArgs?: number
-  correctSyntax?: string
-  expectedArgs?: string
-  autocomplete?: function
-  reply?: boolean
+  callback: function;
+  type: CommandType;
+  init?: function;
+  description?: string;
+  aliases?: string[];
+  testOnly?: boolean;
+  guildOnly?: boolean;
+  ownerOnly?: boolean;
+  permissions?: bigint[];
+  deferReply?: "ephemeral" | boolean;
+  cooldowns?: CooldownUsage;
+  minArgs?: number;
+  maxArgs?: number;
+  correctSyntax?: string;
+  expectedArgs?: string;
+  options?: ApplicationCommandOption[];
+  autocomplete?: function;
+  reply?: boolean;
+  delete?: boolean;
 }
 
 export type FileData = {
-  filePath: string
-  fileContents: any
-}
+  filePath: string;
+  fileContents: any;
+};
 
-export enum CommandType {
-  SLASH = 'SLASH',
-  LEGACY = 'LEGACY',
-  BOTH = 'BOTH',
-}
+export { CommandType, CooldownTypes };

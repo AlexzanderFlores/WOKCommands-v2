@@ -1,4 +1,4 @@
-import { Schema, model, models } from 'mongoose'
+import { Schema, model, models } from "mongoose";
 
 const cooldownSchema = new Schema({
   // The key from Cooldowns.getKey()
@@ -10,7 +10,7 @@ const cooldownSchema = new Schema({
     type: Date,
     required: true,
   },
-})
+});
 
-const name = 'cooldowns'
-export default models[name] || model(name, cooldownSchema)
+const name = "cooldowns";
+export default models[name] || model(name, cooldownSchema);

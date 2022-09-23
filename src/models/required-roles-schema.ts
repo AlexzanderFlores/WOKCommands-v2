@@ -1,4 +1,4 @@
-import { Schema, model, models } from 'mongoose'
+import { Schema, model, models } from "mongoose";
 
 const requiredRolesSchema = new Schema({
   // guildId-commandName
@@ -10,7 +10,7 @@ const requiredRolesSchema = new Schema({
     type: [String],
     required: true,
   },
-})
+});
 
-const name = 'required-roles'
-export default models[name] || model(name, requiredRolesSchema)
+const name = "required-roles";
+export default models[name] || model(name, requiredRolesSchema);

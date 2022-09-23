@@ -1,14 +1,14 @@
-import { PermissionFlagsBits } from 'discord.js'
-import { CommandType } from '../..'
+import { PermissionFlagsBits } from "discord.js";
 
-import { CommandObject, CommandUsage } from '../../../typings'
+import { CommandType } from "../..";
+import { CommandObject, CommandUsage } from "../../../typings";
 
 export default {
-  description: 'Sets the prefix for this server',
+  description: "Sets the prefix for this server",
 
   minArgs: 1,
-  syntaxError: 'Correct syntax: {PREFIX}prefix {ARGS}',
-  expectedArgs: '<prefix>',
+  syntaxError: "Correct syntax: {PREFIX}prefix {ARGS}",
+  expectedArgs: "<prefix>",
 
   type: CommandType.BOTH,
   guildOnly: true,
@@ -16,10 +16,18 @@ export default {
   permissions: [PermissionFlagsBits.Administrator],
 
   callback: (commandUsage: CommandUsage) => {
-    const { instance, guild, text: prefix } = commandUsage
+    const { instance, guild, text: prefix } = commandUsage;
 
-    instance.commandHandler.prefixHandler.set(guild!.id, prefix)
+    if (!instance.isConnectedToDB) {
+      return {
+        content:
+          "This bot is not connected to a database which is required for this command. Please contact the bot owner.",
+        ephemeral: true,
+      };
+    }
 
-    return `Set "${prefix}" as the command prefix for this server.`
+    instance.commandHandler.prefixHandler.set(guild!.id, prefix);
+
+    return `Set "${prefix}" as the command prefix for this server.`;
   },
-} as CommandObject
+} as CommandObject;

@@ -1,15 +1,11 @@
-import {
-  PermissionFlagsBits,
-  ApplicationCommandOptionType,
-  AutocompleteInteraction,
-} from 'discord.js'
+import { PermissionFlagsBits, ApplicationCommandOptionType } from "discord.js";
 
-import Command from '../Command'
-import { CommandUsage } from '../../../typings'
-import { CommandType } from '../..'
+import Command from "../Command";
+import { CommandUsage } from "../../../typings";
+import { CommandType } from "../..";
 
 export default {
-  description: 'Toggles a command on or off for your guild',
+  description: "Toggles a command on or off for your guild",
 
   type: CommandType.SLASH,
   guildOnly: true,
@@ -18,8 +14,8 @@ export default {
 
   options: [
     {
-      name: 'command',
-      description: 'The command to toggle on or off',
+      name: "command",
+      description: "The command to toggle on or off",
       type: ApplicationCommandOptionType.String,
       required: true,
       autocomplete: true,
@@ -27,22 +23,30 @@ export default {
   ],
 
   autocomplete: (command: Command) => {
-    return [...command.instance.commandHandler.commands.keys()]
+    return [...command.instance.commandHandler.commands.keys()];
   },
 
   callback: async (commandUsage: CommandUsage) => {
-    const { instance, guild, text: commandName, interaction } = commandUsage
+    const { instance, guild, text: commandName, interaction } = commandUsage;
 
-    const { disabledCommands } = instance.commandHandler
+    if (!instance.isConnectedToDB) {
+      return {
+        content:
+          "This bot is not connected to a database which is required for this command. Please contact the bot owner.",
+        ephemeral: true,
+      };
+    }
+
+    const { disabledCommands } = instance.commandHandler;
 
     if (disabledCommands.isDisabled(guild!.id, commandName)) {
-      await disabledCommands.enable(guild!.id, commandName)
+      await disabledCommands.enable(guild!.id, commandName);
 
-      interaction!.reply(`Command "${commandName}" has been enabled`)
+      interaction!.reply(`Command "${commandName}" has been enabled`);
     } else {
-      await disabledCommands.disable(guild!.id, commandName)
+      await disabledCommands.disable(guild!.id, commandName);
 
-      interaction!.reply(`Command "${commandName}" has been disabled`)
+      interaction!.reply(`Command "${commandName}" has been disabled`);
     }
   },
-}
+};

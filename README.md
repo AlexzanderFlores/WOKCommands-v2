@@ -21,7 +21,7 @@ npm install wokcommands
 Development Build
 
 ```bash
-npm install github:AlexzanderFlores/WOKCommands#dev
+npm install github:AlexzanderFlores/WOKCommands-v2#dev
 ```
 
 # Support & Feature Requests

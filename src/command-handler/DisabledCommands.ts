@@ -1,50 +1,64 @@
-import disabledCommandSchema from '../models/disabled-commands-schema'
+import disabledCommandSchema from "../models/disabled-commands-schema";
+import WOKCommands from "../../typings";
 
 class DisabledCommands {
   // array of `${guildId}-${commandName}`
-  private _disabledCommands: string[] = []
+  private _disabledCommands: string[] = [];
+  private _instance: WOKCommands;
 
-  constructor() {
-    this.loadDisabledCommands()
+  constructor(instance: WOKCommands) {
+    this._instance = instance;
+
+    this.loadDisabledCommands();
   }
 
   async loadDisabledCommands() {
-    const results = await disabledCommandSchema.find({})
+    if (!this._instance.isConnectedToDB) {
+      return;
+    }
+
+    const results = await disabledCommandSchema.find({});
 
     for (const result of results) {
-      this._disabledCommands.push(result._id)
+      this._disabledCommands.push(result._id);
     }
   }
 
   async disable(guildId: string, commandName: string) {
-    if (this.isDisabled(guildId, commandName)) {
-      return
+    if (
+      !this._instance.isConnectedToDB ||
+      this.isDisabled(guildId, commandName)
+    ) {
+      return;
     }
 
-    const _id = `${guildId}-${commandName}`
-    this._disabledCommands.push(_id)
+    const _id = `${guildId}-${commandName}`;
+    this._disabledCommands.push(_id);
 
     try {
       await new disabledCommandSchema({
         _id,
-      }).save()
+      }).save();
     } catch (ignored) {}
   }
 
   async enable(guildId: string, commandName: string) {
-    if (!this.isDisabled(guildId, commandName)) {
-      return
+    if (
+      !this._instance.isConnectedToDB ||
+      !this.isDisabled(guildId, commandName)
+    ) {
+      return;
     }
 
-    const _id = `${guildId}-${commandName}`
-    this._disabledCommands = this._disabledCommands.filter((id) => id !== _id)
+    const _id = `${guildId}-${commandName}`;
+    this._disabledCommands = this._disabledCommands.filter((id) => id !== _id);
 
-    await disabledCommandSchema.deleteOne({ _id })
+    await disabledCommandSchema.deleteOne({ _id });
   }
 
   isDisabled(guildId: string, commandName: string) {
-    return this._disabledCommands.includes(`${guildId}-${commandName}`)
+    return this._disabledCommands.includes(`${guildId}-${commandName}`);
   }
 }
 
-export default DisabledCommands
+export default DisabledCommands;

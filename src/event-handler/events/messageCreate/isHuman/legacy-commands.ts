@@ -1,45 +1,50 @@
-import { Message } from 'discord.js'
+import { Message } from "discord.js";
 
-import WOKCommands from '../../../..'
+import WOKCommands from "../../../..";
 
 export default async (message: Message, instance: WOKCommands) => {
-  const { guild, content } = message
+  const { guild, content } = message;
 
-  const { commandHandler } = instance
+  const { commandHandler } = instance;
   if (!commandHandler) {
-    return
+    return;
   }
 
-  const { prefixHandler, commands, customCommands } = commandHandler
+  const { prefixHandler, commands, customCommands } = commandHandler;
 
-  const prefix = prefixHandler.get(guild?.id)
+  const prefix = prefixHandler.get(guild?.id);
   if (!content.startsWith(prefix)) {
-    return
+    return;
   }
 
-  const args = content.split(/\s+/)
-  const commandName = args.shift()!.substring(prefix.length).toLowerCase()
+  const args = content.split(/\s+/);
+  const commandName = args.shift()!.substring(prefix.length).toLowerCase();
 
-  const command = commands.get(commandName)
+  const command = commands.get(commandName);
   if (!command) {
-    customCommands.run(commandName, message, null)
-    return
+    customCommands.run(commandName, message, null);
+    return;
   }
 
-  const { reply, deferReply } = command.commandObject
+  const { reply, deferReply } = command.commandObject;
 
   if (deferReply) {
-    message.channel.sendTyping()
+    message.channel.sendTyping();
   }
 
-  const response = await commandHandler.runCommand(command, args, message, null)
+  const response = await commandHandler.runCommand(
+    command,
+    args,
+    message,
+    null
+  );
   if (!response) {
-    return
+    return;
   }
 
   if (reply) {
-    message.reply(response).catch(() => {})
+    message.reply(response).catch(() => {});
   } else {
-    message.channel.send(response).catch(() => {})
+    message.channel.send(response).catch(() => {});
   }
-}
+};

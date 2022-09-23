@@ -1,4 +1,4 @@
-import { Schema, model, models } from 'mongoose'
+import { Schema, model, models } from "mongoose";
 
 const guildPrefixSchema = new Schema({
   // guild ID
@@ -10,7 +10,7 @@ const guildPrefixSchema = new Schema({
     type: String,
     required: true,
   },
-})
+});
 
-const name = 'guild-prefixes'
-export default models[name] || model(name, guildPrefixSchema)
+const name = "guild-prefixes";
+export default models[name] || model(name, guildPrefixSchema);
