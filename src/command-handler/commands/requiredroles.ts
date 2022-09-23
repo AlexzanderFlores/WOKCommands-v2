@@ -1,9 +1,8 @@
 import { PermissionFlagsBits, ApplicationCommandOptionType } from "discord.js";
 
 import requiredroles from "../../models/required-roles-schema";
-import { CommandObject, CommandUsage } from "../../../typings";
+import { CommandObject, CommandUsage, CommandType } from "../../../typings";
 import Command from "../Command";
-import { CommandType } from "../..";
 
 export default {
   description: "Sets what commands require what roles",

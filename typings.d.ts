@@ -8,7 +8,6 @@ import {
   User,
 } from "discord.js";
 
-import { CommandType, CooldownTypes } from "./src/index";
 import Cooldowns from "./src/util/Cooldowns";
 
 export default class WOKCommands {
@@ -114,4 +113,17 @@ export type FileData = {
   fileContents: any;
 };
 
-export { CommandType, CooldownTypes };
+enum CommandType {
+  SLASH = "SLASH",
+  LEGACY = "LEGACY",
+  BOTH = "BOTH",
+}
+
+enum CooldownTypes {
+  perUser = "perUser",
+  perUserPerGuild = "perUserPerGuild",
+  perGuild = "perGuild",
+  global = "global",
+}
+
+export { Command, CommandType, CooldownTypes };

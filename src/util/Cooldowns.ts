@@ -1,7 +1,7 @@
-import { CooldownTypes } from "../";
 import cooldownSchema from "../models/cooldown-schema";
 import WOKCommands, {
   CooldownConfig,
+  CooldownTypes,
   InternalCooldownConfig,
 } from "../../typings";
 

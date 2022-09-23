@@ -1,4 +1,4 @@
-import { CommandType } from "../../..";
+import { CommandType } from "../../../../typings";
 import Command from "../../Command";
 
 export default (command: Command) => {

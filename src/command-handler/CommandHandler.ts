@@ -16,10 +16,10 @@ import DisabledCommands from "./DisabledCommands";
 import PrefixHandler from "./PrefixHandler";
 import WOKCommands, {
   CommandObject,
+  CommandType,
   CommandUsage,
   InternalCooldownConfig,
 } from "../../typings";
-import { CommandType } from "..";
 
 class CommandHandler {
   // <commandName, instance of the Command class>

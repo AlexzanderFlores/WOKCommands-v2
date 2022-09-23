@@ -5,6 +5,7 @@ import EventHandler from "./event-handler/EventHandler";
 import WOKCommandsType, { Events, Options, Validations } from "../typings";
 import Cooldowns from "./util/Cooldowns";
 import { Client } from "discord.js";
+import Command from "./command-handler/Command";
 
 class WOKCommands {
   private _client!: Client;
@@ -129,17 +130,20 @@ class WOKCommands {
 export default WOKCommands;
 module.exports = WOKCommands;
 
-export enum CommandType {
-  SLASH = "SLASH",
-  LEGACY = "LEGACY",
-  BOTH = "BOTH",
-}
-module.exports.CommandType = CommandType;
+// enum CommandType {
+//   SLASH = "SLASH",
+//   LEGACY = "LEGACY",
+//   BOTH = "BOTH",
+// }
+// module.exports.CommandType = CommandType;
 
-export enum CooldownTypes {
-  perUser = "perUser",
-  perUserPerGuild = "perUserPerGuild",
-  perGuild = "perGuild",
-  global = "global",
-}
-module.exports.CooldownTypes = CooldownTypes;
+// enum CooldownTypes {
+//   perUser = "perUser",
+//   perUserPerGuild = "perUserPerGuild",
+//   perGuild = "perGuild",
+//   global = "global",
+// }
+// module.exports.CooldownTypes = CooldownTypes;
+
+// export { CommandType, CooldownTypes, Command };
+// module.exports.Command = Command;

@@ -1,8 +1,7 @@
 import { PermissionFlagsBits, ApplicationCommandOptionType } from "discord.js";
 
 import Command from "../Command";
-import { CommandUsage } from "../../../typings";
-import { CommandType } from "../..";
+import { CommandType, CommandUsage } from "../../../typings";
 
 export default {
   description: "Toggles a command on or off for your guild",
