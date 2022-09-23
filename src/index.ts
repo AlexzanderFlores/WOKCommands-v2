@@ -38,6 +38,10 @@ class WOKCommands {
       throw new Error("A client is required.");
     }
 
+    if (mongoUri) {
+      await this.connectToMongo(mongoUri);
+    }
+
     // Add the bot owner's ID
     if (botOwners.length === 0) {
       await client.application?.fetch();
@@ -61,10 +65,6 @@ class WOKCommands {
       dbRequired: 300, // 5 minutes
       ...cooldownConfig,
     });
-
-    if (mongoUri) {
-      this.connectToMongo(mongoUri);
-    }
 
     if (commandsDir) {
       this._commandHandler = new CommandHandler(

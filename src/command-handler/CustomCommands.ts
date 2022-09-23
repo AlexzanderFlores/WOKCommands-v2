@@ -30,6 +30,19 @@ class CustomCommands {
     }
   }
 
+  getCommands(guildId: string) {
+    const commands = [];
+
+    for (const [key] of this._customCommands) {
+      const [id, commandName] = key.split("-");
+      if (id === guildId) {
+        commands.push(commandName);
+      }
+    }
+
+    return commands;
+  }
+
   async create(
     guildId: string,
     commandName: string,
