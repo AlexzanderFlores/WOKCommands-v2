@@ -1,12 +1,12 @@
 import disabledCommandSchema from "../models/disabled-commands-schema";
-import WOKCommands from "../../typings";
+import WOK from "../../typings";
 
 class DisabledCommands {
   // array of `${guildId}-${commandName}`
   private _disabledCommands: string[] = [];
-  private _instance: WOKCommands;
+  private _instance: WOK;
 
-  constructor(instance: WOKCommands) {
+  constructor(instance: WOK) {
     this._instance = instance;
 
     this.loadDisabledCommands();

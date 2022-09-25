@@ -5,7 +5,8 @@ import {
   PermissionFlagsBits,
 } from "discord.js";
 
-import { CommandType, CommandObject, CommandUsage } from "../../../typings";
+import CommandType from "../../util/CommandType";
+import { CommandObject, CommandUsage } from "../../../typings";
 import Command from "../Command";
 
 const noCommands = "No custom commands configured.";

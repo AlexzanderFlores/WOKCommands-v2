@@ -2,18 +2,18 @@ import { Client, Interaction, InteractionType, Message } from "discord.js";
 import path from "path";
 
 import getAllFiles from "../util/get-all-files";
-import WOKCommands, { Events } from "../../typings";
+import WOK, { Events } from "../../typings";
 
 class EventHandler {
   // <eventName, array of [function, dynamic validation functions]>
   private _eventCallbacks = new Map();
-  private _instance: WOKCommands;
+  private _instance: WOK;
   private _eventsDir: string;
   private _client: Client;
   private _events: Events;
   private _builtInEvents: any;
 
-  constructor(instance: WOKCommands, events: Events, client: Client) {
+  constructor(instance: WOK, events: Events, client: Client) {
     this._instance = instance;
     this._eventsDir = events?.dir;
     this._events = events;

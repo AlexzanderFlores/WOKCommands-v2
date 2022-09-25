@@ -1,13 +1,13 @@
 import guildPrefixSchema from "../models/guild-prefix-schema";
-import WOKCommands from "../../typings";
+import WOK from "../../typings";
 
 class PrefixHandler {
   // <guildId: prefix>
   private _prefixes = new Map();
   private _defaultPrefix = "!";
-  private _instance: WOKCommands;
+  private _instance: WOK;
 
-  constructor(instance: WOKCommands) {
+  constructor(instance: WOK) {
     this._instance = instance;
 
     this.loadPrefixes();

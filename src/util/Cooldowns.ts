@@ -1,9 +1,6 @@
 import cooldownSchema from "../models/cooldown-schema";
-import WOKCommands, {
-  CooldownConfig,
-  CooldownTypes,
-  InternalCooldownConfig,
-} from "../../typings";
+import CooldownTypes from "../util/CooldownTypes";
+import WOK, { CooldownConfig, InternalCooldownConfig } from "../../typings";
 
 const cooldownDurations = {
   s: 1,
@@ -14,12 +11,12 @@ const cooldownDurations = {
 
 class Cooldowns {
   private _cooldowns: Map<string, Date> = new Map();
-  private _instance: WOKCommands;
+  private _instance: WOK;
   private _errorMessage: string;
   private _botOwnersBypass: boolean;
   private _dbRequired: number;
 
-  constructor(instance: WOKCommands, cooldownConfig: CooldownConfig) {
+  constructor(instance: WOK, cooldownConfig: CooldownConfig) {
     const { errorMessage, botOwnersBypass, dbRequired } = cooldownConfig;
 
     this._instance = instance;

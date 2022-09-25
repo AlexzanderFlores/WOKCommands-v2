@@ -2,15 +2,15 @@ import { CommandInteraction, Message } from "discord.js";
 
 import customCommandSchema from "../models/custom-command-schema";
 import CommandHandler from "./CommandHandler";
-import WOKCommands from "../../typings";
+import WOK from "../../typings";
 
 class CustomCommands {
   // guildId-commandName: response
   private _customCommands = new Map();
   private _commandHandler: CommandHandler;
-  private _instance: WOKCommands;
+  private _instance: WOK;
 
-  constructor(instance: WOKCommands, commandHandler: CommandHandler) {
+  constructor(instance: WOK, commandHandler: CommandHandler) {
     this._instance = instance;
     this._commandHandler = commandHandler;
 

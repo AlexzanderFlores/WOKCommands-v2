@@ -14,9 +14,9 @@ import ChannelCommands from "./ChannelCommands";
 import CustomCommands from "./CustomCommands";
 import DisabledCommands from "./DisabledCommands";
 import PrefixHandler from "./PrefixHandler";
-import WOKCommands, {
+import CommandType from "../util/CommandType";
+import WOK, {
   CommandObject,
-  CommandType,
   CommandUsage,
   InternalCooldownConfig,
 } from "../../typings";
@@ -27,7 +27,7 @@ class CommandHandler {
   private _validations = this.getValidations(
     path.join(__dirname, "validations", "runtime")
   );
-  private _instance: WOKCommands;
+  private _instance: WOK;
   private _client: Client;
   private _commandsDir: string;
   private _slashCommands: SlashCommands;
@@ -36,7 +36,7 @@ class CommandHandler {
   private _disabledCommands: DisabledCommands;
   private _prefixes: PrefixHandler;
 
-  constructor(instance: WOKCommands, commandsDir: string, client: Client) {
+  constructor(instance: WOK, commandsDir: string, client: Client) {
     this._instance = instance;
     this._commandsDir = commandsDir;
     this._slashCommands = new SlashCommands(client);

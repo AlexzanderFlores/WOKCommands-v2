@@ -1,8 +1,8 @@
 import { Message } from "discord.js";
 
-import WOKCommands from "../../../..";
+import WOK from "../../../../../typings";
 
-export default async (message: Message, instance: WOKCommands) => {
+export default async (message: Message, instance: WOK) => {
   const { guild, content } = message;
 
   const { commandHandler } = instance;

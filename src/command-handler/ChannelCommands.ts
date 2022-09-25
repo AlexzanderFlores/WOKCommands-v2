@@ -1,12 +1,12 @@
-import WOKCommands from "../../typings";
+import WOK from "../../typings";
 import channelCommands from "../models/channel-commands-schema";
 
 class ChannelCommands {
   // `${guildId}-${commandName}`: [channelIds]
   private _channelCommands: Map<string, string[]> = new Map();
-  private _instance: WOKCommands;
+  private _instance: WOK;
 
-  constructor(instance: WOKCommands) {
+  constructor(instance: WOK) {
     this._instance = instance;
   }
 

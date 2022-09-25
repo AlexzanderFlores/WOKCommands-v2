@@ -8,9 +8,21 @@ import {
   User,
 } from "discord.js";
 
+import CommandType from "./src/util/CommandType";
+import CooldownTypes from "./src/util/CooldownTypes";
 import Cooldowns from "./src/util/Cooldowns";
 
-export default class WOKCommands {
+export default class WOK {
+  private _client!: Client;
+  private _testServers!: string[];
+  private _botOwners!: string[];
+  private _cooldowns: Cooldowns | undefined;
+  private _disabledDefaultCommands!: string[];
+  private _validations!: Validations;
+  private _commandHandler: CommandHandler | undefined;
+  private _eventHandler!: EventHandler;
+  private _isConnectedToDB = false;
+
   constructor(options: Options);
 
   public get client(): Client;
@@ -53,7 +65,7 @@ export interface Validations {
 }
 
 export class Cooldowns {
-  constructor(instance: WOKCommands, oldownConfig: CooldownConfig) {}
+  constructor(instance: WOK, oldownConfig: CooldownConfig) {}
 }
 
 export interface CooldownUsage {
@@ -73,7 +85,7 @@ export interface InternalCooldownConfig {
 
 export interface CommandUsage {
   client: Client;
-  instance: WOKCommands;
+  instance: WOK;
   message?: Message | null;
   interaction?: CommandInteraction | null;
   args: string[];
@@ -113,17 +125,12 @@ export type FileData = {
   fileContents: any;
 };
 
-enum CommandType {
-  SLASH = "SLASH",
-  LEGACY = "LEGACY",
-  BOTH = "BOTH",
+export class Command {
+  constructor(instance: WOK, commandName: string, commandObject: CommandObject);
+
+  public get instance(): WOK;
+  public get commandName(): string;
+  public get commandObject(): CommandObject;
 }
 
-enum CooldownTypes {
-  perUser = "perUser",
-  perUserPerGuild = "perUserPerGuild",
-  perGuild = "perGuild",
-  global = "global",
-}
-
-export { Command, CommandType, CooldownTypes };
+export { CommandObject, Command, CommandType, CooldownTypes };

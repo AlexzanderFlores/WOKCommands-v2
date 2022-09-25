@@ -1,13 +1,12 @@
-import WOKCommands from "../../";
-import { CommandObject } from "../../typings";
+import WOK, { CommandObject } from "../../typings";
 
 class Command {
-  private _instance: WOKCommands;
+  private _instance: WOK;
   private _commandName: string;
   private _commandObject: CommandObject;
 
   constructor(
-    instance: WOKCommands,
+    instance: WOK,
     commandName: string,
     commandObject: CommandObject
   ) {
