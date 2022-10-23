@@ -127,4 +127,3 @@ class WOKCommands {
 }
 
 export default WOKCommands;
-module.exports = WOKCommands;
