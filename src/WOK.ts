@@ -5,13 +5,14 @@ import CommandHandler from "./command-handler/CommandHandler";
 import EventHandler from "./event-handler/EventHandler";
 import WOK, { Events, Options, Validations } from "../typings";
 import Cooldowns from "./util/Cooldowns";
+import DefaultCommands from "./util/DefaultCommands";
 
 class WOKCommands {
   private _client!: Client;
   private _testServers!: string[];
   private _botOwners!: string[];
   private _cooldowns: Cooldowns | undefined;
-  private _disabledDefaultCommands!: string[];
+  private _disabledDefaultCommands!: DefaultCommands[];
   private _validations!: Validations;
   private _commandHandler: CommandHandler | undefined;
   private _eventHandler!: EventHandler;
@@ -54,9 +55,7 @@ class WOKCommands {
     this._client = client;
     this._testServers = testServers;
     this._botOwners = botOwners;
-    this._disabledDefaultCommands = disabledDefaultCommands.map((cmd: string) =>
-      cmd.toLowerCase()
-    );
+    this._disabledDefaultCommands = disabledDefaultCommands;
     this._validations = validations;
 
     this._cooldowns = new Cooldowns(this as unknown as WOK, {
@@ -97,7 +96,7 @@ class WOKCommands {
     return this._cooldowns;
   }
 
-  public get disabledDefaultCommands(): string[] {
+  public get disabledDefaultCommands(): DefaultCommands[] {
     return this._disabledDefaultCommands;
   }
 

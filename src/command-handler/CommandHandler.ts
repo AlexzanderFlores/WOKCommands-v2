@@ -20,6 +20,7 @@ import WOK, {
   CommandUsage,
   InternalCooldownConfig,
 } from "../../typings";
+import DefaultCommands from "../util/DefaultCommands";
 
 class CommandHandler {
   // <commandName, instance of the Command class>
@@ -105,11 +106,20 @@ class CommandHandler {
         init = () => {},
       } = commandObject;
 
+      let defaultCommandValue: DefaultCommands | undefined;
+
+      for (const [key, value] of Object.entries(DefaultCommands)) {
+        if (value === commandName.toLowerCase()) {
+          defaultCommandValue =
+            DefaultCommands[key as keyof typeof DefaultCommands];
+          break;
+        }
+      }
+
       if (
         del ||
-        this._instance.disabledDefaultCommands.includes(
-          commandName.toLowerCase()
-        )
+        (defaultCommandValue &&
+          this._instance.disabledDefaultCommands.includes(defaultCommandValue))
       ) {
         if (type === "SLASH" || type === "BOTH") {
           if (testOnly) {
@@ -121,7 +131,7 @@ class CommandHandler {
           }
         }
 
-        return;
+        continue;
       }
 
       for (const validation of validations) {

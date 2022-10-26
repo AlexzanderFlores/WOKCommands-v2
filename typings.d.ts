@@ -11,13 +11,14 @@ import {
 import CommandType from "./src/util/CommandType";
 import CooldownTypes from "./src/util/CooldownTypes";
 import Cooldowns from "./src/util/Cooldowns";
+import DefaultCommands from "./src/util/DefaultCommands";
 
 export default class WOK {
   private _client!: Client;
   private _testServers!: string[];
   private _botOwners!: string[];
   private _cooldowns: Cooldowns | undefined;
-  private _disabledDefaultCommands!: string[];
+  private _disabledDefaultCommands!: DefaultCommands[];
   private _validations!: Validations;
   private _commandHandler: CommandHandler | undefined;
   private _eventHandler!: EventHandler;
@@ -29,7 +30,7 @@ export default class WOK {
   public get testServers(): string[];
   public get botOwners(): string[];
   public get cooldowns(): Cooldowns;
-  public get disabledDefaultCommands(): string[];
+  public get disabledDefaultCommands(): DefaultCommands[];
   public get validations(): Validations;
   public get commandHandler(): CommandHandler;
   public get eventHandler(): EventHandler;
@@ -43,7 +44,7 @@ export interface Options {
   testServers?: string[];
   botOwners?: string[];
   cooldownConfig?: CooldownConfig;
-  disabledDefaultCommands?: string[];
+  disabledDefaultCommands?: DefaultCommands[];
   events?: Events;
   validations?: Validations;
 }
@@ -133,4 +134,4 @@ export class Command {
   public get commandObject(): CommandObject;
 }
 
-export { CommandObject, Command, CommandType, CooldownTypes };
+export { CommandObject, Command, CommandType, CooldownTypes, DefaultCommands };
