@@ -20,9 +20,7 @@ class WOKCommands {
     private _validations!: Validations
     private _commandHandler: CommandHandler | undefined
     private _eventHandler!: EventHandler
-    private _isConnectedToDB = false
     private _isConnectedToMariaDB = false
-    private _dataSource: DataSource
 
     constructor(options: Options) {
         this.init(options)

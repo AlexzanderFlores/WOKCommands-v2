@@ -9,11 +9,15 @@ import CustomCommands from "./CustomCommands";
 import DisabledCommands from "./DisabledCommands";
 import PrefixHandler from "./PrefixHandler";
 import CommandType from "../util/CommandType";
-import WOK, {CommandObject, CommandUsage, InternalCooldownConfig,} from "../../typings";
+import WOK, {ChannelCommandsTypeorm, CommandObject, CommandUsage, InternalCooldownConfig,} from "../../typings";
 import DefaultCommands from "../util/DefaultCommands";
+import {getRepository} from "typeorm";
+import {ConfigTypeorm} from "../models/config-typeorm";
+import {ds} from "../WOK";
 
 class CommandHandler {
     // <commandName, instance of the Command class>
+    private _configs: Array<string> = [];
     private _commands: Map<string, Command> = new Map();
     private _validations = this.getValidations(
         path.join(__dirname, "validations", "runtime")
@@ -43,10 +47,16 @@ class CommandHandler {
         ];
 
         this.readFiles();
+
+        this.loadConfigs()
     }
 
     public get commands() {
         return this._commands;
+    }
+
+    public get configs() {
+        return this._configs;
     }
 
     public get channelCommands() {
@@ -67,6 +77,18 @@ class CommandHandler {
 
     public get prefixHandler() {
         return this._prefixes;
+    }
+
+    private async loadConfigs() {
+        const configs = await ds.getRepository(ConfigTypeorm).find();
+
+        if (!configs) {
+            return this._configs = []
+        }
+
+        for (const config of configs) {
+            this._configs.push(config.key)
+        }
     }
 
     private async readFiles() {

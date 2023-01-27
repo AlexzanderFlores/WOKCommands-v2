@@ -58,10 +58,6 @@ export default class WOK {
 
     public get eventHandler(): EventHandler
 
-    private _isConnectedToDB = false
-
-    public get isConnectedToDB(): boolean
-
     private _isConnectedToMariaDB = false
 
     public get isConnectedToMariaDB(): boolean
@@ -98,7 +94,7 @@ export interface Validations {
 }
 
 export class Cooldowns {
-    constructor(instance: WOK, oldownConfig: CooldownConfig) {}
+    constructor(instance: WOK, cooldownConfig: CooldownConfig) {}
 }
 
 export interface CooldownUsage {

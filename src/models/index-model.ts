@@ -5,6 +5,7 @@ import {DisabledCommandsTypeorm} from "./disabled-commands-typeorm";
 import {GuildPrefixTypeorm} from "./guild-prefix-typeorm";
 import {RequiredPermissionsTypeorm} from "./required-permissions-typeorm";
 import {RequiredRolesTypeorm} from "./required-roles-typeorm";
+import {ConfigTypeorm} from "./config-typeorm";
 
 export const DbModels = [
     RequiredPermissionsTypeorm,
@@ -13,7 +14,8 @@ export const DbModels = [
     CustomCommandTypeorm,
     RequiredRolesTypeorm,
     GuildPrefixTypeorm,
-    CooldownTypeorm
+    CooldownTypeorm,
+    ConfigTypeorm,
 ]
 
 export default DbModels;
