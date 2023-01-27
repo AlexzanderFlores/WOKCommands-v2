@@ -13,7 +13,6 @@ import CommandType from './src/util/CommandType'
 import CooldownTypes from './src/util/CooldownTypes'
 import Cooldowns from './src/util/Cooldowns'
 import DefaultCommands from './src/util/DefaultCommands'
-import {DataSource} from "typeorm";
 import CommandHandler from "./src/command-handler/CommandHandler";
 import EventHandler from "./src/event-handler/EventHandler";
 import {RequiredPermissionsTypeorm} from "./src/models/required-permissions-typeorm";
@@ -66,16 +65,11 @@ export default class WOK {
     private _isConnectedToMariaDB = false
 
     public get isConnectedToMariaDB(): boolean
-
-    private _dataSource: DataSource
-
-    public async get dataSource(): DataSource
 }
 
 export interface Options {
     client: Client
     mongoUri?: string
-    dataSource?: DataSource
     commandsDir?: string
     featuresDir?: string
     testServers?: string[]
