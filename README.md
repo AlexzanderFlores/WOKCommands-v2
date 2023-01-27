@@ -4,7 +4,8 @@
 
 # WOKCommands for MariaDB connection with TypeORM
 
-WOKCommands is a Discord.JS command handler made by [Worn Off Keys](https://youtube.com/wornoffkeys). The goal of this package is to make it simple and easy to get your bot off the ground without worrying about your own command handler.
+WOKCommands is a Discord.JS command handler made by [Worn Off Keys](https://youtube.com/wornoffkeys). The goal of this
+package is to make it simple and easy to get your bot off the ground without worrying about your own command handler.
 
 # Documentation
 
@@ -12,7 +13,8 @@ The official documentation can be found here: https://docs.wornoffkeys.com
 
 # Installation
 
-You need to just insert this `postinstall` script to your `package.json` (there is for sure better solution for installation, but I don't know how ¯\_(ツ)_/¯)
+You need to just insert this `postinstall` script to your `package.json` (there is for sure better solution for
+installation, but I don't know how ¯\_(ツ)_/¯)
 
 ```json
 {
@@ -25,6 +27,7 @@ You need to just insert this `postinstall` script to your `package.json` (there 
 ```
 
 Then you just need to run this command:
+
 ```bash
 npm install
 ```
@@ -52,6 +55,7 @@ And that's all. Command handler will create his own DataSource connection.
 
 # Support & Feature Requests
 
-This package is looking for feedback and ideas to help cover more use cases. If you have any ideas feel free to share them within the "💡 ｜ suggestions" channel in the [Worn Off Keys Discord server](http://wornoffkeys.com/discord).
+This package is looking for feedback and ideas to help cover more use cases. If you have any ideas feel free to share
+them within the "💡 ｜ suggestions" channel in the [Worn Off Keys Discord server](http://wornoffkeys.com/discord).
 
 ---
