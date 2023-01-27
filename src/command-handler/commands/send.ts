@@ -54,11 +54,11 @@ export default {
         sendChannel = intChannel ? intChannel as TextChannel : channel as TextChannel
 
         sendChannel.send({
-            content: intMessage
+            content: intMessage,
         })
 
         return {
-            content: `Set "${prefix}" as the command prefix for this server.`,
+            content: `Zpráva byla úspěšně odeslána.`,
             ephemeral: true,
         };
     },
