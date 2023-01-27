@@ -1,5 +1,4 @@
 import WOK from "../../typings";
-import channelCommands from "../models/channel-commands-schema";
 import {ChannelCommandsTypeorm} from "../models/channel-commands-typeorm";
 import {ds} from "../WOK";
 import command from "./Command";
@@ -25,7 +24,6 @@ class ChannelCommands {
 
     const _id = `${guildId}-${commandName}`;
 
-    // const ds = this._instance.dataSource;
     const repo = await ds.getRepository(ChannelCommandsTypeorm)
 
     if (action == "remove") {
@@ -68,7 +66,6 @@ class ChannelCommands {
     let channels: Array<string> = !t ? [] : t;
 
     if (!channels) {
-      // const ds = this._instance.dataSource;
       const result = await ds.getRepository(ChannelCommandsTypeorm).find()
       result.forEach(x => channels.push(x.channelId))
       if (result.length < 1) {
@@ -77,12 +74,6 @@ class ChannelCommands {
         this._channelCommands.set(_id, channels!)
       }
     }
-
-    // if (!channels) {
-    //   const results = await channelCommands.findById(_id);
-    //   channels = results ? results.channels : [];
-    //   this._channelCommands.set(_id, channels!);
-    // }
 
     return channels;
   }

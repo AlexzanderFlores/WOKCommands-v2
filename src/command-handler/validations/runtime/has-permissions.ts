@@ -1,6 +1,5 @@
 import { PermissionFlagsBits } from "discord.js";
 
-import requiredPermissions from "../../../models/required-permissions-schema";
 import Command from "../../Command";
 import { CommandUsage } from "../../../../typings";
 import {DisabledCommandsTypeorm} from "../../../models/disabled-commands-typeorm";
@@ -17,12 +16,8 @@ export default async (command: Command, usage: CommandUsage) => {
     return true;
   }
 
-  // const ds = instance.dataSource;
   const repo = await ds.getRepository(RequiredPermissionsTypeorm);
 
-  // const document = await requiredPermissions.findById(
-  //   `${guild!.id}-${command.commandName}`
-  // );
   const document = await repo.findBy({
     guildId: guild!.id,
     cmdId: command.commandName

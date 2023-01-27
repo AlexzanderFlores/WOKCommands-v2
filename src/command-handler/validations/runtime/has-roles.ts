@@ -11,8 +11,6 @@ export default async (command: Command, usage: CommandUsage) => {
   }
 
   const _id = `${guild!.id}-${command.commandName}`;
-  // const document = await requiredRoles.findById(_id);
-  // const ds = instance.dataSource;
   const repo = await ds.getRepository(RequiredRolesTypeorm);
   const document = await repo.findBy({
     guildId: guild!.id,

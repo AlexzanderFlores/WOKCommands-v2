@@ -32,8 +32,6 @@ class WOKCommands {
   private async init(options: Options) {
     let {
       client,
-      mongoUri,
-      dataSource,
       commandsDir,
       featuresDir,
       testServers = [],
@@ -48,13 +46,7 @@ class WOKCommands {
       throw new Error('A client is required.')
     }
 
-    if (mongoUri) {
-      await this.connectToMongo(mongoUri)
-    }
-
-    // if (dataSource) {
-      await this.connectToMaria(undefined)
-    // }
+    await this.connectToMariaDb()
 
     // Add the bot owner's ID
     if (botOwners.length === 0) {
@@ -130,15 +122,11 @@ class WOKCommands {
     return this._validations
   }
 
-  public get isConnectedToDB(): boolean {
-    return this._isConnectedToDB
-  }
-
   public get isConnectedToMariaDB(): boolean {
     return this._isConnectedToMariaDB
   }
 
-  private async connectToMaria(dataSource: DataSource | undefined) {
+  private async connectToMariaDb() {
     ds = new DataSource({
       type: "mariadb",
       host: process.env.MARIADB_HOST,
@@ -153,14 +141,6 @@ class WOKCommands {
     await ds.initialize()
 
     this._isConnectedToMariaDB = true
-  }
-
-  private async connectToMongo(mongoUri: string) {
-    await mongoose.connect(mongoUri, {
-      keepAlive: true,
-    })
-
-    this._isConnectedToDB = true
   }
 }
 

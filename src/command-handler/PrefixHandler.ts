@@ -1,4 +1,3 @@
-import guildPrefixSchema from "../models/guild-prefix-schema";
 import WOK from "../../typings";
 import {findPrefixes, setPrefix} from "../models/guild-prefix-typeorm";
 
@@ -47,19 +46,6 @@ class PrefixHandler {
     this._prefixes.set(guildId, prefix);
 
     await setPrefix(guildId, prefix)
-
-    // await guildPrefixSchema.findOneAndUpdate(
-    //   {
-    //     _id: guildId,
-    //   },
-    //   {
-    //     _id: guildId,
-    //     prefix,
-    //   },
-    //   {
-    //     upsert: true,
-    //   }
-    // );
   }
 }
 

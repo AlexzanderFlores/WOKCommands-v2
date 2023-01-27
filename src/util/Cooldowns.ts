@@ -1,4 +1,3 @@
-import cooldownSchema from "../models/cooldown-schema";
 import CooldownTypes from "../util/CooldownTypes";
 import WOK, { CooldownConfig, InternalCooldownConfig } from "../../typings";
 import {RequiredRolesTypeorm} from "../models/required-roles-typeorm";
@@ -36,22 +35,16 @@ class Cooldowns {
       return;
     }
 
-    // const ds = this._instance.dataSource;
     console.log('t')
     const repo = await ds.getRepository(CooldownTypeorm);
 
-    // await cooldownSchema.deleteMany({
-    //   expires: { $lt: new Date() },
-    // });
     await repo.delete({
       expires: LessThan(new Date())
     })
 
-    // const results = await cooldownSchema.find({});
     const results = await repo.find();
 
     for (const result of results) {
-      // const { _id, expires } = result;
       const _id = `${result.guildId}-${result.cmdId}`
       const expires = result.expires
 
@@ -106,18 +99,6 @@ class Cooldowns {
       }, {
         expires: expires
       })
-      // await cooldownSchema.findOneAndUpdate(
-      //   {
-      //     _id: key,
-      //   },
-      //   {
-      //     _id: key,
-      //     expires,
-      //   },
-      //   {
-      //     upsert: true,
-      //   }
-      // );
     }
   }
 
@@ -224,18 +205,6 @@ class Cooldowns {
       }, {
         expires: expires
       })
-      // await cooldownSchema.findOneAndUpdate(
-      //   {
-      //     _id: key,
-      //   },
-      //   {
-      //     _id: key,
-      //     expires,
-      //   },
-      //   {
-      //     upsert: true,
-      //   }
-      // );
     }
 
     this._cooldowns.set(key, expires);

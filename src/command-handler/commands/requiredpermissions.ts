@@ -1,6 +1,5 @@
 import { PermissionFlagsBits, ApplicationCommandOptionType } from "discord.js";
 
-import requiredPermissions from "../../models/required-permissions-schema";
 import CommandType from "../../util/CommandType";
 import { CommandObject, CommandUsage } from "../../../typings";
 import Command from "../Command";
@@ -70,13 +69,7 @@ export default {
     const repo = await ds.getRepository(RequiredPermissionsTypeorm);
 
     if (!permission) {
-      // const document = await requiredPermissions.findById(_id);
       const document = await repo.find();
-
-      // const permissions =
-      //   document && document.permissions?.length
-      //     ? document.permissions.join(", ")
-      //     : "None.";
 
       let permissions: string = '';
       if (document && document.length > 0) {
@@ -95,7 +88,6 @@ export default {
     }
 
     if (permission === clearAllPermissions) {
-      // await requiredPermissions.deleteOne({ _id });
       await repo.delete({
         guildId: guild!.id
       })
@@ -113,18 +105,6 @@ export default {
     .getRawOne();
 
     if (alreadyExistsRaw) {
-      // await requiredPermissions.findOneAndUpdate(
-      //   {
-      //     _id,
-      //   },
-      //   {
-      //     _id,
-      //     $pull: {
-      //       permissions: permission,
-      //     },
-      //   }
-      // );
-
       await repo.delete({
         guildId: guild!.id,
         cmdId: commandName,
@@ -137,20 +117,6 @@ export default {
       };
     }
 
-    // await requiredPermissions.findOneAndUpdate(
-    //   {
-    //     _id,
-    //   },
-    //   {
-    //     _id,
-    //     $addToSet: {
-    //       permissions: permission,
-    //     },
-    //   },
-    //   {
-    //     upsert: true,
-    //   }
-    // );
     await repo.insert({
       guildId: guild!.id,
       cmdId: commandName,

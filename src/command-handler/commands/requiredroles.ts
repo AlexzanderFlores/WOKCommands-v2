@@ -1,6 +1,5 @@
 import { PermissionFlagsBits, ApplicationCommandOptionType } from "discord.js";
 
-import requiredroles from "../../models/required-roles-schema";
 import CommandType from "../../util/CommandType";
 import { CommandObject, CommandUsage } from "../../../typings";
 import Command from "../Command";
@@ -58,17 +57,10 @@ export default {
     }
 
     const _id = `${guild!.id}-${command.commandName}`;
-    // const ds = instance.dataSource;
     const repo = await ds.getRepository(RequiredRolesTypeorm);
 
     if (!role) {
-      // const document = await requiredroles.findById(_id);
       const document = await repo.find();
-
-      // const roles =
-      //   document && document.roles?.length
-      //     ? document.roles.map((roleId: string) => `<@&${roleId}>`)
-      //     : "None.";
 
       let rolesOutput: string = '';
       if (document && document.length > 0) {
@@ -88,12 +80,6 @@ export default {
       };
     }
 
-    // const alreadyExists = await requiredroles.findOne({
-    //   _id,
-    //   roles: {
-    //     $in: [role],
-    //   },
-    // });
     const alreadyExistsRaw = await repo.createQueryBuilder('rrt')
     .where('guildId = :guildId', {guildId: guild!.id})
     .andWhere('cmdId = :cmdId', {cmdId: commandName})
@@ -101,17 +87,6 @@ export default {
     .getRawOne();
 
     if (alreadyExistsRaw) {
-      // await requiredroles.findOneAndUpdate(
-      //   {
-      //     _id,
-      //   },
-      //   {
-      //     _id,
-      //     $pull: {
-      //       roles: role,
-      //     },
-      //   }
-      // );
 
       await repo.delete({
         guildId: guild!.id,
@@ -128,20 +103,6 @@ export default {
       };
     }
 
-    // await requiredroles.findOneAndUpdate(
-    //   {
-    //     _id,
-    //   },
-    //   {
-    //     _id,
-    //     $addToSet: {
-    //       roles: role,
-    //     },
-    //   },
-    //   {
-    //     upsert: true,
-    //   }
-    // );
     await repo.insert({
       guildId: guild!.id,
       cmdId: commandName,
