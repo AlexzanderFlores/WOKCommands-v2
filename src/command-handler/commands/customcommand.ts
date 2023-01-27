@@ -66,7 +66,7 @@ export default {
   ) => {
     const results = [
       ...command.instance.commandHandler.customCommands.getCommands(
-        interaction.guild?.id
+        interaction.guild?.id!
       ),
     ];
 
@@ -81,7 +81,7 @@ export default {
     const { instance, guild } = commandUsage;
     const interaction = commandUsage.interaction as ChatInputCommandInteraction;
 
-    if (!instance.isConnectedToDB) {
+    if (!instance.isConnectedToMariaDB) {
       return {
         content:
           "This bot is not connected to a database which is required for this command. Please contact the bot owner.",
@@ -92,9 +92,9 @@ export default {
     const sub = interaction.options.getSubcommand();
 
     if (sub === "create") {
-      const commandName = interaction.options.getString("command");
-      const description = interaction.options.getString("description");
-      const response = interaction.options.getString("response");
+      const commandName = interaction.options.getString("command") as string;
+      const description = interaction.options.getString("description") as string;
+      const response = interaction.options.getString("response") as string;
 
       await instance.commandHandler.customCommands.create(
         guild!.id,
@@ -108,7 +108,7 @@ export default {
         ephemeral: true,
       };
     } else if (sub === "delete") {
-      const commandName = interaction.options.getString("command");
+      const commandName = interaction.options.getString("command") as string;
 
       if (commandName === noCommands) {
         return {

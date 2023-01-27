@@ -7,6 +7,7 @@ import WOK, { Events, Options, Validations } from '../typings'
 import Cooldowns from './util/Cooldowns'
 import DefaultCommands from './util/DefaultCommands'
 import FeaturesHandler from './util/FeaturesHandler'
+import {DataSource} from "typeorm";
 
 class WOKCommands {
   private _client!: Client
@@ -18,6 +19,8 @@ class WOKCommands {
   private _commandHandler: CommandHandler | undefined
   private _eventHandler!: EventHandler
   private _isConnectedToDB = false
+  private _isConnectedToMariaDB = false
+  private _dataSource = DataSource
 
   constructor(options: Options) {
     this.init(options)
@@ -27,6 +30,7 @@ class WOKCommands {
     let {
       client,
       mongoUri,
+      dataSource,
       commandsDir,
       featuresDir,
       testServers = [],
@@ -43,6 +47,10 @@ class WOKCommands {
 
     if (mongoUri) {
       await this.connectToMongo(mongoUri)
+    }
+
+    if (dataSource) {
+      await this.connectToMaria(dataSource)
     }
 
     // Add the bot owner's ID
@@ -120,6 +128,16 @@ class WOKCommands {
 
   public get isConnectedToDB(): boolean {
     return this._isConnectedToDB
+  }
+
+  public get isConnectedToMariaDB(): boolean {
+    return this.isConnectedToMariaDB
+  }
+
+  private async connectToMaria(dataSource: DataSource) {
+    await dataSource.initialize()
+
+    this._isConnectedToMariaDB = true
   }
 
   private async connectToMongo(mongoUri: string) {

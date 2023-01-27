@@ -1,5 +1,6 @@
 import WOK from "../../typings";
 import channelCommands from "../models/channel-commands-schema";
+import {ChannelCommandsTypeorm} from "../models/channel-commands-typeorm";
 
 class ChannelCommands {
   // `${guildId}-${commandName}`: [channelIds]
@@ -16,30 +17,32 @@ class ChannelCommands {
     commandName: string,
     channelId: string
   ) {
-    if (!this._instance.isConnectedToDB) {
+    if (!this._instance.isConnectedToMariaDB) {
       return;
     }
 
     const _id = `${guildId}-${commandName}`;
 
-    const result = await channelCommands.findOneAndUpdate(
-      {
-        _id,
-      },
-      {
-        _id,
-        [action === "add" ? "$addToSet" : "$pull"]: {
-          channels: channelId,
-        },
-      },
-      {
-        upsert: true,
-        new: true,
-      }
-    );
+    const ds = this._instance.dataSource;
+    const repo = await ds.getRepository(ChannelCommandsTypeorm)
 
-    this._channelCommands.set(_id, result.channels);
-    return result.channels;
+    if (action == "add") {
+      await repo.delete({
+        commandId: _id
+      })
+    } else {
+      await repo.insert({
+        commandId: _id,
+        channelId: channelId
+      })
+    }
+
+    let channels: Array<string> = [];
+    const result = await repo.find()
+    result.forEach(x => channels.push(x.channelId))
+
+    this._channelCommands.set(_id, channels);
+    return channels;
   }
 
   async add(guildId: string, commandName: string, channelId: string) {
@@ -51,18 +54,26 @@ class ChannelCommands {
   }
 
   async getAvailableChannels(guildId: string, commandName: string) {
-    if (!this._instance.isConnectedToDB) {
+    if (!this._instance.isConnectedToMariaDB) {
       return [];
     }
 
-    const _id = `${guildId}-${commandName}`;
-    let channels = this._channelCommands.get(_id);
+    const _id = `${guildId}-${commandName}`
+    let t = this._channelCommands.get(_id);
+    let channels: Array<string> = !t ? [] : t;
 
     if (!channels) {
-      const results = await channelCommands.findById(_id);
-      channels = results ? results.channels : [];
-      this._channelCommands.set(_id, channels!);
+      const ds = this._instance.dataSource;
+      const result = await ds.getRepository(ChannelCommandsTypeorm).find()
+      result.forEach(x => channels.push(x.channelId))
+      this._channelCommands.set(_id, channels!)
     }
+
+    // if (!channels) {
+    //   const results = await channelCommands.findById(_id);
+    //   channels = results ? results.channels : [];
+    //   this._channelCommands.set(_id, channels!);
+    // }
 
     return channels;
   }

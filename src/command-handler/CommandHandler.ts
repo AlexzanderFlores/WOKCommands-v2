@@ -49,7 +49,7 @@ class CommandHandler {
 
     this._validations = [
       ...this._validations,
-      ...this.getValidations(instance.validations?.runtime),
+      ...this.getValidations(instance.validations?.runtime), // Todo: validace
     ];
 
     this.readFiles();

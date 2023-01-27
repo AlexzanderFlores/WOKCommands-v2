@@ -3,7 +3,7 @@ import {
   Client,
   CommandInteraction,
   Guild,
-  GuildMember,
+  GuildMember, Message,
   TextChannel,
   User,
 } from 'discord.js'
@@ -12,6 +12,10 @@ import CommandType from './src/util/CommandType'
 import CooldownTypes from './src/util/CooldownTypes'
 import Cooldowns from './src/util/Cooldowns'
 import DefaultCommands from './src/util/DefaultCommands'
+import {DataSource} from "typeorm";
+import CommandHandler from "./src/command-handler/CommandHandler";
+import EventHandler from "./src/event-handler/EventHandler";
+import dbModels from "./models/index-model";
 
 export default class WOK {
   private _client!: Client
@@ -23,6 +27,8 @@ export default class WOK {
   private _commandHandler: CommandHandler | undefined
   private _eventHandler!: EventHandler
   private _isConnectedToDB = false
+  private _isConnectedToMariaDB = false
+  private _dataSource = DataSource
 
   constructor(options: Options)
 
@@ -35,11 +41,14 @@ export default class WOK {
   public get commandHandler(): CommandHandler
   public get eventHandler(): EventHandler
   public get isConnectedToDB(): boolean
+  public get isConnectedToMariaDB(): boolean
+  public async get dataSource(): DataSource
 }
 
 export interface Options {
   client: Client
   mongoUri?: string
+  dataSource?: DataSource
   commandsDir?: string
   featuresDir?: string
   testServers?: string[]
@@ -135,4 +144,4 @@ export class Command {
   public get commandObject(): CommandObject
 }
 
-export { CommandObject, Command, CommandType, CooldownTypes, DefaultCommands }
+export { CommandObject, Command, CommandType, CooldownTypes, DefaultCommands, dbModel }

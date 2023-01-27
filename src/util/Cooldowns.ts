@@ -1,6 +1,9 @@
 import cooldownSchema from "../models/cooldown-schema";
 import CooldownTypes from "../util/CooldownTypes";
 import WOK, { CooldownConfig, InternalCooldownConfig } from "../../typings";
+import {RequiredRolesTypeorm} from "../models/required-roles-typeorm";
+import {CooldownTypeorm} from "../models/cooldown-typeorm";
+import {LessThan, MoreThan} from "typeorm";
 
 const cooldownDurations = {
   s: 1,
@@ -28,18 +31,27 @@ class Cooldowns {
   }
 
   private async loadCooldowns() {
-    if (!this._instance.isConnectedToDB) {
+    if (!this._instance.isConnectedToMariaDB) {
       return;
     }
 
-    await cooldownSchema.deleteMany({
-      expires: { $lt: new Date() },
-    });
+    const ds = this._instance.dataSource;
+    const repo = await ds.getRepository(CooldownTypeorm);
 
-    const results = await cooldownSchema.find({});
+    // await cooldownSchema.deleteMany({
+    //   expires: { $lt: new Date() },
+    // });
+    await repo.delete({
+      expires: LessThan(new Date())
+    })
+
+    // const results = await cooldownSchema.find({});
+    const results = await repo.find();
 
     for (const result of results) {
-      const { _id, expires } = result;
+      // const { _id, expires } = result;
+      const _id = `${result.guildId}-${result.cmdId}`
+      const expires = result.expires
 
       this._cooldowns.set(_id, expires);
     }
@@ -56,8 +68,14 @@ class Cooldowns {
 
     this._cooldowns.delete(key);
 
-    if (this._instance.isConnectedToDB) {
-      await cooldownSchema.deleteOne({ _id: key });
+    if (this._instance.isConnectedToMariaDB) {
+      // await cooldownSchema.deleteOne({ _id: key });
+      const ds = this._instance.dataSource;
+      const repo = await ds.getRepository(CooldownTypeorm);
+      await repo.delete({
+        guildId: key.split("-")[0],
+        cmdId: key.split("-")[1]
+      })
     }
   }
 
@@ -69,7 +87,7 @@ class Cooldowns {
 
     this._cooldowns.set(key, expires);
 
-    if (!this._instance.isConnectedToDB) {
+    if (!this._instance.isConnectedToMariaDB) {
       return;
     }
 
@@ -77,18 +95,27 @@ class Cooldowns {
     const secondsDiff = (expires.getTime() - now.getTime()) / 1000;
 
     if (secondsDiff > this._dbRequired) {
-      await cooldownSchema.findOneAndUpdate(
-        {
-          _id: key,
-        },
-        {
-          _id: key,
-          expires,
-        },
-        {
-          upsert: true,
-        }
-      );
+      const ds = this._instance.dataSource;
+      const repo = await ds.getRepository(CooldownTypeorm);
+
+      await repo.update({
+        guildId: key.split("-")[0],
+        cmdId: key.split("-")[1]
+      }, {
+        expires: expires
+      })
+      // await cooldownSchema.findOneAndUpdate(
+      //   {
+      //     _id: key,
+      //   },
+      //   {
+      //     _id: key,
+      //     expires,
+      //   },
+      //   {
+      //     upsert: true,
+      //   }
+      // );
     }
   }
 
@@ -185,19 +212,28 @@ class Cooldowns {
     const expires = new Date();
     expires.setSeconds(expires.getSeconds() + seconds);
 
-    if (this._instance.isConnectedToDB && seconds >= this._dbRequired) {
-      await cooldownSchema.findOneAndUpdate(
-        {
-          _id: key,
-        },
-        {
-          _id: key,
-          expires,
-        },
-        {
-          upsert: true,
-        }
-      );
+    if (this._instance.isConnectedToMariaDB && seconds >= this._dbRequired) {
+      const ds = this._instance.dataSource;
+      const repo = await ds.getRepository(CooldownTypeorm);
+
+      await repo.update({
+        guildId: key.split("-")[0],
+        cmdId: key.split("-")[1]
+      }, {
+        expires: expires
+      })
+      // await cooldownSchema.findOneAndUpdate(
+      //   {
+      //     _id: key,
+      //   },
+      //   {
+      //     _id: key,
+      //     expires,
+      //   },
+      //   {
+      //     upsert: true,
+      //   }
+      // );
     }
 
     this._cooldowns.set(key, expires);

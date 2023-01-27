@@ -33,7 +33,7 @@ export default {
   callback: async (commandUsage: CommandUsage) => {
     const { instance, guild } = commandUsage;
 
-    if (!instance.isConnectedToDB) {
+    if (!instance.isConnectedToMariaDB) {
       return {
         content:
           "This bot is not connected to a database which is required for this command. Please contact the bot owner.",
@@ -61,6 +61,7 @@ export default {
     const { channelCommands } = instance.commandHandler;
 
     let availableChannels = [];
+    // @ts-ignore
     const canRun = (
       await channelCommands.getAvailableChannels(guild!.id, commandName)
     ).includes(channel.id);
@@ -70,13 +71,13 @@ export default {
         guild!.id,
         commandName,
         channel.id
-      );
+      ) as string [];
     } else {
       availableChannels = await channelCommands.add(
         guild!.id,
         commandName,
         channel.id
-      );
+      ) as string [];
     }
 
     if (availableChannels.length) {

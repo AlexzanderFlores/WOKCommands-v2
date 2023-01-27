@@ -29,7 +29,7 @@ export default {
   callback: async (commandUsage: CommandUsage) => {
     const { instance, guild, text: commandName, interaction } = commandUsage;
 
-    if (!instance.isConnectedToDB) {
+    if (!instance.isConnectedToMariaDB) {
       return {
         content:
           "This bot is not connected to a database which is required for this command. Please contact the bot owner.",

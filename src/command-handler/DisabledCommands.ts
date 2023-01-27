@@ -1,5 +1,6 @@
 import disabledCommandSchema from "../models/disabled-commands-schema";
 import WOK from "../../typings";
+import {DisabledCommandsTypeorm, findDisabledCommand} from "../models/disabled-commands-typeorm";
 
 class DisabledCommands {
   // array of `${guildId}-${commandName}`
@@ -13,20 +14,21 @@ class DisabledCommands {
   }
 
   async loadDisabledCommands() {
-    if (!this._instance.isConnectedToDB) {
+    if (!this._instance.isConnectedToMariaDB) {
       return;
     }
 
-    const results = await disabledCommandSchema.find({});
+    const results = await findDisabledCommand(this._instance.dataSource)
+    // const results = await disabledCommandSchema.find({});
 
     for (const result of results) {
-      this._disabledCommands.push(result._id);
+      this._disabledCommands.push(`${result.guildId}-${result.cmdName}`);
     }
   }
 
   async disable(guildId: string, commandName: string) {
     if (
-      !this._instance.isConnectedToDB ||
+      !this._instance.isConnectedToMariaDB ||
       this.isDisabled(guildId, commandName)
     ) {
       return;
@@ -34,17 +36,23 @@ class DisabledCommands {
 
     const _id = `${guildId}-${commandName}`;
     this._disabledCommands.push(_id);
+    const ds = this._instance.dataSource;
+    const repo = await ds.getRepository(DisabledCommandsTypeorm);
 
     try {
-      await new disabledCommandSchema({
-        _id,
-      }).save();
+      // await new disabledCommandSchema({
+      //   _id,
+      // }).save();
+      await repo.save({
+        guildId: guildId,
+        cmdName: commandName
+      })
     } catch (ignored) {}
   }
 
   async enable(guildId: string, commandName: string) {
     if (
-      !this._instance.isConnectedToDB ||
+      !this._instance.isConnectedToMariaDB ||
       !this.isDisabled(guildId, commandName)
     ) {
       return;
@@ -53,7 +61,13 @@ class DisabledCommands {
     const _id = `${guildId}-${commandName}`;
     this._disabledCommands = this._disabledCommands.filter((id) => id !== _id);
 
-    await disabledCommandSchema.deleteOne({ _id });
+    // await disabledCommandSchema.deleteOne({ _id });
+    const ds = this._instance.dataSource;
+    const repo = await ds.getRepository(DisabledCommandsTypeorm);
+    await repo.delete({
+      guildId: guildId,
+      cmdName: commandName
+    })
   }
 
   isDisabled(guildId: string, commandName: string) {

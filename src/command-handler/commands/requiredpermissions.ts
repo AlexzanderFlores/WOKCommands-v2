@@ -4,6 +4,9 @@ import requiredPermissions from "../../models/required-permissions-schema";
 import CommandType from "../../util/CommandType";
 import { CommandObject, CommandUsage } from "../../../typings";
 import Command from "../Command";
+import {DisabledCommandsTypeorm} from "../../models/disabled-commands-typeorm";
+import {RequiredPermissionsTypeorm} from "../../models/required-permissions-typeorm";
+import prefix from "./prefix";
 
 const clearAllPermissions = "Clear All Permissions";
 
@@ -43,7 +46,7 @@ export default {
   callback: async (commandUsage: CommandUsage) => {
     const { instance, guild, args } = commandUsage;
 
-    if (!instance.isConnectedToDB) {
+    if (!instance.isConnectedToMariaDB) {
       return {
         content:
           "This bot is not connected to a database which is required for this command. Please contact the bot owner.",
@@ -62,14 +65,27 @@ export default {
     }
 
     const _id = `${guild!.id}-${command.commandName}`;
+    const ds = instance.dataSource;
+    const repo = await ds.getRepository(RequiredPermissionsTypeorm);
 
     if (!permission) {
-      const document = await requiredPermissions.findById(_id);
+      // const document = await requiredPermissions.findById(_id);
+      const document = await repo.find();
 
-      const permissions =
-        document && document.permissions?.length
-          ? document.permissions.join(", ")
-          : "None.";
+      // const permissions =
+      //   document && document.permissions?.length
+      //     ? document.permissions.join(", ")
+      //     : "None.";
+
+      let permissions: string = '';
+      if (document && document.length) {
+        for (const d of document) {
+          permissions += `${d}, `;
+        }
+        permissions = permissions.slice(0, -2)
+      } else {
+        permissions = "None."
+      }
 
       return {
         content: `Here are the permissions for "${commandName}": ${permissions}`,
@@ -78,7 +94,10 @@ export default {
     }
 
     if (permission === clearAllPermissions) {
-      await requiredPermissions.deleteOne({ _id });
+      // await requiredPermissions.deleteOne({ _id });
+      await repo.delete({
+        guildId: guild!.id
+      })
 
       return {
         content: `The command "${commandName}" no longer requires any permissions.`,
@@ -86,25 +105,30 @@ export default {
       };
     }
 
-    const alreadyExists = await requiredPermissions.findOne({
-      _id,
-      permissions: {
-        $in: [permission],
-      },
-    });
+    const alreadyExistsRaw = await repo.createQueryBuilder()
+    .where('guildId = :guildId', {guildId: guild!.id})
+    .andWhere('cmdId = :cmdId', {cmdId: commandName})
+    .andWhere('permission IN (:..values)', {values: permission})
+    .getRawOne();
 
-    if (alreadyExists) {
-      await requiredPermissions.findOneAndUpdate(
-        {
-          _id,
-        },
-        {
-          _id,
-          $pull: {
-            permissions: permission,
-          },
-        }
-      );
+    if (alreadyExistsRaw) {
+      // await requiredPermissions.findOneAndUpdate(
+      //   {
+      //     _id,
+      //   },
+      //   {
+      //     _id,
+      //     $pull: {
+      //       permissions: permission,
+      //     },
+      //   }
+      // );
+
+      await repo.delete({
+        guildId: guild!.id,
+        cmdId: commandName,
+        permission: alreadyExistsRaw.permission
+      })
 
       return {
         content: `The command "${commandName}" no longer requires the permission "${permission}"`,
@@ -112,20 +136,25 @@ export default {
       };
     }
 
-    await requiredPermissions.findOneAndUpdate(
-      {
-        _id,
-      },
-      {
-        _id,
-        $addToSet: {
-          permissions: permission,
-        },
-      },
-      {
-        upsert: true,
-      }
-    );
+    // await requiredPermissions.findOneAndUpdate(
+    //   {
+    //     _id,
+    //   },
+    //   {
+    //     _id,
+    //     $addToSet: {
+    //       permissions: permission,
+    //     },
+    //   },
+    //   {
+    //     upsert: true,
+    //   }
+    // );
+    await repo.insert({
+      guildId: guild!.id,
+      cmdId: commandName,
+      permission: permission
+    })
 
     return {
       content: `The command "${commandName}" now requires the permission "${permission}"`,

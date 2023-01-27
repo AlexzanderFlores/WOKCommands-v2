@@ -3,6 +3,8 @@ import { PermissionFlagsBits } from "discord.js";
 import requiredPermissions from "../../../models/required-permissions-schema";
 import Command from "../../Command";
 import { CommandUsage } from "../../../../typings";
+import {DisabledCommandsTypeorm} from "../../../models/disabled-commands-typeorm";
+import {RequiredPermissionsTypeorm} from "../../../models/required-permissions-typeorm";
 
 const keys = Object.keys(PermissionFlagsBits);
 
@@ -10,17 +12,26 @@ export default async (command: Command, usage: CommandUsage) => {
   const { permissions = [] } = command.commandObject;
   const { instance, guild, member, message, interaction } = usage;
 
-  if (!member || !instance.isConnectedToDB) {
+  if (!member || !instance.isConnectedToMariaDB) {
     return true;
   }
 
-  const document = await requiredPermissions.findById(
-    `${guild!.id}-${command.commandName}`
-  );
+  const ds = instance.dataSource;
+  const repo = await ds.getRepository(RequiredPermissionsTypeorm);
+
+  // const document = await requiredPermissions.findById(
+  //   `${guild!.id}-${command.commandName}`
+  // );
+  const document = await repo.findBy({
+    guildId: guild!.id,
+    cmdId: command.commandName
+  })
+
+
   if (document) {
-    for (const permission of document.permissions) {
-      if (!permissions.includes(permission)) {
-        permissions.push(permission);
+    for (const permission of document) {
+      if (!permissions.includes(permission.permission as unknown as bigint)) {
+        permissions.push(permission.permission as unknown as bigint); // Todo?
       }
     }
   }

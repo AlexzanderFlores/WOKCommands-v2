@@ -3,6 +3,8 @@ import { CommandInteraction, Message } from "discord.js";
 import customCommandSchema from "../models/custom-command-schema";
 import CommandHandler from "./CommandHandler";
 import WOK from "../../typings";
+import {RequiredRolesTypeorm} from "../models/required-roles-typeorm";
+import {CustomCommandTypeorm} from "../models/custom-command-typeorm";
 
 class CustomCommands {
   // guildId-commandName: response
@@ -49,11 +51,13 @@ class CustomCommands {
     description: string,
     response: string
   ) {
-    if (!this._instance.isConnectedToDB) {
+    if (!this._instance.isConnectedToMariaDB) {
       return;
     }
 
     const _id = `${guildId}-${commandName}`;
+    const ds = this._instance.dataSource;
+    const repo = await ds.getRepository(CustomCommandTypeorm);
 
     this._customCommands.set(_id, response);
 
@@ -64,18 +68,23 @@ class CustomCommands {
       guildId
     );
 
-    await customCommandSchema.findOneAndUpdate(
-      {
-        _id,
-      },
-      {
-        _id,
-        response,
-      },
-      {
-        upsert: true,
-      }
-    );
+    // await customCommandSchema.findOneAndUpdate(
+    //   {
+    //     _id,
+    //   },
+    //   {
+    //     _id,
+    //     response,
+    //   },
+    //   {
+    //     upsert: true,
+    //   }
+    // );
+    await repo.insert({
+      guildId: guildId,
+      cmdId: commandName,
+      response: response
+    })
   }
 
   async delete(guildId: string, commandName: string) {
@@ -84,12 +93,18 @@ class CustomCommands {
     }
 
     const _id = `${guildId}-${commandName}`;
+    const ds = this._instance.dataSource;
+    const repo = await ds.getRepository(CustomCommandTypeorm);
 
     this._customCommands.delete(_id);
 
     this._commandHandler.slashCommands.delete(commandName, guildId);
 
-    await customCommandSchema.deleteOne({ _id });
+    // await customCommandSchema.deleteOne({ _id });
+    await repo.delete({
+      guildId: guildId,
+      cmdId: commandName
+    })
   }
 
   async run(

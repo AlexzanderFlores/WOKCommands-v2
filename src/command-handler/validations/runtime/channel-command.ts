@@ -5,7 +5,7 @@ export default async (command: Command, usage: CommandUsage) => {
   const { commandName, instance } = command;
   const { guild, channel, message, interaction } = usage;
 
-  if (!guild || !instance.isConnectedToDB) {
+  if (!guild || !instance.isConnectedToMariaDB) {
     return true;
   }
 

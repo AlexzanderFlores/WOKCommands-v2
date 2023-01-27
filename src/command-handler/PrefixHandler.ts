@@ -1,5 +1,6 @@
 import guildPrefixSchema from "../models/guild-prefix-schema";
 import WOK from "../../typings";
+import {findPrefixes, setPrefix} from "../models/guild-prefix-typeorm";
 
 class PrefixHandler {
   // <guildId: prefix>
@@ -14,14 +15,15 @@ class PrefixHandler {
   }
 
   private async loadPrefixes() {
-    if (!this._instance.isConnectedToDB) {
+    if (!this._instance.isConnectedToMariaDB) {
       return;
     }
 
-    const results = await guildPrefixSchema.find({});
+    // const results = await guildPrefixSchema.find({});
+    const results = await findPrefixes(this._instance.dataSource)
 
     for (const result of results) {
-      this._prefixes.set(result._id, result.prefix);
+      this._prefixes.set(result.guildId, result.prefix);
     }
   }
 
@@ -38,24 +40,26 @@ class PrefixHandler {
   }
 
   public async set(guildId: string, prefix: string) {
-    if (!this._instance.isConnectedToDB) {
+    if (!this._instance.isConnectedToMariaDB) {
       return;
     }
 
     this._prefixes.set(guildId, prefix);
 
-    await guildPrefixSchema.findOneAndUpdate(
-      {
-        _id: guildId,
-      },
-      {
-        _id: guildId,
-        prefix,
-      },
-      {
-        upsert: true,
-      }
-    );
+    await setPrefix(this._instance.dataSource, guildId, prefix)
+
+    // await guildPrefixSchema.findOneAndUpdate(
+    //   {
+    //     _id: guildId,
+    //   },
+    //   {
+    //     _id: guildId,
+    //     prefix,
+    //   },
+    //   {
+    //     upsert: true,
+    //   }
+    // );
   }
 }
 

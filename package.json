@@ -12,7 +12,10 @@
   "dependencies": {
     "discord.js": "^14.3.0",
     "dotenv": "^16.0.2",
-    "mongoose": "^6.6.1"
+    "mariadb": "^3.0.2",
+    "mongoose": "^6.6.1",
+    "mysql": "^2.18.1",
+    "typeorm": "^0.3.11"
   },
   "devDependencies": {
     "@types/mongoose": "^5.11.97",
