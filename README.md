@@ -14,13 +14,13 @@ The official documentation can be found here: https://docs.wornoffkeys.com
 # Installation
 
 You need to just insert this `postinstall` script to your `package.json` (there is for sure better solution for
-installation, but I don't know how ¯\_(ツ)_/¯)
+installation, but I don't know how)
 
 ```json
 {
   ...
   "scripts": {
-    "postinstall": "cd node_modules/ && git clone git@github.com:kiritodom53/WOKCommands-v2.git wokcommands-dom53 && cd wokcommands-dom53/ && git fetch && git pull && tsc --outDir dist --rootDir src --skipLibCheck && echo \"done\" && exit 0"
+    "postinstall": "cd node_modules/ && git clone https://github.com/kiritodom53/WOKCommands-v2-MariaDbWithTypeORM.git wokcommands-dom53 && cd wokcommands-dom53/ && git fetch && git pull && tsc --outDir dist --rootDir src --skipLibCheck && echo \"done\" && exit 0"
   },
   ...
 }
