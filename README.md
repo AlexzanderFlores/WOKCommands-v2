@@ -2,7 +2,7 @@
 
 <a href='https://nodei.co/npm/wokcommands/' target='_blank'>![alt WOKCommands](https://nodei.co/npm/wokcommands.png)</a>
 
-# WOKCommands with MariaDb nad TypeORM compatibility
+# WOKCommands for MariaDB connection with TypeORM
 
 WOKCommands is a Discord.JS command handler made by [Worn Off Keys](https://youtube.com/wornoffkeys). The goal of this package is to make it simple and easy to get your bot off the ground without worrying about your own command handler.
 
