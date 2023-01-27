@@ -1,11 +1,12 @@
 import {
-  ApplicationCommandOption,
-  Client,
-  CommandInteraction,
-  Guild,
-  GuildMember, Message,
-  TextChannel,
-  User,
+    ApplicationCommandOption,
+    Client,
+    CommandInteraction,
+    Guild,
+    GuildMember,
+    Message,
+    TextChannel,
+    User,
 } from 'discord.js'
 
 import CommandType from './src/util/CommandType'
@@ -24,143 +25,166 @@ import {GuildPrefixTypeorm} from "./src/models/guild-prefix-typeorm";
 import {CooldownTypeorm} from "./src/models/cooldown-typeorm";
 
 export default class WOK {
-  private _client!: Client
-  private _testServers!: string[]
-  private _botOwners!: string[]
-  private _cooldowns: Cooldowns | undefined
-  private _disabledDefaultCommands!: DefaultCommands[]
-  private _validations!: Validations
-  private _commandHandler: CommandHandler | undefined
-  private _eventHandler!: EventHandler
-  private _isConnectedToDB = false
-  private _isConnectedToMariaDB = false
-  private _dataSource: DataSource
+    constructor(options: Options)
 
-  constructor(options: Options)
+    private _client!: Client
 
-  public get client(): Client
-  public get testServers(): string[]
-  public get botOwners(): string[]
-  public get cooldowns(): Cooldowns
-  public get disabledDefaultCommands(): DefaultCommands[]
-  public get validations(): Validations
-  public get commandHandler(): CommandHandler
-  public get eventHandler(): EventHandler
-  public get isConnectedToDB(): boolean
-  public get isConnectedToMariaDB(): boolean
-  public async get dataSource(): DataSource
+    public get client(): Client
+
+    private _testServers!: string[]
+
+    public get testServers(): string[]
+
+    private _botOwners!: string[]
+
+    public get botOwners(): string[]
+
+    private _cooldowns: Cooldowns | undefined
+
+    public get cooldowns(): Cooldowns
+
+    private _disabledDefaultCommands!: DefaultCommands[]
+
+    public get disabledDefaultCommands(): DefaultCommands[]
+
+    private _validations!: Validations
+
+    public get validations(): Validations
+
+    private _commandHandler: CommandHandler | undefined
+
+    public get commandHandler(): CommandHandler
+
+    private _eventHandler!: EventHandler
+
+    public get eventHandler(): EventHandler
+
+    private _isConnectedToDB = false
+
+    public get isConnectedToDB(): boolean
+
+    private _isConnectedToMariaDB = false
+
+    public get isConnectedToMariaDB(): boolean
+
+    private _dataSource: DataSource
+
+    public async get dataSource(): DataSource
 }
 
 export interface Options {
-  client: Client
-  mongoUri?: string
-  dataSource?: DataSource
-  commandsDir?: string
-  featuresDir?: string
-  testServers?: string[]
-  botOwners?: string[]
-  cooldownConfig?: CooldownConfig
-  disabledDefaultCommands?: DefaultCommands[]
-  events?: Events
-  validations?: Validations
+    client: Client
+    mongoUri?: string
+    dataSource?: DataSource
+    commandsDir?: string
+    featuresDir?: string
+    testServers?: string[]
+    botOwners?: string[]
+    cooldownConfig?: CooldownConfig
+    disabledDefaultCommands?: DefaultCommands[]
+    events?: Events
+    validations?: Validations
 }
 
 export interface CooldownConfig {
-  errorMessage: string
-  botOwnersBypass: boolean
-  dbRequired: number
+    errorMessage: string
+    botOwnersBypass: boolean
+    dbRequired: number
 }
 
 export interface Events {
-  dir: string
-  [key: string]: any
+    dir: string
+
+    [key: string]: any
 }
 
 export interface Validations {
-  runtime?: string
-  syntax?: string
+    runtime?: string
+    syntax?: string
 }
 
 export class Cooldowns {
-  constructor(instance: WOK, oldownConfig: CooldownConfig) {}
+    constructor(instance: WOK, oldownConfig: CooldownConfig) {}
 }
 
 export interface CooldownUsage {
-  errorMessage?: string
-  type: CooldownTypes
-  duration: string
+    errorMessage?: string
+    type: CooldownTypes
+    duration: string
 }
 
 export interface InternalCooldownConfig {
-  cooldownType: CooldownTypes
-  userId: string
-  actionId: string
-  guildId?: string
-  duration?: string
-  errorMessage?: string
+    cooldownType: CooldownTypes
+    userId: string
+    actionId: string
+    guildId?: string
+    duration?: string
+    errorMessage?: string
 }
 
 export interface CommandUsage {
-  client: Client
-  instance: WOK
-  message?: Message | null
-  interaction?: CommandInteraction | null
-  args: string[]
-  text: string
-  guild?: Guild | null
-  member?: GuildMember
-  user: User
-  channel?: TextChannel
-  cancelCooldown?: function
-  updateCooldown?: function
+    client: Client
+    instance: WOK
+    message?: Message | null
+    interaction?: CommandInteraction | null
+    args: string[]
+    text: string
+    guild?: Guild | null
+    member?: GuildMember
+    user: User
+    channel?: TextChannel
+    cancelCooldown?: function
+    updateCooldown?: function
 }
 
 export interface CommandObject {
-  callback: (commandUsage: CommandUsage) => unknown
-  type: CommandType
-  init?: function
-  description?: string
-  aliases?: string[]
-  testOnly?: boolean
-  guildOnly?: boolean
-  ownerOnly?: boolean
-  permissions?: bigint[]
-  deferReply?: 'ephemeral' | boolean
-  cooldowns?: CooldownUsage
-  minArgs?: number
-  maxArgs?: number
-  correctSyntax?: string
-  expectedArgs?: string
-  options?: ApplicationCommandOption[]
-  autocomplete?: function
-  reply?: boolean
-  delete?: boolean
+    callback: (commandUsage: CommandUsage) => unknown
+    type: CommandType
+    init?: function
+    description?: string
+    aliases?: string[]
+    testOnly?: boolean
+    guildOnly?: boolean
+    ownerOnly?: boolean
+    permissions?: bigint[]
+    deferReply?: 'ephemeral' | boolean
+    cooldowns?: CooldownUsage
+    minArgs?: number
+    maxArgs?: number
+    correctSyntax?: string
+    expectedArgs?: string
+    options?: ApplicationCommandOption[]
+    autocomplete?: function
+    reply?: boolean
+    delete?: boolean
 }
 
 export type FileData = {
-  filePath: string
-  fileContents: any
+    filePath: string
+    fileContents: any
 }
 
 export class Command {
-  constructor(instance: WOK, commandName: string, commandObject: CommandObject)
+    constructor(instance: WOK, commandName: string, commandObject: CommandObject)
 
-  public get instance(): WOK
-  public get commandName(): string
-  public get commandObject(): CommandObject
+    public get instance(): WOK
+
+    public get commandName(): string
+
+    public get commandObject(): CommandObject
 }
 
 export {
-  CommandObject,
-  Command,
-  CommandType,
-  CooldownTypes,
-  DefaultCommands,
-  RequiredPermissionsTypeorm,
-  DisabledCommandsTypeorm,
-  ChannelCommandsTypeorm,
-  CustomCommandTypeorm,
-  RequiredRolesTypeorm,
-  GuildPrefixTypeorm,
-  CooldownTypeorm
+    CommandObject,
+    Command,
+    CommandType,
+    CooldownTypes,
+    DefaultCommands,
+    RequiredPermissionsTypeorm,
+    DisabledCommandsTypeorm,
+    ChannelCommandsTypeorm,
+    CustomCommandTypeorm,
+    RequiredRolesTypeorm,
+    GuildPrefixTypeorm,
+    CooldownTypeorm
 }
