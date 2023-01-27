@@ -33,7 +33,7 @@ export default {
             type: ApplicationCommandOptionType.Channel,
             required: false,
             descriptionLocalizations: {
-                cd: 'Textový kanál'
+                cs: 'Textový kanál'
             },
             channelTypes: [
                 ChannelType.GuildText
