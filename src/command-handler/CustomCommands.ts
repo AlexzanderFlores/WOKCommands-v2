@@ -1,120 +1,119 @@
-import { CommandInteraction, Message } from "discord.js";
+import {CommandInteraction, Message} from "discord.js";
 
 import CommandHandler from "./CommandHandler";
 import WOK from "../../typings";
-import {RequiredRolesTypeorm} from "../models/required-roles-typeorm";
 import {CustomCommandTypeorm} from "../models/custom-command-typeorm";
 import {ds} from "../WOK";
 
 class CustomCommands {
-  // guildId-commandName: response
-  private _customCommands = new Map();
-  private _commandHandler: CommandHandler;
-  private _instance: WOK;
+    // guildId-commandName: response
+    private _customCommands = new Map();
+    private _commandHandler: CommandHandler;
+    private _instance: WOK;
 
-  constructor(instance: WOK, commandHandler: CommandHandler) {
-    this._instance = instance;
-    this._commandHandler = commandHandler;
+    constructor(instance: WOK, commandHandler: CommandHandler) {
+        this._instance = instance;
+        this._commandHandler = commandHandler;
 
-    this.loadCommands();
-  }
-
-  async loadCommands() {
-    if (!this._instance.isConnectedToMariaDB) {
-      return;
+        this.loadCommands();
     }
 
-    const results = await ds.getRepository(CustomCommandTypeorm).find();
+    async loadCommands() {
+        if (!this._instance.isConnectedToMariaDB) {
+            return;
+        }
 
-    for (const result of results) {
-      const { guildId, cmdId, response } = result;
-      this._customCommands.set(`${guildId}-${cmdId}`, response);
-    }
-  }
+        const results = await ds.getRepository(CustomCommandTypeorm).find();
 
-  getCommands(guildId: string) {
-    const commands = [];
-
-    for (const [key] of this._customCommands) {
-      const [id, commandName] = key.split("-");
-      if (id === guildId) {
-        commands.push(commandName);
-      }
+        for (const result of results) {
+            const {guildId, cmdId, response} = result;
+            this._customCommands.set(`${guildId}-${cmdId}`, response);
+        }
     }
 
-    return commands;
-  }
+    getCommands(guildId: string) {
+        const commands = [];
 
-  async create(
-    guildId: string,
-    commandName: string,
-    description: string,
-    response: string
-  ) {
-    if (!this._instance.isConnectedToMariaDB) {
-      return;
+        for (const [key] of this._customCommands) {
+            const [id, commandName] = key.split("-");
+            if (id === guildId) {
+                commands.push(commandName);
+            }
+        }
+
+        return commands;
     }
 
-    const _id = `${guildId}-${commandName}`;
-    const repo = await ds.getRepository(CustomCommandTypeorm);
+    async create(
+        guildId: string,
+        commandName: string,
+        description: string,
+        response: string
+    ) {
+        if (!this._instance.isConnectedToMariaDB) {
+            return;
+        }
 
-    this._customCommands.set(_id, response);
+        const _id = `${guildId}-${commandName}`;
+        const repo = await ds.getRepository(CustomCommandTypeorm);
 
-    this._commandHandler.slashCommands.create(
-      commandName,
-      description,
-      [],
-      guildId
-    );
+        this._customCommands.set(_id, response);
 
-    await repo.insert({
-      guildId: guildId,
-      cmdId: commandName,
-      response: response
-    })
-  }
+        this._commandHandler.slashCommands.create(
+            commandName,
+            description,
+            [],
+            guildId
+        );
 
-  async delete(guildId: string, commandName: string) {
-    if (!this._instance.isConnectedToMariaDB) {
-      return;
+        await repo.insert({
+            guildId: guildId,
+            cmdId: commandName,
+            response: response
+        })
     }
 
-    const _id = `${guildId}-${commandName}`;
-    const repo = await ds.getRepository(CustomCommandTypeorm);
+    async delete(guildId: string, commandName: string) {
+        if (!this._instance.isConnectedToMariaDB) {
+            return;
+        }
 
-    this._customCommands.delete(_id);
+        const _id = `${guildId}-${commandName}`;
+        const repo = await ds.getRepository(CustomCommandTypeorm);
 
-    this._commandHandler.slashCommands.delete(commandName, guildId);
+        this._customCommands.delete(_id);
 
-    await repo.delete({
-      guildId: guildId,
-      cmdId: commandName
-    })
-  }
+        this._commandHandler.slashCommands.delete(commandName, guildId);
 
-  async run(
-    commandName: string,
-    message: Message | null,
-    interaction: CommandInteraction | null
-  ) {
-    if (!message && !interaction) {
-      return;
+        await repo.delete({
+            guildId: guildId,
+            cmdId: commandName
+        })
     }
 
-    const guild = message ? message.guild : interaction!.guild;
-    if (!guild) {
-      return;
-    }
+    async run(
+        commandName: string,
+        message: Message | null,
+        interaction: CommandInteraction | null
+    ) {
+        if (!message && !interaction) {
+            return;
+        }
 
-    const _id = `${guild.id}-${commandName}`;
-    const response = this._customCommands.get(_id);
-    if (!response) {
-      return;
-    }
+        const guild = message ? message.guild : interaction!.guild;
+        if (!guild) {
+            return;
+        }
 
-    if (message) message.channel.send(response).catch(() => {});
-    else if (interaction) interaction.reply(response).catch(() => {});
-  }
+        const _id = `${guild.id}-${commandName}`;
+        const response = this._customCommands.get(_id);
+        if (!response) {
+            return;
+        }
+
+        if (message) message.channel.send(response).catch(() => {});
+        else if (interaction) interaction.reply(response).catch(() => {});
+    }
 }
 
 export default CustomCommands;

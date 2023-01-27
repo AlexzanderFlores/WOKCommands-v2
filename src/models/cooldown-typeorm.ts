@@ -1,4 +1,4 @@
-import {Column, DataSource, Entity, PrimaryColumn} from "typeorm";
+import {Column, Entity, PrimaryColumn} from "typeorm";
 
 @Entity({name: 'cooldown'})
 export class CooldownTypeorm {

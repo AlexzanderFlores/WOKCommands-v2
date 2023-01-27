@@ -3,69 +3,70 @@ import {DisabledCommandsTypeorm, findDisabledCommand} from "../models/disabled-c
 import {ds} from "../WOK";
 
 class DisabledCommands {
-  // array of `${guildId}-${commandName}`
-  private _disabledCommands: string[] = [];
-  private _instance: WOK;
+    // array of `${guildId}-${commandName}`
+    private _disabledCommands: string[] = [];
+    private _instance: WOK;
 
-  constructor(instance: WOK) {
-    this._instance = instance;
+    constructor(instance: WOK) {
+        this._instance = instance;
 
-    this.loadDisabledCommands();
-  }
-
-  async loadDisabledCommands() {
-    if (!this._instance.isConnectedToMariaDB) {
-      return;
+        this.loadDisabledCommands();
     }
 
-    const results = await findDisabledCommand()
+    async loadDisabledCommands() {
+        if (!this._instance.isConnectedToMariaDB) {
+            return;
+        }
 
-    for (const result of results) {
-      this._disabledCommands.push(`${result.guildId}-${result.cmdName}`);
-    }
-  }
+        const results = await findDisabledCommand()
 
-  async disable(guildId: string, commandName: string) {
-    if (
-      !this._instance.isConnectedToMariaDB ||
-      this.isDisabled(guildId, commandName)
-    ) {
-      return;
+        for (const result of results) {
+            this._disabledCommands.push(`${result.guildId}-${result.cmdName}`);
+        }
     }
 
-    const _id = `${guildId}-${commandName}`;
-    this._disabledCommands.push(_id);
-    const repo = await ds.getRepository(DisabledCommandsTypeorm);
+    async disable(guildId: string, commandName: string) {
+        if (
+            !this._instance.isConnectedToMariaDB ||
+            this.isDisabled(guildId, commandName)
+        ) {
+            return;
+        }
 
-    try {
-      await repo.save({
-        guildId: guildId,
-        cmdName: commandName
-      })
-    } catch (ignored) {}
-  }
+        const _id = `${guildId}-${commandName}`;
+        this._disabledCommands.push(_id);
+        const repo = await ds.getRepository(DisabledCommandsTypeorm);
 
-  async enable(guildId: string, commandName: string) {
-    if (
-      !this._instance.isConnectedToMariaDB ||
-      !this.isDisabled(guildId, commandName)
-    ) {
-      return;
+        try {
+            await repo.save({
+                guildId: guildId,
+                cmdName: commandName
+            })
+        } catch (ignored) {
+        }
     }
 
-    const _id = `${guildId}-${commandName}`;
-    this._disabledCommands = this._disabledCommands.filter((id) => id !== _id);
+    async enable(guildId: string, commandName: string) {
+        if (
+            !this._instance.isConnectedToMariaDB ||
+            !this.isDisabled(guildId, commandName)
+        ) {
+            return;
+        }
 
-    const repo = await ds.getRepository(DisabledCommandsTypeorm);
-    await repo.delete({
-      guildId: guildId,
-      cmdName: commandName
-    })
-  }
+        const _id = `${guildId}-${commandName}`;
+        this._disabledCommands = this._disabledCommands.filter((id) => id !== _id);
 
-  isDisabled(guildId: string, commandName: string) {
-    return this._disabledCommands.includes(`${guildId}-${commandName}`);
-  }
+        const repo = await ds.getRepository(DisabledCommandsTypeorm);
+        await repo.delete({
+            guildId: guildId,
+            cmdName: commandName
+        })
+    }
+
+    isDisabled(guildId: string, commandName: string) {
+        return this._disabledCommands.includes(`${guildId}-${commandName}`);
+    }
 }
 
 export default DisabledCommands;

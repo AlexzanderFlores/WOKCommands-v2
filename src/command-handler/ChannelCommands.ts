@@ -1,82 +1,81 @@
 import WOK from "../../typings";
 import {ChannelCommandsTypeorm} from "../models/channel-commands-typeorm";
 import {ds} from "../WOK";
-import command from "./Command";
 
 class ChannelCommands {
-  // `${guildId}-${commandName}`: [channelIds]
-  private _channelCommands: Map<string, string[]> = new Map();
-  private _instance: WOK;
+    // `${guildId}-${commandName}`: [channelIds]
+    private _channelCommands: Map<string, string[]> = new Map();
+    private _instance: WOK;
 
-  constructor(instance: WOK) {
-    this._instance = instance;
-  }
-
-  async action(
-    action: "add" | "remove",
-    guildId: string,
-    commandName: string,
-    channelId: string
-  ) {
-    if (!this._instance.isConnectedToMariaDB) {
-      return;
+    constructor(instance: WOK) {
+        this._instance = instance;
     }
 
-    const _id = `${guildId}-${commandName}`;
+    async action(
+        action: "add" | "remove",
+        guildId: string,
+        commandName: string,
+        channelId: string
+    ) {
+        if (!this._instance.isConnectedToMariaDB) {
+            return;
+        }
 
-    const repo = await ds.getRepository(ChannelCommandsTypeorm)
+        const _id = `${guildId}-${commandName}`;
 
-    if (action == "remove") {
-      await repo.delete({
-        guildId: guildId,
-        commandId: commandName,
-        channelId: channelId
-      })
-    } else {
-      await repo.insert({
-        guildId: guildId,
-        commandId: commandName,
-        channelId: channelId
-      })
+        const repo = await ds.getRepository(ChannelCommandsTypeorm)
+
+        if (action == "remove") {
+            await repo.delete({
+                guildId: guildId,
+                commandId: commandName,
+                channelId: channelId
+            })
+        } else {
+            await repo.insert({
+                guildId: guildId,
+                commandId: commandName,
+                channelId: channelId
+            })
+        }
+
+        let channels: Array<string> = [];
+        const result = await repo.find()
+        result.forEach(x => channels.push(x.channelId))
+
+        this._channelCommands.set(_id, channels);
+        return channels;
     }
 
-    let channels: Array<string> = [];
-    const result = await repo.find()
-    result.forEach(x => channels.push(x.channelId))
-
-    this._channelCommands.set(_id, channels);
-    return channels;
-  }
-
-  async add(guildId: string, commandName: string, channelId: string) {
-    return await this.action("add", guildId, commandName, channelId);
-  }
-
-  async remove(guildId: string, commandName: string, channelId: string) {
-    return await this.action("remove", guildId, commandName, channelId);
-  }
-
-  async getAvailableChannels(guildId: string, commandName: string) {
-    if (!this._instance.isConnectedToMariaDB) {
-      return [];
+    async add(guildId: string, commandName: string, channelId: string) {
+        return await this.action("add", guildId, commandName, channelId);
     }
 
-    const _id = `${guildId}-${commandName}`
-    let t = this._channelCommands.get(_id);
-    let channels: Array<string> = !t ? [] : t;
-
-    if (!channels) {
-      const result = await ds.getRepository(ChannelCommandsTypeorm).find()
-      result.forEach(x => channels.push(x.channelId))
-      if (result.length < 1) {
-        this._channelCommands.set(_id, [])
-      } else {
-        this._channelCommands.set(_id, channels!)
-      }
+    async remove(guildId: string, commandName: string, channelId: string) {
+        return await this.action("remove", guildId, commandName, channelId);
     }
 
-    return channels;
-  }
+    async getAvailableChannels(guildId: string, commandName: string) {
+        if (!this._instance.isConnectedToMariaDB) {
+            return [];
+        }
+
+        const _id = `${guildId}-${commandName}`
+        let t = this._channelCommands.get(_id);
+        let channels: Array<string> = !t ? [] : t;
+
+        if (!channels) {
+            const result = await ds.getRepository(ChannelCommandsTypeorm).find()
+            result.forEach(x => channels.push(x.channelId))
+            if (result.length < 1) {
+                this._channelCommands.set(_id, [])
+            } else {
+                this._channelCommands.set(_id, channels!)
+            }
+        }
+
+        return channels;
+    }
 }
 
 export default ChannelCommands;

@@ -1,5 +1,4 @@
-import {DataSource, Entity, PrimaryColumn} from "typeorm";
-import {GuildPrefixTypeorm} from "./guild-prefix-typeorm";
+import {Entity, PrimaryColumn} from "typeorm";
 import {ds} from "../WOK";
 
 @Entity({name: 'disabled_command'})

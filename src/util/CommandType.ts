@@ -1,7 +1,7 @@
 enum CommandType {
-  SLASH = "SLASH",
-  LEGACY = "LEGACY",
-  BOTH = "BOTH",
+    SLASH = "SLASH",
+    LEGACY = "LEGACY",
+    BOTH = "BOTH",
 }
 
 export default CommandType;

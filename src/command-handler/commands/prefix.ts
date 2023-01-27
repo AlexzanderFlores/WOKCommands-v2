@@ -1,36 +1,36 @@
-import { PermissionFlagsBits } from "discord.js";
+import {PermissionFlagsBits} from "discord.js";
 
 import CommandType from "../../util/CommandType";
-import { CommandObject, CommandUsage } from "../../../typings";
+import {CommandObject, CommandUsage} from "../../../typings";
 
 export default {
-  description: "Sets the prefix for this server",
+    description: "Sets the prefix for this server",
 
-  minArgs: 1,
-  syntaxError: "Correct syntax: {PREFIX}prefix {ARGS}",
-  expectedArgs: "<prefix>",
+    minArgs: 1,
+    syntaxError: "Correct syntax: {PREFIX}prefix {ARGS}",
+    expectedArgs: "<prefix>",
 
-  type: CommandType.BOTH,
-  guildOnly: true,
+    type: CommandType.BOTH,
+    guildOnly: true,
 
-  permissions: [PermissionFlagsBits.Administrator],
+    permissions: [PermissionFlagsBits.Administrator],
 
-  callback: (commandUsage: CommandUsage) => {
-    const { instance, guild, text: prefix } = commandUsage;
+    callback: (commandUsage: CommandUsage) => {
+        const {instance, guild, text: prefix} = commandUsage;
 
-    if (!instance.isConnectedToMariaDB) {
-      return {
-        content:
-          "This bot is not connected to a database which is required for this command. Please contact the bot owner.",
-        ephemeral: true,
-      };
-    }
+        if (!instance.isConnectedToMariaDB) {
+            return {
+                content:
+                    "This bot is not connected to a database which is required for this command. Please contact the bot owner.",
+                ephemeral: true,
+            };
+        }
 
-    instance.commandHandler.prefixHandler.set(guild!.id, prefix);
+        instance.commandHandler.prefixHandler.set(guild!.id, prefix);
 
-    return {
-      content: `Set "${prefix}" as the command prefix for this server.`,
-      ephemeral: true,
-    };
-  },
+        return {
+            content: `Set "${prefix}" as the command prefix for this server.`,
+            ephemeral: true,
+        };
+    },
 } as CommandObject;

@@ -2,51 +2,51 @@ import WOK from "../../typings";
 import {findPrefixes, setPrefix} from "../models/guild-prefix-typeorm";
 
 class PrefixHandler {
-  // <guildId: prefix>
-  private _prefixes = new Map();
-  private _defaultPrefix = "!";
-  private _instance: WOK;
+    // <guildId: prefix>
+    private _prefixes = new Map();
+    private _defaultPrefix = "!";
+    private _instance: WOK;
 
-  constructor(instance: WOK) {
-    this._instance = instance;
+    constructor(instance: WOK) {
+        this._instance = instance;
 
-    this.loadPrefixes();
-  }
-
-  private async loadPrefixes() {
-    if (!this._instance.isConnectedToMariaDB) {
-      return;
+        this.loadPrefixes();
     }
 
-    // const results = await guildPrefixSchema.find({});
-    const results = await findPrefixes()
+    private async loadPrefixes() {
+        if (!this._instance.isConnectedToMariaDB) {
+            return;
+        }
 
-    for (const result of results) {
-      this._prefixes.set(result.guildId, result.prefix);
-    }
-  }
+        // const results = await guildPrefixSchema.find({});
+        const results = await findPrefixes()
 
-  public get defaultPrefix() {
-    return this._defaultPrefix;
-  }
-
-  public get(guildId?: string) {
-    if (!guildId) {
-      return this.defaultPrefix;
+        for (const result of results) {
+            this._prefixes.set(result.guildId, result.prefix);
+        }
     }
 
-    return this._prefixes.get(guildId) || this.defaultPrefix;
-  }
-
-  public async set(guildId: string, prefix: string) {
-    if (!this._instance.isConnectedToMariaDB) {
-      return;
+    public get defaultPrefix() {
+        return this._defaultPrefix;
     }
 
-    this._prefixes.set(guildId, prefix);
+    public get(guildId?: string) {
+        if (!guildId) {
+            return this.defaultPrefix;
+        }
 
-    await setPrefix(guildId, prefix)
-  }
+        return this._prefixes.get(guildId) || this.defaultPrefix;
+    }
+
+    public async set(guildId: string, prefix: string) {
+        if (!this._instance.isConnectedToMariaDB) {
+            return;
+        }
+
+        this._prefixes.set(guildId, prefix);
+
+        await setPrefix(guildId, prefix)
+    }
 }
 
 export default PrefixHandler;
