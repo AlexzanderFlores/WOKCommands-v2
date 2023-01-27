@@ -1,4 +1,5 @@
 import {Column, DataSource, Entity, PrimaryColumn} from "typeorm";
+import {ds} from "../WOK";
 
 @Entity({name: 'guild_prefix'})
 export class GuildPrefixTypeorm {
@@ -17,7 +18,7 @@ export const isPrefixExist = async (ds: DataSource, guildId: string, prefix: str
     return result
 }
 
-export const setPrefix = async (ds: DataSource, guildId: string, prefix: string): Promise<boolean> => {
+export const setPrefix = async (guildId: string, prefix: string): Promise<boolean> => {
     const repo = await ds.getRepository(GuildPrefixTypeorm);
     if (await isPrefixExist(ds, guildId, prefix)) {
         await repo.update({
@@ -35,7 +36,7 @@ export const setPrefix = async (ds: DataSource, guildId: string, prefix: string)
     return true;
 }
 
-export const findPrefixes = async (ds: DataSource): Promise<GuildPrefixTypeorm[]> => {
+export const findPrefixes = async (): Promise<GuildPrefixTypeorm[]> => {
     const repo = await ds.getRepository(GuildPrefixTypeorm);
     const result = await repo.find()
     return !result ? [] : result;

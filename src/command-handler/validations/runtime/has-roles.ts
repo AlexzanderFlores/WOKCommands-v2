@@ -1,7 +1,7 @@
-import requiredRoles from "../../../models/required-roles-schema";
 import Command from "../../Command";
-import { CommandUsage } from "../../../../typings";
-import {RequiredPermissionsTypeorm} from "../../../models/required-permissions-typeorm";
+import {ds} from "../../../WOK";
+import {RequiredRolesTypeorm} from "../../../models/required-roles-typeorm";
+import {CommandUsage} from "../../../../typings";
 
 export default async (command: Command, usage: CommandUsage) => {
   const { instance, guild, member, message, interaction } = usage;
@@ -12,14 +12,14 @@ export default async (command: Command, usage: CommandUsage) => {
 
   const _id = `${guild!.id}-${command.commandName}`;
   // const document = await requiredRoles.findById(_id);
-  const ds = instance.dataSource;
-  const repo = await ds.getRepository(requiredRoles);
+  // const ds = instance.dataSource;
+  const repo = await ds.getRepository(RequiredRolesTypeorm);
   const document = await repo.findBy({
     guildId: guild!.id,
     cmdId: command.commandName
   })
 
-  if (document) {
+  if (document.length > 0) {
     let hasRole = false;
 
     for (const doc of document) {
@@ -33,10 +33,13 @@ export default async (command: Command, usage: CommandUsage) => {
       return true;
     }
 
+    let rpl = 'You need one of these roles: ';
+    for (const role of document) {
+      rpl += `<@&${role.roleId}>`
+    }
+
     const reply = {
-      content: `You need one of these roles: ${document.map(
-        (roleId: string) => `<@&${roleId}>` // Todo: ??
-      )}`,
+      content: rpl,
       allowedMentions: {
         roles: [],
       },

@@ -1,6 +1,8 @@
 import WOK from "../../typings";
 import channelCommands from "../models/channel-commands-schema";
 import {ChannelCommandsTypeorm} from "../models/channel-commands-typeorm";
+import {ds} from "../WOK";
+import command from "./Command";
 
 class ChannelCommands {
   // `${guildId}-${commandName}`: [channelIds]
@@ -23,16 +25,19 @@ class ChannelCommands {
 
     const _id = `${guildId}-${commandName}`;
 
-    const ds = this._instance.dataSource;
+    // const ds = this._instance.dataSource;
     const repo = await ds.getRepository(ChannelCommandsTypeorm)
 
-    if (action == "add") {
+    if (action == "remove") {
       await repo.delete({
-        commandId: _id
+        guildId: guildId,
+        commandId: commandName,
+        channelId: channelId
       })
     } else {
       await repo.insert({
-        commandId: _id,
+        guildId: guildId,
+        commandId: commandName,
         channelId: channelId
       })
     }
@@ -63,10 +68,14 @@ class ChannelCommands {
     let channels: Array<string> = !t ? [] : t;
 
     if (!channels) {
-      const ds = this._instance.dataSource;
+      // const ds = this._instance.dataSource;
       const result = await ds.getRepository(ChannelCommandsTypeorm).find()
       result.forEach(x => channels.push(x.channelId))
-      this._channelCommands.set(_id, channels!)
+      if (result.length < 1) {
+        this._channelCommands.set(_id, [])
+      } else {
+        this._channelCommands.set(_id, channels!)
+      }
     }
 
     // if (!channels) {

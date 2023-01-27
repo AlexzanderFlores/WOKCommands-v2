@@ -8,6 +8,9 @@ import Cooldowns from './util/Cooldowns'
 import DefaultCommands from './util/DefaultCommands'
 import FeaturesHandler from './util/FeaturesHandler'
 import {DataSource} from "typeorm";
+import indexModel from "./models/index-model";
+
+export let ds: DataSource;
 
 class WOKCommands {
   private _client!: Client
@@ -20,7 +23,7 @@ class WOKCommands {
   private _eventHandler!: EventHandler
   private _isConnectedToDB = false
   private _isConnectedToMariaDB = false
-  private _dataSource = DataSource
+  private _dataSource: DataSource
 
   constructor(options: Options) {
     this.init(options)
@@ -49,9 +52,9 @@ class WOKCommands {
       await this.connectToMongo(mongoUri)
     }
 
-    if (dataSource) {
-      await this.connectToMaria(dataSource)
-    }
+    // if (dataSource) {
+      await this.connectToMaria(undefined)
+    // }
 
     // Add the bot owner's ID
     if (botOwners.length === 0) {
@@ -67,6 +70,7 @@ class WOKCommands {
     this._botOwners = botOwners
     this._disabledDefaultCommands = disabledDefaultCommands
     this._validations = validations
+    // this._dataSource = dataSource!
 
     this._cooldowns = new Cooldowns(this as unknown as WOK, {
       errorMessage: 'Please wait {TIME} before doing that again.',
@@ -131,11 +135,22 @@ class WOKCommands {
   }
 
   public get isConnectedToMariaDB(): boolean {
-    return this.isConnectedToMariaDB
+    return this._isConnectedToMariaDB
   }
 
-  private async connectToMaria(dataSource: DataSource) {
-    await dataSource.initialize()
+  private async connectToMaria(dataSource: DataSource | undefined) {
+    ds = new DataSource({
+      type: "mariadb",
+      host: process.env.MARIADB_HOST,
+      port: Number(process.env.MARIADB_PORT),
+      username: process.env.MARIADB_USERNAME,
+      password: process.env.MARIADB_PASSWORD,
+      database: process.env.MARIADB_DATABASE,
+      synchronize: process.env.LIVE != 'true', // true only in develop mode, turn off in production
+      entities: indexModel,
+    });
+
+    await ds.initialize()
 
     this._isConnectedToMariaDB = true
   }

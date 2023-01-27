@@ -5,6 +5,7 @@ import Command from "../../Command";
 import { CommandUsage } from "../../../../typings";
 import {DisabledCommandsTypeorm} from "../../../models/disabled-commands-typeorm";
 import {RequiredPermissionsTypeorm} from "../../../models/required-permissions-typeorm";
+import {ds} from "../../../WOK";
 
 const keys = Object.keys(PermissionFlagsBits);
 
@@ -16,7 +17,7 @@ export default async (command: Command, usage: CommandUsage) => {
     return true;
   }
 
-  const ds = instance.dataSource;
+  // const ds = instance.dataSource;
   const repo = await ds.getRepository(RequiredPermissionsTypeorm);
 
   // const document = await requiredPermissions.findById(
@@ -28,7 +29,7 @@ export default async (command: Command, usage: CommandUsage) => {
   })
 
 
-  if (document) {
+  if (document.length > 0) {
     for (const permission of document) {
       if (!permissions.includes(permission.permission as unknown as bigint)) {
         permissions.push(permission.permission as unknown as bigint); // Todo?

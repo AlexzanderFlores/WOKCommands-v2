@@ -6,6 +6,7 @@ import { CommandObject, CommandUsage } from "../../../typings";
 import Command from "../Command";
 import {RequiredPermissionsTypeorm} from "../../models/required-permissions-typeorm";
 import {RequiredRolesTypeorm} from "../../models/required-roles-typeorm";
+import {ds} from "../../WOK";
 
 export default {
   description: "Sets what commands require what roles",
@@ -51,13 +52,13 @@ export default {
     const command = instance.commandHandler.commands.get(commandName);
     if (!command) {
       return {
-        content: `The command "${commandName}" does not exist.`,
+        content: `The command \`${commandName}\` does not exist.`,
         ephemeral: true,
       };
     }
 
     const _id = `${guild!.id}-${command.commandName}`;
-    const ds = instance.dataSource;
+    // const ds = instance.dataSource;
     const repo = await ds.getRepository(RequiredRolesTypeorm);
 
     if (!role) {
@@ -69,17 +70,17 @@ export default {
       //     ? document.roles.map((roleId: string) => `<@&${roleId}>`)
       //     : "None.";
 
-      let roles: string = '';
-      if (document && document.length) {
+      let rolesOutput: string = '';
+      if (document && document.length > 0) {
         for (const d of document) {
-          roles += `<@&${d}>`;
+          rolesOutput += `<@&${d.roleId}>`;
         }
       } else {
-        roles = "None."
+        rolesOutput = "None."
       }
 
       return {
-        content: `Here are the roles for "${commandName}": ${roles}`,
+        content: `Here are the roles for \`${commandName}\`: ${rolesOutput}`,
         ephemeral: true,
         allowedMentions: {
           roles: [],
@@ -93,10 +94,10 @@ export default {
     //     $in: [role],
     //   },
     // });
-    const alreadyExistsRaw = await repo.createQueryBuilder()
+    const alreadyExistsRaw = await repo.createQueryBuilder('rrt')
     .where('guildId = :guildId', {guildId: guild!.id})
     .andWhere('cmdId = :cmdId', {cmdId: commandName})
-    .andWhere('roleId IN (:..values)', {values: role})
+    .andWhere('roleId IN (:values)', {values: role})
     .getRawOne();
 
     if (alreadyExistsRaw) {
@@ -115,11 +116,11 @@ export default {
       await repo.delete({
         guildId: guild!.id,
         cmdId: commandName,
-        roleId: alreadyExistsRaw.permission
+        roleId: alreadyExistsRaw.rrt_roleId
       });
 
       return {
-        content: `The command "${commandName}" no longer requires the role <@&${role}>`,
+        content: `The command \`${commandName}\` no longer requires the role <@&${role}>`,
         ephemeral: true,
         allowedMentions: {
           roles: [],
@@ -148,7 +149,7 @@ export default {
     })
 
     return {
-      content: `The command "${commandName}" now requires the role <@&${role}>`,
+      content: `The command \`${commandName}\` now requires the role <@&${role}>`,
       ephemeral: true,
       allowedMentions: {
         roles: [],

@@ -15,7 +15,13 @@ import DefaultCommands from './src/util/DefaultCommands'
 import {DataSource} from "typeorm";
 import CommandHandler from "./src/command-handler/CommandHandler";
 import EventHandler from "./src/event-handler/EventHandler";
-import dbModels from "./models/index-model";
+import {RequiredPermissionsTypeorm} from "./src/models/required-permissions-typeorm";
+import {DisabledCommandsTypeorm} from "./src/models/disabled-commands-typeorm";
+import {ChannelCommandsTypeorm} from "./src/models/channel-commands-typeorm";
+import {CustomCommandTypeorm} from "./src/models/custom-command-typeorm";
+import {RequiredRolesTypeorm} from "./src/models/required-roles-typeorm";
+import {GuildPrefixTypeorm} from "./src/models/guild-prefix-typeorm";
+import {CooldownTypeorm} from "./src/models/cooldown-typeorm";
 
 export default class WOK {
   private _client!: Client
@@ -28,7 +34,7 @@ export default class WOK {
   private _eventHandler!: EventHandler
   private _isConnectedToDB = false
   private _isConnectedToMariaDB = false
-  private _dataSource = DataSource
+  private _dataSource: DataSource
 
   constructor(options: Options)
 
@@ -144,4 +150,17 @@ export class Command {
   public get commandObject(): CommandObject
 }
 
-export { CommandObject, Command, CommandType, CooldownTypes, DefaultCommands, dbModel }
+export {
+  CommandObject,
+  Command,
+  CommandType,
+  CooldownTypes,
+  DefaultCommands,
+  RequiredPermissionsTypeorm,
+  DisabledCommandsTypeorm,
+  ChannelCommandsTypeorm,
+  CustomCommandTypeorm,
+  RequiredRolesTypeorm,
+  GuildPrefixTypeorm,
+  CooldownTypeorm
+}

@@ -20,7 +20,7 @@ class PrefixHandler {
     }
 
     // const results = await guildPrefixSchema.find({});
-    const results = await findPrefixes(this._instance.dataSource)
+    const results = await findPrefixes()
 
     for (const result of results) {
       this._prefixes.set(result.guildId, result.prefix);
@@ -46,7 +46,7 @@ class PrefixHandler {
 
     this._prefixes.set(guildId, prefix);
 
-    await setPrefix(this._instance.dataSource, guildId, prefix)
+    await setPrefix(guildId, prefix)
 
     // await guildPrefixSchema.findOneAndUpdate(
     //   {

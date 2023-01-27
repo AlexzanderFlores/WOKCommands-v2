@@ -7,6 +7,7 @@ import Command from "../Command";
 import {DisabledCommandsTypeorm} from "../../models/disabled-commands-typeorm";
 import {RequiredPermissionsTypeorm} from "../../models/required-permissions-typeorm";
 import prefix from "./prefix";
+import {ds} from "../../WOK";
 
 const clearAllPermissions = "Clear All Permissions";
 
@@ -59,13 +60,13 @@ export default {
     const command = instance.commandHandler.commands.get(commandName);
     if (!command) {
       return {
-        content: `The command "${commandName}" does not exist.`,
+        content: `The command \`${commandName}\` does not exist.`,
         ephemeral: true,
       };
     }
 
     const _id = `${guild!.id}-${command.commandName}`;
-    const ds = instance.dataSource;
+    // const ds = instance.dataSource;
     const repo = await ds.getRepository(RequiredPermissionsTypeorm);
 
     if (!permission) {
@@ -78,9 +79,9 @@ export default {
       //     : "None.";
 
       let permissions: string = '';
-      if (document && document.length) {
+      if (document && document.length > 0) {
         for (const d of document) {
-          permissions += `${d}, `;
+          permissions += `\`${d.permission}\`, `;
         }
         permissions = permissions.slice(0, -2)
       } else {
@@ -88,7 +89,7 @@ export default {
       }
 
       return {
-        content: `Here are the permissions for "${commandName}": ${permissions}`,
+        content: `Here are the permissions for \`${commandName}\`: ${permissions}`,
         ephemeral: true,
       };
     }
@@ -100,15 +101,15 @@ export default {
       })
 
       return {
-        content: `The command "${commandName}" no longer requires any permissions.`,
+        content: `The command \`${commandName}\` no longer requires any permissions.`,
         ephemeral: true,
       };
     }
 
-    const alreadyExistsRaw = await repo.createQueryBuilder()
+    const alreadyExistsRaw = await repo.createQueryBuilder('rpt')
     .where('guildId = :guildId', {guildId: guild!.id})
     .andWhere('cmdId = :cmdId', {cmdId: commandName})
-    .andWhere('permission IN (:..values)', {values: permission})
+    .andWhere('permission IN (:values)', {values: permission})
     .getRawOne();
 
     if (alreadyExistsRaw) {
@@ -127,11 +128,11 @@ export default {
       await repo.delete({
         guildId: guild!.id,
         cmdId: commandName,
-        permission: alreadyExistsRaw.permission
+        permission: alreadyExistsRaw.rpt_permission
       })
 
       return {
-        content: `The command "${commandName}" no longer requires the permission "${permission}"`,
+        content: `The command \`${commandName}\` no longer requires the permission \`${permission}\``,
         ephemeral: true,
       };
     }
@@ -157,7 +158,7 @@ export default {
     })
 
     return {
-      content: `The command "${commandName}" now requires the permission "${permission}"`,
+      content: `The command \`${commandName}\` now requires the permission \`${permission}\``,
       ephemeral: true,
     };
   },

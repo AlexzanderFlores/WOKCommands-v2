@@ -4,6 +4,7 @@ import WOK, { CooldownConfig, InternalCooldownConfig } from "../../typings";
 import {RequiredRolesTypeorm} from "../models/required-roles-typeorm";
 import {CooldownTypeorm} from "../models/cooldown-typeorm";
 import {LessThan, MoreThan} from "typeorm";
+import {ds} from "../WOK";
 
 const cooldownDurations = {
   s: 1,
@@ -35,7 +36,8 @@ class Cooldowns {
       return;
     }
 
-    const ds = this._instance.dataSource;
+    // const ds = this._instance.dataSource;
+    console.log('t')
     const repo = await ds.getRepository(CooldownTypeorm);
 
     // await cooldownSchema.deleteMany({
@@ -70,7 +72,7 @@ class Cooldowns {
 
     if (this._instance.isConnectedToMariaDB) {
       // await cooldownSchema.deleteOne({ _id: key });
-      const ds = this._instance.dataSource;
+      // const ds = this._instance.dataSource;
       const repo = await ds.getRepository(CooldownTypeorm);
       await repo.delete({
         guildId: key.split("-")[0],
@@ -95,7 +97,7 @@ class Cooldowns {
     const secondsDiff = (expires.getTime() - now.getTime()) / 1000;
 
     if (secondsDiff > this._dbRequired) {
-      const ds = this._instance.dataSource;
+      // const ds = this._instance.dataSource;
       const repo = await ds.getRepository(CooldownTypeorm);
 
       await repo.update({
@@ -213,7 +215,7 @@ class Cooldowns {
     expires.setSeconds(expires.getSeconds() + seconds);
 
     if (this._instance.isConnectedToMariaDB && seconds >= this._dbRequired) {
-      const ds = this._instance.dataSource;
+      // const ds = this._instance.dataSource;
       const repo = await ds.getRepository(CooldownTypeorm);
 
       await repo.update({

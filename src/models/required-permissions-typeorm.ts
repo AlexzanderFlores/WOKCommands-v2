@@ -1,4 +1,4 @@
-import {Column, DataSource, Entity, PrimaryColumn} from "typeorm";
+import {Entity, PrimaryColumn} from "typeorm";
 
 @Entity({name: 'required_permissions'})
 export class RequiredPermissionsTypeorm {
@@ -7,6 +7,7 @@ export class RequiredPermissionsTypeorm {
 
     @PrimaryColumn()
     cmdId: string
-    @Column()
+
+    @PrimaryColumn()
     permission: string
 }

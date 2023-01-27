@@ -1,6 +1,7 @@
 import disabledCommandSchema from "../models/disabled-commands-schema";
 import WOK from "../../typings";
 import {DisabledCommandsTypeorm, findDisabledCommand} from "../models/disabled-commands-typeorm";
+import {ds} from "../WOK";
 
 class DisabledCommands {
   // array of `${guildId}-${commandName}`
@@ -18,7 +19,7 @@ class DisabledCommands {
       return;
     }
 
-    const results = await findDisabledCommand(this._instance.dataSource)
+    const results = await findDisabledCommand()
     // const results = await disabledCommandSchema.find({});
 
     for (const result of results) {
@@ -36,7 +37,7 @@ class DisabledCommands {
 
     const _id = `${guildId}-${commandName}`;
     this._disabledCommands.push(_id);
-    const ds = this._instance.dataSource;
+    // const ds = this._instance.dataSource;
     const repo = await ds.getRepository(DisabledCommandsTypeorm);
 
     try {
@@ -62,7 +63,7 @@ class DisabledCommands {
     this._disabledCommands = this._disabledCommands.filter((id) => id !== _id);
 
     // await disabledCommandSchema.deleteOne({ _id });
-    const ds = this._instance.dataSource;
+    // const ds = this._instance.dataSource;
     const repo = await ds.getRepository(DisabledCommandsTypeorm);
     await repo.delete({
       guildId: guildId,

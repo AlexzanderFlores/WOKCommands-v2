@@ -5,6 +5,7 @@ import CommandHandler from "./CommandHandler";
 import WOK from "../../typings";
 import {RequiredRolesTypeorm} from "../models/required-roles-typeorm";
 import {CustomCommandTypeorm} from "../models/custom-command-typeorm";
+import {ds} from "../WOK";
 
 class CustomCommands {
   // guildId-commandName: response
@@ -20,15 +21,16 @@ class CustomCommands {
   }
 
   async loadCommands() {
-    if (!this._instance.isConnectedToDB) {
+    if (!this._instance.isConnectedToMariaDB) {
       return;
     }
 
-    const results = await customCommandSchema.find({});
+    // const results = await customCommandSchema.find({});
+    const results = await ds.getRepository(CustomCommandTypeorm).find();
 
     for (const result of results) {
-      const { _id, response } = result;
-      this._customCommands.set(_id, response);
+      const { guildId, cmdId, response } = result;
+      this._customCommands.set(`${guildId}-${cmdId}`, response);
     }
   }
 
@@ -56,7 +58,7 @@ class CustomCommands {
     }
 
     const _id = `${guildId}-${commandName}`;
-    const ds = this._instance.dataSource;
+    // const ds = this._instance.dataSource;
     const repo = await ds.getRepository(CustomCommandTypeorm);
 
     this._customCommands.set(_id, response);
@@ -88,12 +90,12 @@ class CustomCommands {
   }
 
   async delete(guildId: string, commandName: string) {
-    if (!this._instance.isConnectedToDB) {
+    if (!this._instance.isConnectedToMariaDB) {
       return;
     }
 
     const _id = `${guildId}-${commandName}`;
-    const ds = this._instance.dataSource;
+    // const ds = this._instance.dataSource;
     const repo = await ds.getRepository(CustomCommandTypeorm);
 
     this._customCommands.delete(_id);
