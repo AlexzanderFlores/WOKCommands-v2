@@ -5,6 +5,7 @@ enum DefaultCommands {
     RequiredPermissions = "requiredpermissions",
     RequiredRoles = "requiredroles",
     ToggleCommand = "togglecommand",
+    Send = 'send'
 }
 
 export default DefaultCommands;
