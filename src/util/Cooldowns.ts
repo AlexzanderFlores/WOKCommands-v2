@@ -34,7 +34,6 @@ class Cooldowns {
             return;
         }
 
-        console.log('t')
         const repo = await ds.getRepository(CooldownTypeorm);
 
         await repo.delete({
