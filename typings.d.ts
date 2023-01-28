@@ -150,6 +150,7 @@ export interface CommandObject {
     reply?: boolean;
     delete?: boolean;
     excludeLog?: boolean;
+    configs?: ConfigType[];
 }
 
 export type FileData = {
