@@ -1,17 +1,16 @@
-import { ApplicationCommandOptionType, PermissionFlagsBits, VoiceState } from "discord.js";
+import { ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
 
 import Command from "../Command";
 import CommandType from "../../util/CommandType";
 import { CommandUsage } from "../../../typings";
 import { discord_events } from "../../util/event-list";
-import { channel } from "diagnostics_channel";
 
 export default {
     description: "Simulate selected event",
 
     type: CommandType.SLASH,
     guildOnly: true,
-    testOnly: true,
+    // testOnly: true,
     ownerOnly: true,
 
     permissions: [PermissionFlagsBits.Administrator],
@@ -59,19 +58,19 @@ export default {
 
         switch (event) {
             case "guildCreate":
-                client.emit(event, guild!)
+                client.emit(event, guild!);
                 break;
             case "messageCreate":
-                client.emit(event, message!)
+                client.emit(event, message!);
                 break;
             case "channelCreate":
-                client.emit(event, channel!)
+                client.emit(event, channel!);
                 break;
             case "guildMemberAdd":
-                client.emit(event, member!)
+                client.emit(event, member!);
                 break;
             case "guildMemberRemove":
-                client.emit(event, member!)
+                client.emit(event, member!);
                 break;
         }
 
