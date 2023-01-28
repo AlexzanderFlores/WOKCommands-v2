@@ -38,7 +38,9 @@ export default async (command: Command, usage: CommandUsage) => {
     let text = `This command require these configs to be set:\n`;
     unsetConfigs.forEach(
         (value, key) =>
-            (text += `\`${key}\`:\n> ${!value ? "Nemá popisek" : value}\n`)
+            (text += `> _${key}_:\n\`\`\`\n${
+                !value ? "Nemá popisek" : value
+            }\`\`\`\n`)
     );
 
     if (message) message.reply(text);
