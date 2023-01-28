@@ -1,10 +1,6 @@
 import { ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
-
-import Command from "../Command";
 import CommandType from "../../util/CommandType";
 import { CommandObject, CommandUsage } from "../../../typings";
-import { ds } from "../../WOK";
-import { ConfigTypeorm } from "../../models/config-typeorm";
 import { migrateConfig } from "../../models/migrations/config-migration";
 
 const configs = ["configs", "users"];
@@ -15,6 +11,7 @@ export default {
     type: CommandType.SLASH,
     guildOnly: true,
     ownerOnly: true,
+    excludeLog: true,
 
     permissions: [PermissionFlagsBits.Administrator],
 
