@@ -30,6 +30,7 @@ enum ConfigType {
     AT_NEWS_CHANNEL_ID = "at-news-channel-id",
     MAIN_SERVANTS_CHANNEL_ID = "main-servants-channel-id",
     SERVANTS_CHANNEL_ID = "servants-channel-id",
+    SERVANTS_VOICE_CHANNEL_ID = "servants-voice-channel-id",
     GARDENER_CHANNEL_ID = "gardener-channel-id",
     GRIM_CHANNEL_ID = "grim-reaper-channel-id",
     ATEAM_CHANNEL_ID = "ateam-channel-id",
