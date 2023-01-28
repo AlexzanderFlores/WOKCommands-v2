@@ -140,6 +140,12 @@ class WOKCommands {
         });
 
         await ds.initialize();
+        console.log("ds.init complete");
+        console.log(
+            process.env.LIVE == "true"
+                ? process.env.MARIADB_DATABASE
+                : process.env.MARIADB_DATABASE_TEST
+        );
 
         this._isConnectedToMariaDB = true;
     }
