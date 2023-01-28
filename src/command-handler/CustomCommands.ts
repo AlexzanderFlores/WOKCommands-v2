@@ -1,9 +1,9 @@
-import {CommandInteraction, Message} from "discord.js";
+import { CommandInteraction, Message } from "discord.js";
 
 import CommandHandler from "./CommandHandler";
 import WOK from "../../typings";
-import {CustomCommandTypeorm} from "../models/custom-command-typeorm";
-import {ds} from "../WOK";
+import { CustomCommandTypeorm } from "../models/custom-command-typeorm";
+import { ds } from "../WOK";
 
 class CustomCommands {
     // guildId-commandName: response
@@ -26,7 +26,7 @@ class CustomCommands {
         const results = await ds.getRepository(CustomCommandTypeorm).find();
 
         for (const result of results) {
-            const {guildId, cmdId, response} = result;
+            const { guildId, cmdId, response } = result;
             this._customCommands.set(`${guildId}-${cmdId}`, response);
         }
     }
@@ -69,8 +69,8 @@ class CustomCommands {
         await repo.insert({
             guildId: guildId,
             cmdId: commandName,
-            response: response
-        })
+            response: response,
+        });
     }
 
     async delete(guildId: string, commandName: string) {
@@ -87,8 +87,8 @@ class CustomCommands {
 
         await repo.delete({
             guildId: guildId,
-            cmdId: commandName
-        })
+            cmdId: commandName,
+        });
     }
 
     async run(

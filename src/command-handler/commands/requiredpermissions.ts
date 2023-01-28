@@ -1,10 +1,10 @@
-import {ApplicationCommandOptionType, PermissionFlagsBits} from "discord.js";
+import { ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
 
 import CommandType from "../../util/CommandType";
-import {CommandObject, CommandUsage} from "../../../typings";
+import { CommandObject, CommandUsage } from "../../../typings";
 import Command from "../Command";
-import {RequiredPermissionsTypeorm} from "../../models/required-permissions-typeorm";
-import {ds} from "../../WOK";
+import { RequiredPermissionsTypeorm } from "../../models/required-permissions-typeorm";
+import { ds } from "../../WOK";
 
 const clearAllPermissions = "Clear All Permissions";
 
@@ -42,7 +42,7 @@ export default {
     },
 
     callback: async (commandUsage: CommandUsage) => {
-        const {instance, guild, args} = commandUsage;
+        const { instance, guild, args } = commandUsage;
 
         if (!instance.isConnectedToMariaDB) {
             return {
@@ -68,14 +68,14 @@ export default {
         if (!permission) {
             const document = await repo.find();
 
-            let permissions: string = '';
+            let permissions: string = "";
             if (document && document.length > 0) {
                 for (const d of document) {
                     permissions += `\`${d.permission}\`, `;
                 }
-                permissions = permissions.slice(0, -2)
+                permissions = permissions.slice(0, -2);
             } else {
-                permissions = "None."
+                permissions = "None.";
             }
 
             return {
@@ -86,8 +86,8 @@ export default {
 
         if (permission === clearAllPermissions) {
             await repo.delete({
-                guildId: guild!.id
-            })
+                guildId: guild!.id,
+            });
 
             return {
                 content: `The command \`${commandName}\` no longer requires any permissions.`,
@@ -95,18 +95,19 @@ export default {
             };
         }
 
-        const alreadyExistsRaw = await repo.createQueryBuilder('rpt')
-            .where('guildId = :guildId', {guildId: guild!.id})
-            .andWhere('cmdId = :cmdId', {cmdId: commandName})
-            .andWhere('permission IN (:values)', {values: permission})
+        const alreadyExistsRaw = await repo
+            .createQueryBuilder("rpt")
+            .where("guildId = :guildId", { guildId: guild!.id })
+            .andWhere("cmdId = :cmdId", { cmdId: commandName })
+            .andWhere("permission IN (:values)", { values: permission })
             .getRawOne();
 
         if (alreadyExistsRaw) {
             await repo.delete({
                 guildId: guild!.id,
                 cmdId: commandName,
-                permission: alreadyExistsRaw.rpt_permission
-            })
+                permission: alreadyExistsRaw.rpt_permission,
+            });
 
             return {
                 content: `The command \`${commandName}\` no longer requires the permission \`${permission}\``,
@@ -117,8 +118,8 @@ export default {
         await repo.insert({
             guildId: guild!.id,
             cmdId: commandName,
-            permission: permission
-        })
+            permission: permission,
+        });
 
         return {
             content: `The command \`${commandName}\` now requires the permission \`${permission}\``,

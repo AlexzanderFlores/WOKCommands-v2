@@ -5,35 +5,32 @@ import CommandType from "../../util/CommandType";
 import { CommandObject, CommandUsage } from "../../../typings";
 import { ds } from "../../WOK";
 import { ConfigTypeorm } from "../../models/config-typeorm";
+import { migrateConfig } from "../../models/migrations/config-migration";
+
+const configs = ["configs", "users"];
 
 export default {
-    description: "Toggles a command on or off for your guild",
+    description: "Import important database data",
 
     type: CommandType.SLASH,
     guildOnly: true,
+    ownerOnly: true,
 
     permissions: [PermissionFlagsBits.Administrator],
 
     options: [
         {
-            name: "key",
-            description: "Configuration key",
+            name: "type",
+            description: "Type of data",
             type: ApplicationCommandOptionType.String,
-            required: true,
-            autocomplete: true,
-        },
-        {
-            name: "value",
-            description: "Configuration value",
-            type: ApplicationCommandOptionType.String,
-            required: true,
+            required: false,
             autocomplete: false,
+            choices: configs.map((config) => ({
+                name: config,
+                value: config,
+            })),
         },
     ],
-
-    autocomplete: (command: Command) => {
-        return [...command.instance.commandHandler.configs];
-    },
 
     callback: async (commandUsage: CommandUsage) => {
         const {
@@ -55,16 +52,18 @@ export default {
             return;
         }
 
-        const key = interaction.options.getString("command") as string;
-        const value = interaction.options.getString("command") as string;
+        const type = interaction.options.getString("type");
 
-        await ds.getRepository(ConfigTypeorm).save({
-            key,
-            value,
-        });
+        if (!type) {
+            await migrateConfig();
+        } else {
+            if (type == "config") {
+                await migrateConfig();
+            }
+        }
 
         return {
-            content: `Konfigurace \`${key}\` byla nastavena na \`${value}\``,
+            content: `Migration of \`${!type ? "all" : type}\` was completed.`,
             ephemeral: true,
         };
     },

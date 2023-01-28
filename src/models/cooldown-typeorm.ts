@@ -1,13 +1,13 @@
-import {Column, Entity, PrimaryColumn} from "typeorm";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
-@Entity({name: 'cooldown'})
+@Entity({ name: "cooldown" })
 export class CooldownTypeorm {
     @PrimaryColumn()
-    guildId: string
+    guildId: string;
 
     @Column()
-    cmdId: string
+    cmdId: string;
 
     @Column()
-    expires: Date
+    expires: Date;
 }

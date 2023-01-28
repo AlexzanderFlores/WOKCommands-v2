@@ -1,8 +1,8 @@
-import {ApplicationCommandOptionType, CommandInteraction} from "discord.js";
+import { ApplicationCommandOptionType, CommandInteraction } from "discord.js";
 
 import Command from "../Command";
 import CommandType from "../../util/CommandType";
-import {CommandObject, CommandUsage} from "../../../typings";
+import { CommandObject, CommandUsage } from "../../../typings";
 
 export default {
     description: "Specifies what commands can be ran inside of what channels",
@@ -31,7 +31,7 @@ export default {
     },
 
     callback: async (commandUsage: CommandUsage) => {
-        const {instance, guild} = commandUsage;
+        const { instance, guild } = commandUsage;
 
         if (!instance.isConnectedToMariaDB) {
             return {
@@ -58,7 +58,7 @@ export default {
             };
         }
 
-        const {channelCommands} = instance.commandHandler;
+        const { channelCommands } = instance.commandHandler;
 
         let availableChannels = [];
         // @ts-ignore
@@ -67,21 +67,23 @@ export default {
         ).includes(channel.id);
 
         if (canRun) {
-            availableChannels = await channelCommands.remove(
+            availableChannels = (await channelCommands.remove(
                 guild!.id,
                 commandName,
                 channel.id
-            ) as string [];
+            )) as string[];
         } else {
-            availableChannels = await channelCommands.add(
+            availableChannels = (await channelCommands.add(
                 guild!.id,
                 commandName,
                 channel.id
-            ) as string [];
+            )) as string[];
         }
 
         if (availableChannels.length) {
-            const channelNames = availableChannels.map((c: string) => `<#${c}> `);
+            const channelNames = availableChannels.map(
+                (c: string) => `<#${c}> `
+            );
             return {
                 content: `The command "${commandName}" can now only be ran inside of the following channels: ${channelNames}`,
                 ephemeral: true,

@@ -1,13 +1,13 @@
-import {Entity, PrimaryColumn} from "typeorm";
+import { Entity, PrimaryColumn } from "typeorm";
 
-@Entity({name: 'required_permissions'})
+@Entity({ name: "required_permissions" })
 export class RequiredPermissionsTypeorm {
     @PrimaryColumn()
-    guildId: string
+    guildId: string;
 
     @PrimaryColumn()
-    cmdId: string
+    cmdId: string;
 
     @PrimaryColumn()
-    permission: string
+    permission: string;
 }

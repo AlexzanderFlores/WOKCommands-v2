@@ -1,4 +1,12 @@
-import {Client, CommandInteraction, GuildMember, Message, TextChannel,} from "discord.js";
+import {
+    Client,
+    CommandInteraction,
+    Guild,
+    GuildMember,
+    Message,
+    TextChannel,
+    User,
+} from "discord.js";
 import path from "path";
 
 import getAllFiles from "../util/get-all-files";
@@ -9,11 +17,17 @@ import CustomCommands from "./CustomCommands";
 import DisabledCommands from "./DisabledCommands";
 import PrefixHandler from "./PrefixHandler";
 import CommandType from "../util/CommandType";
-import WOK, {ChannelCommandsTypeorm, CommandObject, CommandUsage, InternalCooldownConfig,} from "../../typings";
+import WOK, {
+    CommandObject,
+    CommandUsage,
+    InternalCooldownConfig,
+} from "../../typings";
 import DefaultCommands from "../util/DefaultCommands";
-import {getRepository} from "typeorm";
-import {ConfigTypeorm} from "../models/config-typeorm";
-import {ds} from "../WOK";
+import { ConfigTypeorm } from "../models/config-typeorm";
+import { ds } from "../WOK";
+import { CommandLogTypeorm } from "../models/command-log-typeorm";
+import { currentDateCZE } from "../util/base-utils";
+import ConfigType from "../util/ConfigType";
 
 class CommandHandler {
     // <commandName, instance of the Command class>
@@ -48,7 +62,7 @@ class CommandHandler {
 
         this.readFiles();
 
-        this.loadConfigs()
+        this.loadConfigs();
     }
 
     public get commands() {
@@ -80,14 +94,15 @@ class CommandHandler {
     }
 
     private async loadConfigs() {
+        console.log("load config");
         const configs = await ds.getRepository(ConfigTypeorm).find();
 
         if (!configs) {
-            return this._configs = []
+            return (this._configs = []);
         }
 
         for (const config of configs) {
-            this._configs.push(config.key)
+            this._configs.push(config.key);
         }
     }
 
@@ -95,19 +110,25 @@ class CommandHandler {
         const defaultCommands = getAllFiles(path.join(__dirname, "./commands"));
         const files = getAllFiles(this._commandsDir);
         const validations = [
-            ...this.getValidations(path.join(__dirname, "validations", "syntax")),
+            ...this.getValidations(
+                path.join(__dirname, "validations", "syntax")
+            ),
             ...this.getValidations(this._instance.validations?.syntax),
         ];
 
         for (let fileData of [...defaultCommands, ...files]) {
-            const {filePath} = fileData;
+            const { filePath } = fileData;
             const commandObject: CommandObject = fileData.fileContents;
 
             const split = filePath.split(/[\/\\]/);
             let commandName = split.pop()!;
             commandName = commandName.split(".")[0];
 
-            const command = new Command(this._instance, commandName, commandObject);
+            const command = new Command(
+                this._instance,
+                commandName,
+                commandObject
+            );
 
             const {
                 description,
@@ -131,12 +152,17 @@ class CommandHandler {
             if (
                 del ||
                 (defaultCommandValue &&
-                    this._instance.disabledDefaultCommands.includes(defaultCommandValue))
+                    this._instance.disabledDefaultCommands.includes(
+                        defaultCommandValue
+                    ))
             ) {
                 if (type === "SLASH" || type === "BOTH") {
                     if (testOnly) {
                         for (const guildId of this._instance.testServers) {
-                            this._slashCommands.delete(command.commandName, guildId);
+                            this._slashCommands.delete(
+                                command.commandName,
+                                guildId
+                            );
                         }
                     } else {
                         this._slashCommands.delete(command.commandName);
@@ -183,13 +209,68 @@ class CommandHandler {
         }
     }
 
+    // Todo: logování
+    public async logCommand(
+        command: Command,
+        interaction: CommandInteraction | Message,
+        cmdType: "slash" | "legacy"
+    ) {
+        const { excludeLog } = command.commandObject;
+        let guild: Guild;
+        let guildId: string;
+        let user: User;
+
+        if (interaction instanceof CommandInteraction) {
+            guild = interaction.guild!;
+            guildId = interaction.guildId!;
+            user = interaction.user;
+        } else {
+            guild = interaction.guild!;
+            guildId = interaction.guildId!;
+            user = interaction.member!.user;
+        }
+
+        // Todo: udělat i command na on/off logování určitých příkazů
+        // Disable log for this command
+        if (excludeLog) {
+            return;
+        }
+
+        await ds.getRepository(CommandLogTypeorm).save({
+            guildId: guildId!,
+            userId: user.id,
+            commandId: command.commandName,
+            triggeredAtCTS: currentDateCZE("datetime"),
+            triggeredAtUTS: currentDateCZE("unix_timestamp").toString(),
+            cmdType: cmdType,
+        });
+
+        const logChannelConfig = await ConfigTypeorm.findByKey(
+            ConfigType.LOG_TRIGGERED_CMD_CHANNEL_ID
+        );
+
+        if (!logChannelConfig!.value) {
+            return;
+        }
+
+        const logChannel = guild!.channels.cache.get(
+            logChannelConfig!.value!
+        ) as TextChannel;
+
+        logChannel.send({
+            content: `Command \`${command.commandName}\` was triggered by <@${
+                user.id
+            }> at <t:${currentDateCZE("unix_timestamp")}>.`,
+        });
+    }
+
     public async runCommand(
         command: Command,
         args: string[],
         message: Message | null,
         interaction: CommandInteraction | null
     ) {
-        const {callback, type, cooldowns} = command.commandObject;
+        const { callback, type, cooldowns } = command.commandObject;
 
         if (message && type === CommandType.SLASH) {
             return;
@@ -218,7 +299,13 @@ class CommandHandler {
         };
 
         for (const validation of this._validations) {
-            if (!(await validation(command, usage, this._prefixes.get(guild?.id)))) {
+            if (
+                !(await validation(
+                    command,
+                    usage,
+                    this._prefixes.get(guild?.id)
+                ))
+            ) {
                 return;
             }
         }
@@ -233,7 +320,8 @@ class CommandHandler {
                 errorMessage: cooldowns.errorMessage,
             };
 
-            const result = this._instance.cooldowns?.canRunAction(cooldownUsage);
+            const result =
+                this._instance.cooldowns?.canRunAction(cooldownUsage);
 
             if (typeof result === "string") {
                 return result;
@@ -246,7 +334,10 @@ class CommandHandler {
             };
 
             usage.updateCooldown = (expires: Date) => {
-                this._instance.cooldowns?.updateCooldown(cooldownUsage, expires);
+                this._instance.cooldowns?.updateCooldown(
+                    cooldownUsage,
+                    expires
+                );
             };
         }
 

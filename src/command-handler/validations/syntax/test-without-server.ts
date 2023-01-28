@@ -1,7 +1,7 @@
 import Command from "../../Command";
 
 export default (command: Command) => {
-    const {instance, commandName, commandObject} = command;
+    const { instance, commandName, commandObject } = command;
 
     if (commandObject.testOnly !== true || instance.testServers.length) {
         return;

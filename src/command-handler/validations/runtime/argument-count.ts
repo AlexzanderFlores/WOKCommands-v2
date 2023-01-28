@@ -1,5 +1,5 @@
 import Command from "../../Command";
-import {CommandUsage} from "../../../../typings";
+import { CommandUsage } from "../../../../typings";
 
 export default (command: Command, usage: CommandUsage, prefix: string) => {
     const {
@@ -9,7 +9,7 @@ export default (command: Command, usage: CommandUsage, prefix: string) => {
         expectedArgs = "",
     } = command.commandObject;
 
-    const {length} = usage.args!;
+    const { length } = usage.args!;
 
     if (length < minArgs || (length > maxArgs && maxArgs !== -1)) {
         const text = correctSyntax
@@ -17,7 +17,7 @@ export default (command: Command, usage: CommandUsage, prefix: string) => {
             .replace("{COMMAND}", command.commandName)
             .replace("{ARGS}", expectedArgs);
 
-        const {message, interaction} = usage;
+        const { message, interaction } = usage;
 
         if (message) message.reply(text);
         else if (interaction) interaction.reply(text);

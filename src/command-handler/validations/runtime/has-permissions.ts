@@ -1,15 +1,15 @@
-import {PermissionFlagsBits} from "discord.js";
+import { PermissionFlagsBits } from "discord.js";
 
 import Command from "../../Command";
-import {CommandUsage} from "../../../../typings";
-import {RequiredPermissionsTypeorm} from "../../../models/required-permissions-typeorm";
-import {ds} from "../../../WOK";
+import { CommandUsage } from "../../../../typings";
+import { RequiredPermissionsTypeorm } from "../../../models/required-permissions-typeorm";
+import { ds } from "../../../WOK";
 
 const keys = Object.keys(PermissionFlagsBits);
 
 export default async (command: Command, usage: CommandUsage) => {
-    const {permissions = []} = command.commandObject;
-    const {instance, guild, member, message, interaction} = usage;
+    const { permissions = [] } = command.commandObject;
+    const { instance, guild, member, message, interaction } = usage;
 
     if (!member || !instance.isConnectedToMariaDB) {
         return true;
@@ -19,13 +19,16 @@ export default async (command: Command, usage: CommandUsage) => {
 
     const document = await repo.findBy({
         guildId: guild!.id,
-        cmdId: command.commandName
-    })
-
+        cmdId: command.commandName,
+    });
 
     if (document.length > 0) {
         for (const permission of document) {
-            if (!permissions.includes(permission.permission as unknown as bigint)) {
+            if (
+                !permissions.includes(
+                    permission.permission as unknown as bigint
+                )
+            ) {
                 permissions.push(permission.permission as unknown as bigint);
             }
         }
@@ -39,6 +42,7 @@ export default async (command: Command, usage: CommandUsage) => {
             if (!member.permissions.has(permission)) {
                 const permissionName = keys.find(
                     // @ts-ignore
+                    // prettier-ignore
                     (key) => key === permission || PermissionFlagsBits[key] === permission
                 );
                 missingPermissions.push(permissionName);

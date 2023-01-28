@@ -1,8 +1,8 @@
 import CooldownTypes from "../util/CooldownTypes";
-import WOK, {CooldownConfig, InternalCooldownConfig} from "../../typings";
-import {CooldownTypeorm} from "../models/cooldown-typeorm";
-import {LessThan} from "typeorm";
-import {ds} from "../WOK";
+import WOK, { CooldownConfig, InternalCooldownConfig } from "../../typings";
+import { CooldownTypeorm } from "../models/cooldown-typeorm";
+import { LessThan } from "typeorm";
+import { ds } from "../WOK";
 
 const cooldownDurations = {
     s: 1,
@@ -19,7 +19,7 @@ class Cooldowns {
     private _dbRequired: number;
 
     constructor(instance: WOK, cooldownConfig: CooldownConfig) {
-        const {errorMessage, botOwnersBypass, dbRequired} = cooldownConfig;
+        const { errorMessage, botOwnersBypass, dbRequired } = cooldownConfig;
 
         this._instance = instance;
         this._errorMessage = errorMessage;
@@ -37,21 +37,21 @@ class Cooldowns {
         const repo = await ds.getRepository(CooldownTypeorm);
 
         await repo.delete({
-            expires: LessThan(new Date())
-        })
+            expires: LessThan(new Date()),
+        });
 
         const results = await repo.find();
 
         for (const result of results) {
-            const _id = `${result.guildId}-${result.cmdId}`
-            const expires = result.expires
+            const _id = `${result.guildId}-${result.cmdId}`;
+            const expires = result.expires;
 
             this._cooldowns.set(_id, expires);
         }
     }
 
     public getKeyFromCooldownUsage(cooldownUsage: InternalCooldownConfig) {
-        const {cooldownType, userId, actionId, guildId} = cooldownUsage;
+        const { cooldownType, userId, actionId, guildId } = cooldownUsage;
 
         return this.getKey(cooldownType, userId, actionId, guildId);
     }
@@ -67,8 +67,8 @@ class Cooldowns {
             const repo = await ds.getRepository(CooldownTypeorm);
             await repo.delete({
                 guildId: key.split("-")[0],
-                cmdId: key.split("-")[1]
-            })
+                cmdId: key.split("-")[1],
+            });
         }
     }
 
@@ -91,12 +91,15 @@ class Cooldowns {
             // const ds = this._instance.dataSource;
             const repo = await ds.getRepository(CooldownTypeorm);
 
-            await repo.update({
-                guildId: key.split("-")[0],
-                cmdId: key.split("-")[1]
-            }, {
-                expires: expires
-            })
+            await repo.update(
+                {
+                    guildId: key.split("-")[0],
+                    cmdId: key.split("-")[1],
+                },
+                {
+                    expires: expires,
+                }
+            );
         }
     }
 
@@ -140,7 +143,8 @@ class Cooldowns {
         guildId?: string
     ): string {
         const isPerUser = cooldownType === CooldownTypes.perUser;
-        const isPerUserPerGuild = cooldownType === CooldownTypes.perUserPerGuild;
+        const isPerUserPerGuild =
+            cooldownType === CooldownTypes.perUserPerGuild;
         const isPerGuild = cooldownType === CooldownTypes.perGuild;
         const isGlobal = cooldownType === CooldownTypes.global;
 
@@ -170,7 +174,9 @@ class Cooldowns {
     }
 
     public canBypass(userId: string) {
-        return this._botOwnersBypass && this._instance.botOwners.includes(userId);
+        return (
+            this._botOwnersBypass && this._instance.botOwners.includes(userId)
+        );
     }
 
     public async start(cooldownUsage: InternalCooldownConfig) {
@@ -193,16 +199,22 @@ class Cooldowns {
         const expires = new Date();
         expires.setSeconds(expires.getSeconds() + seconds);
 
-        if (this._instance.isConnectedToMariaDB && seconds >= this._dbRequired) {
+        if (
+            this._instance.isConnectedToMariaDB &&
+            seconds >= this._dbRequired
+        ) {
             // const ds = this._instance.dataSource;
             const repo = await ds.getRepository(CooldownTypeorm);
 
-            await repo.update({
-                guildId: key.split("-")[0],
-                cmdId: key.split("-")[1]
-            }, {
-                expires: expires
-            })
+            await repo.update(
+                {
+                    guildId: key.split("-")[0],
+                    cmdId: key.split("-")[1],
+                },
+                {
+                    expires: expires,
+                }
+            );
         }
 
         this._cooldowns.set(key, expires);

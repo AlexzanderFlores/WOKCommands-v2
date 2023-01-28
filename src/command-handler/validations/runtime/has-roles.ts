@@ -1,10 +1,10 @@
 import Command from "../../Command";
-import {ds} from "../../../WOK";
-import {RequiredRolesTypeorm} from "../../../models/required-roles-typeorm";
-import {CommandUsage} from "../../../../typings";
+import { ds } from "../../../WOK";
+import { RequiredRolesTypeorm } from "../../../models/required-roles-typeorm";
+import { CommandUsage } from "../../../../typings";
 
 export default async (command: Command, usage: CommandUsage) => {
-    const {instance, guild, member, message, interaction} = usage;
+    const { instance, guild, member, message, interaction } = usage;
 
     if (!member || !instance.isConnectedToMariaDB) {
         return true;
@@ -14,8 +14,8 @@ export default async (command: Command, usage: CommandUsage) => {
     const repo = await ds.getRepository(RequiredRolesTypeorm);
     const document = await repo.findBy({
         guildId: guild!.id,
-        cmdId: command.commandName
-    })
+        cmdId: command.commandName,
+    });
 
     if (document.length > 0) {
         let hasRole = false;
@@ -31,9 +31,9 @@ export default async (command: Command, usage: CommandUsage) => {
             return true;
         }
 
-        let rpl = 'You need one of these roles: ';
+        let rpl = "You need one of these roles: ";
         for (const role of document) {
-            rpl += `<@&${role.roleId}>`
+            rpl += `<@&${role.roleId}>`;
         }
 
         const reply = {

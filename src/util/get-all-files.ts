@@ -1,7 +1,7 @@
 import fs from "fs";
 import p from "path";
 
-import {FileData} from "../../typings";
+import { FileData } from "../../typings";
 
 const getAllFiles = (path: string, foldersOnly = false) => {
     const files = fs.readdirSync(path, {

@@ -1,7 +1,7 @@
-import {Entity, PrimaryColumn} from "typeorm";
-import {ds} from "../WOK";
+import { Entity, PrimaryColumn } from "typeorm";
+import { ds } from "../WOK";
 
-@Entity({name: 'disabled_command'})
+@Entity({ name: "disabled_command" })
 export class DisabledCommandsTypeorm {
     @PrimaryColumn()
     guildId: string;
@@ -9,8 +9,10 @@ export class DisabledCommandsTypeorm {
     cmdName: string;
 }
 
-export const findDisabledCommand = async (): Promise<DisabledCommandsTypeorm[]> => {
+export const findDisabledCommand = async (): Promise<
+    DisabledCommandsTypeorm[]
+> => {
     const repo = await ds.getRepository(DisabledCommandsTypeorm);
-    const result = await repo.find()
+    const result = await repo.find();
     return !result ? [] : result;
-}
+};

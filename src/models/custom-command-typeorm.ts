@@ -1,13 +1,13 @@
-import {Column, Entity, PrimaryColumn} from "typeorm";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
-@Entity({name: 'custom_command'})
+@Entity({ name: "custom_command" })
 export class CustomCommandTypeorm {
     @PrimaryColumn()
-    guildId: string
+    guildId: string;
 
     @Column()
-    cmdId: string
+    cmdId: string;
 
     @Column()
-    response: string
+    response: string;
 }

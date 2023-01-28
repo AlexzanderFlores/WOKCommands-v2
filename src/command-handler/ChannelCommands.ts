@@ -1,6 +1,6 @@
 import WOK from "../../typings";
-import {ChannelCommandsTypeorm} from "../models/channel-commands-typeorm";
-import {ds} from "../WOK";
+import { ChannelCommandsTypeorm } from "../models/channel-commands-typeorm";
+import { ds } from "../WOK";
 
 class ChannelCommands {
     // `${guildId}-${commandName}`: [channelIds]
@@ -23,25 +23,25 @@ class ChannelCommands {
 
         const _id = `${guildId}-${commandName}`;
 
-        const repo = await ds.getRepository(ChannelCommandsTypeorm)
+        const repo = await ds.getRepository(ChannelCommandsTypeorm);
 
         if (action == "remove") {
             await repo.delete({
                 guildId: guildId,
                 commandId: commandName,
-                channelId: channelId
-            })
+                channelId: channelId,
+            });
         } else {
             await repo.insert({
                 guildId: guildId,
                 commandId: commandName,
-                channelId: channelId
-            })
+                channelId: channelId,
+            });
         }
 
         let channels: Array<string> = [];
-        const result = await repo.find()
-        result.forEach(x => channels.push(x.channelId))
+        const result = await repo.find();
+        result.forEach((x) => channels.push(x.channelId));
 
         this._channelCommands.set(_id, channels);
         return channels;
@@ -60,17 +60,19 @@ class ChannelCommands {
             return [];
         }
 
-        const _id = `${guildId}-${commandName}`
+        const _id = `${guildId}-${commandName}`;
         let t = this._channelCommands.get(_id);
         let channels: Array<string> = !t ? [] : t;
 
         if (!channels) {
-            const result = await ds.getRepository(ChannelCommandsTypeorm).find()
-            result.forEach(x => channels.push(x.channelId))
+            const result = await ds
+                .getRepository(ChannelCommandsTypeorm)
+                .find();
+            result.forEach((x) => channels.push(x.channelId));
             if (result.length < 1) {
-                this._channelCommands.set(_id, [])
+                this._channelCommands.set(_id, []);
             } else {
-                this._channelCommands.set(_id, channels!)
+                this._channelCommands.set(_id, channels!);
             }
         }
 

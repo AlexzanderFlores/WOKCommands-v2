@@ -3,11 +3,11 @@ import {
     ApplicationCommandOptionType,
     ChannelType,
     CommandInteraction,
-    TextChannel
+    TextChannel,
 } from "discord.js";
 
 import CommandType from "../../util/CommandType";
-import {CommandObject, CommandUsage} from "../../../typings";
+import { CommandObject, CommandUsage } from "../../../typings";
 
 export default {
     description: "Send message to channel",
@@ -19,30 +19,28 @@ export default {
 
     options: [
         {
-            name: 'message',
-            description: 'Message content',
+            name: "message",
+            description: "Message content",
             type: ApplicationCommandOptionType.String,
             required: true,
             descriptionLocalizations: {
-                cs: 'Obsah zprávy'
-            }
+                cs: "Obsah zprávy",
+            },
         },
         {
-            name: 'channel',
-            description: 'Text channel',
+            name: "channel",
+            description: "Text channel",
             type: ApplicationCommandOptionType.Channel,
             required: false,
             descriptionLocalizations: {
-                cs: 'Textový kanál'
+                cs: "Textový kanál",
             },
-            channelTypes: [
-                ChannelType.GuildText
-            ]
+            channelTypes: [ChannelType.GuildText],
         },
     ],
 
     callback: (commandUsage: CommandUsage) => {
-        const {instance, guild, channel, text: prefix} = commandUsage;
+        const { instance, guild, channel, text: prefix } = commandUsage;
         const interaction: CommandInteraction = commandUsage.interaction!;
 
         let sendChannel: TextChannel | undefined = undefined;
@@ -51,11 +49,13 @@ export default {
         // @ts-ignore
         const intMessage = interaction.options.getString("message") as string;
 
-        sendChannel = intChannel ? intChannel as TextChannel : channel as TextChannel
+        sendChannel = intChannel
+            ? (intChannel as TextChannel)
+            : (channel as TextChannel);
 
         sendChannel.send({
             content: intMessage,
-        })
+        });
 
         return {
             content: `Zpráva byla úspěšně odeslána.`,

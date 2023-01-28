@@ -1,4 +1,8 @@
-import {ApplicationCommandOption, ApplicationCommandOptionType, Client,} from "discord.js";
+import {
+    ApplicationCommandOption,
+    ApplicationCommandOptionType,
+    Client,
+} from "discord.js";
 
 class SlashCommands {
     private _client: Client;
@@ -56,8 +60,10 @@ class SlashCommands {
 
         const existingCommand = commands.cache.find((cmd) => cmd.name === name);
         if (existingCommand) {
-            const {description: existingDescription, options: existingOptions} =
-                existingCommand;
+            const {
+                description: existingDescription,
+                options: existingOptions,
+            } = existingCommand;
 
             if (
                 description !== existingDescription ||
@@ -95,9 +101,9 @@ class SlashCommands {
     }
 
     createOptions({
-                      expectedArgs = "",
-                      minArgs = 0,
-                  }): ApplicationCommandOption[] {
+        expectedArgs = "",
+        minArgs = 0,
+    }): ApplicationCommandOption[] {
         const options: ApplicationCommandOption[] = [];
 
         // <num 1> <num 2>

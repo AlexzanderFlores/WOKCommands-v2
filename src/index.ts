@@ -8,4 +8,4 @@ module.exports = WOK;
 module.exports.CommandType = CommandType;
 module.exports.CooldownTypes = CooldownTypes;
 module.exports.DefaultCommands = DefaultCommands;
-module.exports.DbModels = DbModels
+module.exports.DbModels = DbModels;

@@ -1,10 +1,10 @@
-import {ApplicationCommandOptionType, PermissionFlagsBits} from "discord.js";
+import { ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
 
 import CommandType from "../../util/CommandType";
-import {CommandObject, CommandUsage} from "../../../typings";
+import { CommandObject, CommandUsage } from "../../../typings";
 import Command from "../Command";
-import {RequiredRolesTypeorm} from "../../models/required-roles-typeorm";
-import {ds} from "../../WOK";
+import { RequiredRolesTypeorm } from "../../models/required-roles-typeorm";
+import { ds } from "../../WOK";
 
 export default {
     description: "Sets what commands require what roles",
@@ -35,7 +35,7 @@ export default {
     },
 
     callback: async (commandUsage: CommandUsage) => {
-        const {instance, guild, args} = commandUsage;
+        const { instance, guild, args } = commandUsage;
 
         if (!instance.isConnectedToMariaDB) {
             return {
@@ -61,13 +61,13 @@ export default {
         if (!role) {
             const document = await repo.find();
 
-            let rolesOutput: string = '';
+            let rolesOutput: string = "";
             if (document && document.length > 0) {
                 for (const d of document) {
                     rolesOutput += `<@&${d.roleId}>`;
                 }
             } else {
-                rolesOutput = "None."
+                rolesOutput = "None.";
             }
 
             return {
@@ -79,18 +79,18 @@ export default {
             };
         }
 
-        const alreadyExistsRaw = await repo.createQueryBuilder('rrt')
-            .where('guildId = :guildId', {guildId: guild!.id})
-            .andWhere('cmdId = :cmdId', {cmdId: commandName})
-            .andWhere('roleId IN (:values)', {values: role})
+        const alreadyExistsRaw = await repo
+            .createQueryBuilder("rrt")
+            .where("guildId = :guildId", { guildId: guild!.id })
+            .andWhere("cmdId = :cmdId", { cmdId: commandName })
+            .andWhere("roleId IN (:values)", { values: role })
             .getRawOne();
 
         if (alreadyExistsRaw) {
-
             await repo.delete({
                 guildId: guild!.id,
                 cmdId: commandName,
-                roleId: alreadyExistsRaw.rrt_roleId
+                roleId: alreadyExistsRaw.rrt_roleId,
             });
 
             return {
@@ -105,8 +105,8 @@ export default {
         await repo.insert({
             guildId: guild!.id,
             cmdId: commandName,
-            roleId: role
-        })
+            roleId: role,
+        });
 
         return {
             content: `The command \`${commandName}\` now requires the role <@&${role}>`,

@@ -1,16 +1,16 @@
-import {Message} from "discord.js";
+import { Message } from "discord.js";
 
 import WOK from "../../../../../typings";
 
 export default async (message: Message, instance: WOK) => {
-    const {guild, content} = message;
+    const { guild, content } = message;
 
-    const {commandHandler} = instance;
+    const { commandHandler } = instance;
     if (!commandHandler) {
         return;
     }
 
-    const {prefixHandler, commands, customCommands} = commandHandler;
+    const { prefixHandler, commands, customCommands } = commandHandler;
 
     const prefix = prefixHandler.get(guild?.id);
     if (!content.startsWith(prefix)) {
@@ -26,11 +26,14 @@ export default async (message: Message, instance: WOK) => {
         return;
     }
 
-    const {reply, deferReply} = command.commandObject;
+    const { reply, deferReply } = command.commandObject;
 
     if (deferReply) {
         message.channel.sendTyping();
     }
+
+    // Todo: logování
+    await commandHandler.logCommand(command, message, "legacy");
 
     const response = await commandHandler.runCommand(
         command,

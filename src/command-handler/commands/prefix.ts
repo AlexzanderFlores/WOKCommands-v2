@@ -1,7 +1,7 @@
-import {PermissionFlagsBits} from "discord.js";
+import { PermissionFlagsBits } from "discord.js";
 
 import CommandType from "../../util/CommandType";
-import {CommandObject, CommandUsage} from "../../../typings";
+import { CommandObject, CommandUsage } from "../../../typings";
 
 export default {
     description: "Sets the prefix for this server",
@@ -16,7 +16,7 @@ export default {
     permissions: [PermissionFlagsBits.Administrator],
 
     callback: (commandUsage: CommandUsage) => {
-        const {instance, guild, text: prefix} = commandUsage;
+        const { instance, guild, text: prefix } = commandUsage;
 
         if (!instance.isConnectedToMariaDB) {
             return {

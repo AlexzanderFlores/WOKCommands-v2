@@ -1,5 +1,5 @@
 import WOK from "../../typings";
-import {findPrefixes, setPrefix} from "../models/guild-prefix-typeorm";
+import { findPrefixes, setPrefix } from "../models/guild-prefix-typeorm";
 
 class PrefixHandler {
     // <guildId: prefix>
@@ -19,7 +19,7 @@ class PrefixHandler {
         }
 
         // const results = await guildPrefixSchema.find({});
-        const results = await findPrefixes()
+        const results = await findPrefixes();
 
         for (const result of results) {
             this._prefixes.set(result.guildId, result.prefix);
@@ -45,7 +45,7 @@ class PrefixHandler {
 
         this._prefixes.set(guildId, prefix);
 
-        await setPrefix(guildId, prefix)
+        await setPrefix(guildId, prefix);
     }
 }
 

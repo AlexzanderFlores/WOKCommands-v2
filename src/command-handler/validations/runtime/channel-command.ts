@@ -1,9 +1,9 @@
 import Command from "../../Command";
-import {CommandUsage} from "../../../../typings";
+import { CommandUsage } from "../../../../typings";
 
 export default async (command: Command, usage: CommandUsage) => {
-    const {commandName, instance} = command;
-    const {guild, channel, message, interaction} = usage;
+    const { commandName, instance } = command;
+    const { guild, channel, message, interaction } = usage;
 
     if (!guild || !instance.isConnectedToMariaDB) {
         return true;

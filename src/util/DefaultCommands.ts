@@ -5,8 +5,10 @@ enum DefaultCommands {
     RequiredPermissions = "requiredpermissions",
     RequiredRoles = "requiredroles",
     ToggleCommand = "togglecommand",
-    Send = 'send',
-    Config = 'config'
+    Send = "send",
+    Config = "config",
+    SimulateEvent = "simulateevent",
+    InitDatabase = "init-database",
 }
 
 export default DefaultCommands;

@@ -1,8 +1,8 @@
-import {ApplicationCommandOptionType, PermissionFlagsBits} from "discord.js";
+import { ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
 
 import Command from "../Command";
 import CommandType from "../../util/CommandType";
-import {CommandUsage} from "../../../typings";
+import { CommandUsage } from "../../../typings";
 
 export default {
     description: "Toggles a command on or off for your guild",
@@ -27,7 +27,12 @@ export default {
     },
 
     callback: async (commandUsage: CommandUsage) => {
-        const {instance, guild, text: commandName, interaction} = commandUsage;
+        const {
+            instance,
+            guild,
+            text: commandName,
+            interaction,
+        } = commandUsage;
 
         if (!instance.isConnectedToMariaDB) {
             return {
@@ -37,7 +42,7 @@ export default {
             };
         }
 
-        const {disabledCommands} = instance.commandHandler;
+        const { disabledCommands } = instance.commandHandler;
 
         if (disabledCommands.isDisabled(guild!.id, commandName)) {
             await disabledCommands.enable(guild!.id, commandName);

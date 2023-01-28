@@ -1,6 +1,9 @@
 import WOK from "../../typings";
-import {DisabledCommandsTypeorm, findDisabledCommand} from "../models/disabled-commands-typeorm";
-import {ds} from "../WOK";
+import {
+    DisabledCommandsTypeorm,
+    findDisabledCommand,
+} from "../models/disabled-commands-typeorm";
+import { ds } from "../WOK";
 
 class DisabledCommands {
     // array of `${guildId}-${commandName}`
@@ -18,7 +21,7 @@ class DisabledCommands {
             return;
         }
 
-        const results = await findDisabledCommand()
+        const results = await findDisabledCommand();
 
         for (const result of results) {
             this._disabledCommands.push(`${result.guildId}-${result.cmdName}`);
@@ -40,10 +43,9 @@ class DisabledCommands {
         try {
             await repo.save({
                 guildId: guildId,
-                cmdName: commandName
-            })
-        } catch (ignored) {
-        }
+                cmdName: commandName,
+            });
+        } catch (ignored) {}
     }
 
     async enable(guildId: string, commandName: string) {
@@ -55,13 +57,15 @@ class DisabledCommands {
         }
 
         const _id = `${guildId}-${commandName}`;
-        this._disabledCommands = this._disabledCommands.filter((id) => id !== _id);
+        this._disabledCommands = this._disabledCommands.filter(
+            (id) => id !== _id
+        );
 
         const repo = await ds.getRepository(DisabledCommandsTypeorm);
         await repo.delete({
             guildId: guildId,
-            cmdName: commandName
-        })
+            cmdName: commandName,
+        });
     }
 
     isDisabled(guildId: string, commandName: string) {

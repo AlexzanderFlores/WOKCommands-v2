@@ -1,12 +1,12 @@
 import {
-  ApplicationCommandOptionType,
-  AutocompleteInteraction,
-  ChatInputCommandInteraction,
-  PermissionFlagsBits,
+    ApplicationCommandOptionType,
+    AutocompleteInteraction,
+    ChatInputCommandInteraction,
+    PermissionFlagsBits,
 } from "discord.js";
 
 import CommandType from "../../util/CommandType";
-import {CommandObject, CommandUsage} from "../../../typings";
+import { CommandObject, CommandUsage } from "../../../typings";
 import Command from "../Command";
 
 const noCommands = "No custom commands configured.";
@@ -78,8 +78,9 @@ export default {
     },
 
     callback: async (commandUsage: CommandUsage) => {
-        const {instance, guild} = commandUsage;
-        const interaction = commandUsage.interaction as ChatInputCommandInteraction;
+        const { instance, guild } = commandUsage;
+        const interaction =
+            commandUsage.interaction as ChatInputCommandInteraction;
 
         if (!instance.isConnectedToMariaDB) {
             return {
@@ -92,9 +93,15 @@ export default {
         const sub = interaction.options.getSubcommand();
 
         if (sub === "create") {
-            const commandName = interaction.options.getString("command") as string;
-            const description = interaction.options.getString("description") as string;
-            const response = interaction.options.getString("response") as string;
+            const commandName = interaction.options.getString(
+                "command"
+            ) as string;
+            const description = interaction.options.getString(
+                "description"
+            ) as string;
+            const response = interaction.options.getString(
+                "response"
+            ) as string;
 
             await instance.commandHandler.customCommands.create(
                 guild!.id,
@@ -108,7 +115,9 @@ export default {
                 ephemeral: true,
             };
         } else if (sub === "delete") {
-            const commandName = interaction.options.getString("command") as string;
+            const commandName = interaction.options.getString(
+                "command"
+            ) as string;
 
             if (commandName === noCommands) {
                 return {

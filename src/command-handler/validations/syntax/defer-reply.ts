@@ -1,8 +1,8 @@
 import Command from "../../Command";
 
 export default (command: Command) => {
-    const {commandObject, commandName} = command;
-    const {deferReply} = commandObject;
+    const { commandObject, commandName } = command;
+    const { deferReply } = commandObject;
 
     if (
         deferReply &&
