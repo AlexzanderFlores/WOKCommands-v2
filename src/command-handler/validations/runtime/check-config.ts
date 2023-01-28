@@ -35,7 +35,7 @@ export default async (command: Command, usage: CommandUsage) => {
         unsetConfigs.set(x.c_key, !x.c_description ? null : x.c_description)
     );
 
-    let text = `This command require these configs to be set:`;
+    let text = `This command require these configs to be set:\n`;
     unsetConfigs.forEach(
         (value, key) =>
             (text += `\`${key}\`:\n> ${!value ? "Nemá popisek" : value}\n`)
