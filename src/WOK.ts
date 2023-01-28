@@ -131,7 +131,10 @@ class WOKCommands {
             port: Number(process.env.MARIADB_PORT),
             username: process.env.MARIADB_USERNAME,
             password: process.env.MARIADB_PASSWORD,
-            database: process.env.MARIADB_DATABASE,
+            database:
+                process.env.LIVE == "true"
+                    ? process.env.MARIADB_DATABASE
+                    : process.env.MARIADB_DATABASE_TEST,
             synchronize: process.env.LIVE != "true", // true only in develop mode, turn off in production
             entities: indexModel,
         });
