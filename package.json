@@ -9,7 +9,7 @@
         "check": "prettier --check .",
         "format": "prettier --write ."
     },
-    "files": ["dist"],
+    "files": ["dist", "typings.d.ts"],
     "keywords": [],
     "author": "Alexzander Flores, WornOffKeys.com",
     "license": "ISC",
