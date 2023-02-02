@@ -249,6 +249,10 @@ class CommandHandler {
             ConfigType.LOG_TRIGGERED_CMD_CHANNEL_ID
         );
 
+        if (logChannelConfig) {
+            return;
+        }
+
         if (!logChannelConfig!.value) {
             return;
         }
