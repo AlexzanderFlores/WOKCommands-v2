@@ -11,7 +11,7 @@ exports.default = {
     description: "Sets what commands require what roles",
     type: CommandType_1.default.SLASH,
     guildOnly: true,
-    roles: [discord_js_1.PermissionFlagsBits.Administrator],
+    permissions: [discord_js_1.PermissionFlagsBits.Administrator],
     options: [
         {
             name: "command",

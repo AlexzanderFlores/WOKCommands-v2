@@ -169,6 +169,9 @@ class CommandHandler {
             cmdType: cmdType,
         });
         const logChannelConfig = await config_typeorm_1.ConfigTypeorm.findByKey(ConfigType_1.default.LOG_TRIGGERED_CMD_CHANNEL_ID);
+        if (logChannelConfig) {
+            return;
+        }
         if (!logChannelConfig.value) {
             return;
         }

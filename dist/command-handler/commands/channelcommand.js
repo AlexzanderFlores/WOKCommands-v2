@@ -9,6 +9,7 @@ exports.default = {
     description: "Specifies what commands can be ran inside of what channels",
     type: CommandType_1.default.SLASH,
     guildOnly: true,
+    permissions: [discord_js_1.PermissionFlagsBits.Administrator],
     options: [
         {
             name: "command",
