@@ -12,7 +12,7 @@ export default {
     type: CommandType.SLASH,
     guildOnly: true,
 
-    roles: [PermissionFlagsBits.Administrator],
+    permissions: [PermissionFlagsBits.Administrator],
 
     options: [
         {
