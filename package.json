@@ -1,6 +1,6 @@
 {
     "name": "wokcommands-dom53",
-    "version": "2.1.1",
+    "version": "2.2.0",
     "main": "./dist/index.js",
     "typings": "./typings.d.ts",
     "scripts": {
@@ -9,7 +9,11 @@
         "check": "prettier --check .",
         "format": "prettier --write ."
     },
-    "files": ["dist", "typings.d.ts", "src"],
+    "files": [
+        "dist",
+        "typings.d.ts",
+        "src"
+    ],
     "keywords": [],
     "author": "Alexzander Flores, WornOffKeys.com",
     "license": "ISC",
