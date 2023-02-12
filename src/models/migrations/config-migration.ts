@@ -1,4 +1,4 @@
-import { ds } from "../../WOK";
+import { ds } from "../../DCMD";
 import { ConfigTypeorm } from "../config-typeorm";
 import ConfigType from "../../util/ConfigType";
 

@@ -1,16 +1,16 @@
-import WOK from "../../typings";
+import DCMD from "../../typings";
 import {
     DisabledCommandsTypeorm,
     findDisabledCommand,
 } from "../models/disabled-commands-typeorm";
-import { ds } from "../WOK";
+import { ds } from "../DCMD";
 
 class DisabledCommands {
     // array of `${guildId}-${commandName}`
     private _disabledCommands: string[] = [];
-    private _instance: WOK;
+    private _instance: DCMD;
 
-    constructor(instance: WOK) {
+    constructor(instance: DCMD) {
         this._instance = instance;
 
         this.loadDisabledCommands();

@@ -12,14 +12,14 @@ var ConfigTypeorm_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConfigTypeorm = void 0;
 const typeorm_1 = require("typeorm");
-const WOK_1 = require("../WOK");
+const DCMD_1 = require("../DCMD");
 let ConfigTypeorm = ConfigTypeorm_1 = class ConfigTypeorm {
     key;
     value;
     description;
     isRequireForRun;
     static async findByKey(key) {
-        return await WOK_1.ds.getRepository(ConfigTypeorm_1).findOneBy({ key: key });
+        return await DCMD_1.ds.getRepository(ConfigTypeorm_1).findOneBy({ key: key });
     }
 };
 __decorate([

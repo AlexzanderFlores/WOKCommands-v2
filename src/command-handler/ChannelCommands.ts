@@ -1,13 +1,13 @@
-import WOK from "../../typings";
+import DCMD from "../../typings";
 import { ChannelCommandsTypeorm } from "../models/channel-commands-typeorm";
-import { ds } from "../WOK";
+import { ds } from "../DCMD";
 
 class ChannelCommands {
     // `${guildId}-${commandName}`: [channelIds]
     private _channelCommands: Map<string, string[]> = new Map();
-    private _instance: WOK;
+    private _instance: DCMD;
 
-    constructor(instance: WOK) {
+    constructor(instance: DCMD) {
         this._instance = instance;
     }
 

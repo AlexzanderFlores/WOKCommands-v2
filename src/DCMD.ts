@@ -2,7 +2,7 @@ import { Client } from "discord.js";
 
 import CommandHandler from "./command-handler/CommandHandler";
 import EventHandler from "./event-handler/EventHandler";
-import WOK, { Events, Options, Validations } from "../typings";
+import DCMD, { Events, Options, Validations } from "../typings";
 import Cooldowns from "./util/Cooldowns";
 import DefaultCommands from "./util/DefaultCommands";
 import FeaturesHandler from "./util/FeaturesHandler";
@@ -11,7 +11,7 @@ import indexModel from "./models/index-model";
 
 export let ds: DataSource;
 
-class WOKCommands {
+class DssbCmdler {
     private _client!: Client;
     private _testServers!: string[];
     private _botOwners!: string[];
@@ -62,7 +62,7 @@ class WOKCommands {
         this._validations = validations;
         // this._dataSource = dataSource!
 
-        this._cooldowns = new Cooldowns(this as unknown as WOK, {
+        this._cooldowns = new Cooldowns(this as unknown as DCMD, {
             errorMessage: "Please wait {TIME} before doing that again.",
             botOwnersBypass: false,
             dbRequired: 300, // 5 minutes
@@ -71,18 +71,18 @@ class WOKCommands {
 
         if (commandsDir) {
             this._commandHandler = new CommandHandler(
-                this as unknown as WOK,
+                this as unknown as DCMD,
                 commandsDir,
                 client
             );
         }
 
         if (featuresDir) {
-            new FeaturesHandler(this as unknown as WOK, featuresDir, client);
+            new FeaturesHandler(this as unknown as DCMD, featuresDir, client);
         }
 
         this._eventHandler = new EventHandler(
-            this as unknown as WOK,
+            this as unknown as DCMD,
             events as Events,
             client
         );
@@ -151,4 +151,4 @@ class WOKCommands {
     }
 }
 
-export default WOKCommands;
+export default DssbCmdler;

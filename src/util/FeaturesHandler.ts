@@ -1,14 +1,14 @@
 import { Client } from "discord.js";
-import WOK from "../../typings";
+import DCMD from "../../typings";
 import getAllFiles from "./get-all-files";
 
 class FeaturesHandler {
-    constructor(instance: WOK, featuresDir: string, client: Client) {
+    constructor(instance: DCMD, featuresDir: string, client: Client) {
         this.readFiles(instance, featuresDir, client);
     }
 
     private async readFiles(
-        instance: WOK,
+        instance: DCMD,
         featuresDir: string,
         client: Client
     ) {

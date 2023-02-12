@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const CommandType_1 = __importDefault(require("../../util/CommandType"));
 const required_roles_typeorm_1 = require("../../models/required-roles-typeorm");
-const WOK_1 = require("../../WOK");
+const DCMD_1 = require("../../DCMD");
 exports.default = {
     description: "Sets what commands require what roles",
     type: CommandType_1.default.SLASH,
@@ -47,7 +47,7 @@ exports.default = {
             };
         }
         // const _id = `${guild!.id}-${command.commandName}`;
-        const repo = await WOK_1.ds.getRepository(required_roles_typeorm_1.RequiredRolesTypeorm);
+        const repo = await DCMD_1.ds.getRepository(required_roles_typeorm_1.RequiredRolesTypeorm);
         if (!role) {
             const document = await repo.find();
             let rolesOutput = "";

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_typeorm_1 = require("../../../models/config-typeorm");
-const WOK_1 = require("../../../WOK");
+const DCMD_1 = require("../../../DCMD");
 exports.default = async (command, usage) => {
     const { configs } = command.commandObject;
     const { commandName, instance } = command;
@@ -9,7 +9,7 @@ exports.default = async (command, usage) => {
     if (!guild || !instance.isConnectedToMariaDB) {
         return true;
     }
-    const results = await WOK_1.ds
+    const results = await DCMD_1.ds
         .getRepository(config_typeorm_1.ConfigTypeorm)
         .createQueryBuilder("c")
         .where("value is null")

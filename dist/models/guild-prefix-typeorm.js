@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.findPrefixes = exports.setPrefix = exports.isPrefixExist = exports.GuildPrefixTypeorm = void 0;
 const typeorm_1 = require("typeorm");
-const WOK_1 = require("../WOK");
+const DCMD_1 = require("../DCMD");
 let GuildPrefixTypeorm = class GuildPrefixTypeorm {
     guildId;
     prefix;
@@ -37,8 +37,8 @@ const isPrefixExist = async (ds, guildId, prefix) => {
 };
 exports.isPrefixExist = isPrefixExist;
 const setPrefix = async (guildId, prefix) => {
-    const repo = await WOK_1.ds.getRepository(GuildPrefixTypeorm);
-    if (await (0, exports.isPrefixExist)(WOK_1.ds, guildId, prefix)) {
+    const repo = await DCMD_1.ds.getRepository(GuildPrefixTypeorm);
+    if (await (0, exports.isPrefixExist)(DCMD_1.ds, guildId, prefix)) {
         await repo.update({
             guildId: guildId,
         }, {
@@ -54,7 +54,7 @@ const setPrefix = async (guildId, prefix) => {
 };
 exports.setPrefix = setPrefix;
 const findPrefixes = async () => {
-    const repo = await WOK_1.ds.getRepository(GuildPrefixTypeorm);
+    const repo = await DCMD_1.ds.getRepository(GuildPrefixTypeorm);
     const result = await repo.find();
     return !result ? [] : result;
 };

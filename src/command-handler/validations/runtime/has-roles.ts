@@ -1,5 +1,5 @@
 import Command from "../../Command";
-import { ds } from "../../../WOK";
+import { ds } from "../../../DCMD";
 import { RequiredRolesTypeorm } from "../../../models/required-roles-typeorm";
 import { CommandUsage } from "../../../../typings";
 

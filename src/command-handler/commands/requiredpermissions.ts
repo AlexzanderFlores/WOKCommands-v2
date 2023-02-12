@@ -4,7 +4,7 @@ import CommandType from "../../util/CommandType";
 import { CommandObject, CommandUsage } from "../../../typings";
 import Command from "../Command";
 import { RequiredPermissionsTypeorm } from "../../models/required-permissions-typeorm";
-import { ds } from "../../WOK";
+import { ds } from "../../DCMD";
 
 const clearAllPermissions = "Clear All Permissions";
 

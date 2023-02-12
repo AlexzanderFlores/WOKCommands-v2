@@ -1,8 +1,8 @@
 import { AutocompleteInteraction } from "discord.js";
 
-import WOK from "../../../../../typings";
+import DCMD from "../../../../../typings";
 
-export default async (interaction: AutocompleteInteraction, instance: WOK) => {
+export default async (interaction: AutocompleteInteraction, instance: DCMD) => {
     const { commandHandler } = instance;
     if (!commandHandler) {
         return;

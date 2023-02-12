@@ -17,14 +17,14 @@ import CustomCommands from "./CustomCommands";
 import DisabledCommands from "./DisabledCommands";
 import PrefixHandler from "./PrefixHandler";
 import CommandType from "../util/CommandType";
-import WOK, {
+import DCMD, {
     CommandObject,
     CommandUsage,
     InternalCooldownConfig,
 } from "../../typings";
 import DefaultCommands from "../util/DefaultCommands";
 import { ConfigTypeorm } from "../models/config-typeorm";
-import { ds } from "../WOK";
+import { ds } from "../DCMD";
 import { CommandLogTypeorm } from "../models/command-log-typeorm";
 import { currentDateCZE } from "../util/base-utils";
 import ConfigType from "../util/ConfigType";
@@ -36,7 +36,7 @@ class CommandHandler {
     private _validations = this.getValidations(
         path.join(__dirname, "validations", "runtime")
     );
-    private _instance: WOK;
+    private _instance: DCMD;
     private _client: Client;
     private _commandsDir: string;
     private _slashCommands: SlashCommands;
@@ -45,7 +45,7 @@ class CommandHandler {
     private _disabledCommands: DisabledCommands;
     private _prefixes: PrefixHandler;
 
-    constructor(instance: WOK, commandsDir: string, client: Client) {
+    constructor(instance: DCMD, commandsDir: string, client: Client) {
         this._instance = instance;
         this._commandsDir = commandsDir;
         this._slashCommands = new SlashCommands(client);

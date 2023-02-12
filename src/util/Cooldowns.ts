@@ -1,8 +1,8 @@
 import CooldownTypes from "../util/CooldownTypes";
-import WOK, { CooldownConfig, InternalCooldownConfig } from "../../typings";
+import DCMD, { CooldownConfig, InternalCooldownConfig } from "../../typings";
 import { CooldownTypeorm } from "../models/cooldown-typeorm";
 import { LessThan } from "typeorm";
-import { ds } from "../WOK";
+import { ds } from "../DCMD";
 
 const cooldownDurations = {
     s: 1,
@@ -13,12 +13,12 @@ const cooldownDurations = {
 
 class Cooldowns {
     private _cooldowns: Map<string, Date> = new Map();
-    private _instance: WOK;
+    private _instance: DCMD;
     private _errorMessage: string;
     private _botOwnersBypass: boolean;
     private _dbRequired: number;
 
-    constructor(instance: WOK, cooldownConfig: CooldownConfig) {
+    constructor(instance: DCMD, cooldownConfig: CooldownConfig) {
         const { errorMessage, botOwnersBypass, dbRequired } = cooldownConfig;
 
         this._instance = instance;

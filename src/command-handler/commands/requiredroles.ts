@@ -4,7 +4,7 @@ import CommandType from "../../util/CommandType";
 import { CommandObject, CommandUsage } from "../../../typings";
 import Command from "../Command";
 import { RequiredRolesTypeorm } from "../../models/required-roles-typeorm";
-import { ds } from "../../WOK";
+import { ds } from "../../DCMD";
 
 export default {
     description: "Sets what commands require what roles",

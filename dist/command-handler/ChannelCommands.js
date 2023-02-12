@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const channel_commands_typeorm_1 = require("../models/channel-commands-typeorm");
-const WOK_1 = require("../WOK");
+const DCMD_1 = require("../DCMD");
 class ChannelCommands {
     // `${guildId}-${commandName}`: [channelIds]
     _channelCommands = new Map();
@@ -14,7 +14,7 @@ class ChannelCommands {
             return;
         }
         const _id = `${guildId}-${commandName}`;
-        const repo = await WOK_1.ds.getRepository(channel_commands_typeorm_1.ChannelCommandsTypeorm);
+        const repo = await DCMD_1.ds.getRepository(channel_commands_typeorm_1.ChannelCommandsTypeorm);
         if (action == "remove") {
             await repo.delete({
                 guildId: guildId,
@@ -49,7 +49,7 @@ class ChannelCommands {
         let t = this._channelCommands.get(_id);
         let channels = !t ? [] : t;
         if (!channels) {
-            const result = await WOK_1.ds
+            const result = await DCMD_1.ds
                 .getRepository(channel_commands_typeorm_1.ChannelCommandsTypeorm)
                 .find();
             result.forEach((x) => channels.push(x.channelId));

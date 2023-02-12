@@ -1,6 +1,6 @@
 {
-    "name": "wokcommands-dom53",
-    "version": "2.2.0",
+    "name": "dssb-cmdler",
+    "version": "1.0.0",
     "main": "./dist/index.js",
     "typings": "./typings.d.ts",
     "scripts": {

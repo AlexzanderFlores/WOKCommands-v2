@@ -25,7 +25,7 @@ import { CooldownTypeorm } from "./src/models/cooldown-typeorm";
 import { ConfigTypeorm } from "./src/models/config-typeorm";
 import { IDbUser } from "./src/models/interfaces/IDbUser";
 
-export default class WOK {
+export default class DCMD {
     constructor(options: Options);
 
     private _client!: Client;
@@ -96,7 +96,7 @@ export interface Validations {
 }
 
 export class Cooldowns {
-    constructor(instance: WOK, cooldownConfig: CooldownConfig) {}
+    constructor(instance: DCMD, cooldownConfig: CooldownConfig) {}
 }
 
 export interface CooldownUsage {
@@ -116,7 +116,7 @@ export interface InternalCooldownConfig {
 
 export interface CommandUsage {
     client: Client;
-    instance: WOK;
+    instance: DCMD;
     message?: Message | null;
     interaction?: CommandInteraction | null;
     args: string[];
@@ -160,12 +160,12 @@ export type FileData = {
 
 export class Command {
     constructor(
-        instance: WOK,
+        instance: DCMD,
         commandName: string,
         commandObject: CommandObject
     );
 
-    public get instance(): WOK;
+    public get instance(): DCMD;
 
     public get commandName(): string;
 

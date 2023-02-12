@@ -3,7 +3,7 @@ import { PermissionFlagsBits } from "discord.js";
 import Command from "../../Command";
 import { CommandUsage } from "../../../../typings";
 import { RequiredPermissionsTypeorm } from "../../../models/required-permissions-typeorm";
-import { ds } from "../../../WOK";
+import { ds } from "../../../DCMD";
 
 const keys = Object.keys(PermissionFlagsBits);
 

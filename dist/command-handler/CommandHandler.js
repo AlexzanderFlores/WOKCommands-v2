@@ -15,7 +15,7 @@ const PrefixHandler_1 = __importDefault(require("./PrefixHandler"));
 const CommandType_1 = __importDefault(require("../util/CommandType"));
 const DefaultCommands_1 = __importDefault(require("../util/DefaultCommands"));
 const config_typeorm_1 = require("../models/config-typeorm");
-const WOK_1 = require("../WOK");
+const DCMD_1 = require("../DCMD");
 const command_log_typeorm_1 = require("../models/command-log-typeorm");
 const base_utils_1 = require("../util/base-utils");
 const ConfigType_1 = __importDefault(require("../util/ConfigType"));
@@ -71,7 +71,7 @@ class CommandHandler {
     }
     async loadConfigs() {
         console.log("load config");
-        const configs = await WOK_1.ds.getRepository(config_typeorm_1.ConfigTypeorm).find();
+        const configs = await DCMD_1.ds.getRepository(config_typeorm_1.ConfigTypeorm).find();
         if (!configs) {
             return (this._configs = []);
         }
@@ -160,7 +160,7 @@ class CommandHandler {
         if (excludeLog) {
             return;
         }
-        await WOK_1.ds.getRepository(command_log_typeorm_1.CommandLogTypeorm).save({
+        await DCMD_1.ds.getRepository(command_log_typeorm_1.CommandLogTypeorm).save({
             guildId: guildId,
             userId: user.id,
             commandId: command.commandName,

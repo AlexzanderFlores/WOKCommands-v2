@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const custom_command_typeorm_1 = require("../models/custom-command-typeorm");
-const WOK_1 = require("../WOK");
+const DCMD_1 = require("../DCMD");
 class CustomCommands {
     // guildId-commandName: response
     _customCommands = new Map();
@@ -16,7 +16,7 @@ class CustomCommands {
         if (!this._instance.isConnectedToMariaDB) {
             return;
         }
-        const results = await WOK_1.ds.getRepository(custom_command_typeorm_1.CustomCommandTypeorm).find();
+        const results = await DCMD_1.ds.getRepository(custom_command_typeorm_1.CustomCommandTypeorm).find();
         for (const result of results) {
             const { guildId, cmdId, response } = result;
             this._customCommands.set(`${guildId}-${cmdId}`, response);
@@ -37,7 +37,7 @@ class CustomCommands {
             return;
         }
         const _id = `${guildId}-${commandName}`;
-        const repo = await WOK_1.ds.getRepository(custom_command_typeorm_1.CustomCommandTypeorm);
+        const repo = await DCMD_1.ds.getRepository(custom_command_typeorm_1.CustomCommandTypeorm);
         this._customCommands.set(_id, response);
         this._commandHandler.slashCommands.create(commandName, description, [], guildId);
         await repo.insert({
@@ -51,7 +51,7 @@ class CustomCommands {
             return;
         }
         const _id = `${guildId}-${commandName}`;
-        const repo = await WOK_1.ds.getRepository(custom_command_typeorm_1.CustomCommandTypeorm);
+        const repo = await DCMD_1.ds.getRepository(custom_command_typeorm_1.CustomCommandTypeorm);
         this._customCommands.delete(_id);
         this._commandHandler.slashCommands.delete(commandName, guildId);
         await repo.delete({

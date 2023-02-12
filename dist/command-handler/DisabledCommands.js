@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const disabled_commands_typeorm_1 = require("../models/disabled-commands-typeorm");
-const WOK_1 = require("../WOK");
+const DCMD_1 = require("../DCMD");
 class DisabledCommands {
     // array of `${guildId}-${commandName}`
     _disabledCommands = [];
@@ -26,7 +26,7 @@ class DisabledCommands {
         }
         const _id = `${guildId}-${commandName}`;
         this._disabledCommands.push(_id);
-        const repo = await WOK_1.ds.getRepository(disabled_commands_typeorm_1.DisabledCommandsTypeorm);
+        const repo = await DCMD_1.ds.getRepository(disabled_commands_typeorm_1.DisabledCommandsTypeorm);
         try {
             await repo.save({
                 guildId: guildId,
@@ -42,7 +42,7 @@ class DisabledCommands {
         }
         const _id = `${guildId}-${commandName}`;
         this._disabledCommands = this._disabledCommands.filter((id) => id !== _id);
-        const repo = await WOK_1.ds.getRepository(disabled_commands_typeorm_1.DisabledCommandsTypeorm);
+        const repo = await DCMD_1.ds.getRepository(disabled_commands_typeorm_1.DisabledCommandsTypeorm);
         await repo.delete({
             guildId: guildId,
             cmdName: commandName,

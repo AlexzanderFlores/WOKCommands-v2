@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const CommandType_1 = __importDefault(require("../../util/CommandType"));
 const required_permissions_typeorm_1 = require("../../models/required-permissions-typeorm");
-const WOK_1 = require("../../WOK");
+const DCMD_1 = require("../../DCMD");
 const clearAllPermissions = "Clear All Permissions";
 exports.default = {
     description: "Sets what commands require what permissions",
@@ -54,7 +54,7 @@ exports.default = {
             };
         }
         // const _id = `${guild!.id}-${command.commandName}`;
-        const repo = await WOK_1.ds.getRepository(required_permissions_typeorm_1.RequiredPermissionsTypeorm);
+        const repo = await DCMD_1.ds.getRepository(required_permissions_typeorm_1.RequiredPermissionsTypeorm);
         if (!permission) {
             const document = await repo.find();
             let permissions = "";

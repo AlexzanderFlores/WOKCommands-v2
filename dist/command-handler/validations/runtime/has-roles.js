@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const WOK_1 = require("../../../WOK");
+const DCMD_1 = require("../../../DCMD");
 const required_roles_typeorm_1 = require("../../../models/required-roles-typeorm");
 exports.default = async (command, usage) => {
     const { instance, guild, member, message, interaction } = usage;
@@ -8,7 +8,7 @@ exports.default = async (command, usage) => {
         return true;
     }
     const _id = `${guild.id}-${command.commandName}`;
-    const repo = await WOK_1.ds.getRepository(required_roles_typeorm_1.RequiredRolesTypeorm);
+    const repo = await DCMD_1.ds.getRepository(required_roles_typeorm_1.RequiredRolesTypeorm);
     const document = await repo.findBy({
         guildId: guild.id,
         cmdId: command.commandName,

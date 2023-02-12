@@ -1,5 +1,5 @@
 import { Entity, PrimaryColumn } from "typeorm";
-import { ds } from "../WOK";
+import { ds } from "../DCMD";
 
 @Entity({ name: "disabled_command" })
 export class DisabledCommandsTypeorm {

@@ -3,7 +3,7 @@ import { ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
 import Command from "../Command";
 import CommandType from "../../util/CommandType";
 import { CommandObject, CommandUsage } from "../../../typings";
-import { ds } from "../../WOK";
+import { ds } from "../../DCMD";
 import { ConfigTypeorm } from "../../models/config-typeorm";
 
 export default {

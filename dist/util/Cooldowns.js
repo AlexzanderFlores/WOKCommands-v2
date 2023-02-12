@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const CooldownTypes_1 = __importDefault(require("../util/CooldownTypes"));
 const cooldown_typeorm_1 = require("../models/cooldown-typeorm");
 const typeorm_1 = require("typeorm");
-const WOK_1 = require("../WOK");
+const DCMD_1 = require("../DCMD");
 const cooldownDurations = {
     s: 1,
     m: 60,
@@ -31,7 +31,7 @@ class Cooldowns {
         if (!this._instance.isConnectedToMariaDB) {
             return;
         }
-        const repo = await WOK_1.ds.getRepository(cooldown_typeorm_1.CooldownTypeorm);
+        const repo = await DCMD_1.ds.getRepository(cooldown_typeorm_1.CooldownTypeorm);
         await repo.delete({
             expires: (0, typeorm_1.LessThan)(new Date()),
         });
@@ -52,7 +52,7 @@ class Cooldowns {
         if (this._instance.isConnectedToMariaDB) {
             // await cooldownSchema.deleteOne({ _id: key });
             // const ds = this._instance.dataSource;
-            const repo = await WOK_1.ds.getRepository(cooldown_typeorm_1.CooldownTypeorm);
+            const repo = await DCMD_1.ds.getRepository(cooldown_typeorm_1.CooldownTypeorm);
             await repo.delete({
                 guildId: key.split("-")[0],
                 cmdId: key.split("-")[1],
@@ -69,7 +69,7 @@ class Cooldowns {
         const secondsDiff = (expires.getTime() - now.getTime()) / 1000;
         if (secondsDiff > this._dbRequired) {
             // const ds = this._instance.dataSource;
-            const repo = await WOK_1.ds.getRepository(cooldown_typeorm_1.CooldownTypeorm);
+            const repo = await DCMD_1.ds.getRepository(cooldown_typeorm_1.CooldownTypeorm);
             await repo.update({
                 guildId: key.split("-")[0],
                 cmdId: key.split("-")[1],
@@ -133,7 +133,7 @@ class Cooldowns {
         if (this._instance.isConnectedToMariaDB &&
             seconds >= this._dbRequired) {
             // const ds = this._instance.dataSource;
-            const repo = await WOK_1.ds.getRepository(cooldown_typeorm_1.CooldownTypeorm);
+            const repo = await DCMD_1.ds.getRepository(cooldown_typeorm_1.CooldownTypeorm);
             await repo.update({
                 guildId: key.split("-")[0],
                 cmdId: key.split("-")[1],

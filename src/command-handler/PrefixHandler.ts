@@ -1,13 +1,13 @@
-import WOK from "../../typings";
+import DCMD from "../../typings";
 import { findPrefixes, setPrefix } from "../models/guild-prefix-typeorm";
 
 class PrefixHandler {
     // <guildId: prefix>
     private _prefixes = new Map();
     private _defaultPrefix = "!";
-    private _instance: WOK;
+    private _instance: DCMD;
 
-    constructor(instance: WOK) {
+    constructor(instance: DCMD) {
         this._instance = instance;
 
         this.loadPrefixes();

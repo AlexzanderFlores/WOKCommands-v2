@@ -1,5 +1,5 @@
 import { Column, DataSource, Entity, PrimaryColumn } from "typeorm";
-import { ds } from "../WOK";
+import { ds } from "../DCMD";
 
 @Entity({ name: "guild_prefix" })
 export class GuildPrefixTypeorm {

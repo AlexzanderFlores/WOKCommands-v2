@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.findDisabledCommand = exports.DisabledCommandsTypeorm = void 0;
 const typeorm_1 = require("typeorm");
-const WOK_1 = require("../WOK");
+const DCMD_1 = require("../DCMD");
 let DisabledCommandsTypeorm = class DisabledCommandsTypeorm {
     guildId;
     cmdName;
@@ -29,7 +29,7 @@ DisabledCommandsTypeorm = __decorate([
 ], DisabledCommandsTypeorm);
 exports.DisabledCommandsTypeorm = DisabledCommandsTypeorm;
 const findDisabledCommand = async () => {
-    const repo = await WOK_1.ds.getRepository(DisabledCommandsTypeorm);
+    const repo = await DCMD_1.ds.getRepository(DisabledCommandsTypeorm);
     const result = await repo.find();
     return !result ? [] : result;
 };

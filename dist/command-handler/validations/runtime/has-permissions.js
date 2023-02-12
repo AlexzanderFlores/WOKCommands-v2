@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const required_permissions_typeorm_1 = require("../../../models/required-permissions-typeorm");
-const WOK_1 = require("../../../WOK");
+const DCMD_1 = require("../../../DCMD");
 const keys = Object.keys(discord_js_1.PermissionFlagsBits);
 exports.default = async (command, usage) => {
     const { permissions = [] } = command.commandObject;
@@ -10,7 +10,7 @@ exports.default = async (command, usage) => {
     if (!member || !instance.isConnectedToMariaDB) {
         return true;
     }
-    const repo = await WOK_1.ds.getRepository(required_permissions_typeorm_1.RequiredPermissionsTypeorm);
+    const repo = await DCMD_1.ds.getRepository(required_permissions_typeorm_1.RequiredPermissionsTypeorm);
     const document = await repo.findBy({
         guildId: guild.id,
         cmdId: command.commandName,

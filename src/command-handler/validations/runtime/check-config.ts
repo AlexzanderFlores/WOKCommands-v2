@@ -1,7 +1,7 @@
 import Command from "../../Command";
 import { ConfigTypeorm } from "../../../models/config-typeorm";
 import { CommandUsage } from "../../../../typings";
-import { ds } from "../../../WOK";
+import { ds } from "../../../DCMD";
 
 export default async (command: Command, usage: CommandUsage) => {
     const { configs } = command.commandObject;

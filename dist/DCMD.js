@@ -10,7 +10,7 @@ const Cooldowns_1 = __importDefault(require("./util/Cooldowns"));
 const FeaturesHandler_1 = __importDefault(require("./util/FeaturesHandler"));
 const typeorm_1 = require("typeorm");
 const index_model_1 = __importDefault(require("./models/index-model"));
-class WOKCommands {
+class DssbCmdler {
     _client;
     _testServers;
     _botOwners;
@@ -106,4 +106,4 @@ class WOKCommands {
         this._isConnectedToMariaDB = true;
     }
 }
-exports.default = WOKCommands;
+exports.default = DssbCmdler;

@@ -1,4 +1,4 @@
-import WOK from "./WOK";
+import WOK from "./DCMD";
 import CommandType from "./util/CommandType";
 import CooldownTypes from "./util/CooldownTypes";
 import DefaultCommands from "./util/DefaultCommands";

@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const CommandType_1 = __importDefault(require("../../util/CommandType"));
-const WOK_1 = require("../../WOK");
+const DCMD_1 = require("../../DCMD");
 const config_typeorm_1 = require("../../models/config-typeorm");
 exports.default = {
     description: "Toggles a command on or off for your guild",
@@ -44,7 +44,7 @@ exports.default = {
         }
         const key = interaction.options.getString("command");
         const value = interaction.options.getString("command");
-        await WOK_1.ds.getRepository(config_typeorm_1.ConfigTypeorm).save({
+        await DCMD_1.ds.getRepository(config_typeorm_1.ConfigTypeorm).save({
             key,
             value,
         });
