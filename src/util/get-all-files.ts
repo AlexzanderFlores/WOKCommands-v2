@@ -23,6 +23,7 @@ const getAllFiles = (path: string, foldersOnly = false) => {
       }
       continue;
     }
+    if (!file.name.endsWith('.js') && !file.name.endsWith('.ts')) continue
 
     const fileContents = require(filePath);
     filesFound.push({
