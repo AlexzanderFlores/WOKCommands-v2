@@ -1,46 +1,46 @@
-import { CommandInteraction, Message } from "discord.js";
+import { CommandInteraction, Message } from 'discord.js'
 
-import customCommandSchema from "../models/custom-command-schema";
-import CommandHandler from "./CommandHandler";
-import WOK from "../../typings";
+import customCommandSchema from '../models/custom-command-schema'
+import CommandHandler from './CommandHandler'
+import WOK from '../../typings'
 
 class CustomCommands {
   // guildId-commandName: response
-  private _customCommands = new Map();
-  private _commandHandler: CommandHandler;
-  private _instance: WOK;
+  private _customCommands = new Map()
+  private _commandHandler: CommandHandler
+  private _instance: WOK
 
   constructor(instance: WOK, commandHandler: CommandHandler) {
-    this._instance = instance;
-    this._commandHandler = commandHandler;
+    this._instance = instance
+    this._commandHandler = commandHandler
 
-    this.loadCommands();
+    this.loadCommands()
   }
 
   async loadCommands() {
     if (!this._instance.isConnectedToDB) {
-      return;
+      return
     }
 
-    const results = await customCommandSchema.find({});
+    const results = await customCommandSchema.find({})
 
     for (const result of results) {
-      const { _id, response } = result;
-      this._customCommands.set(_id, response);
+      const { _id, response } = result
+      this._customCommands.set(_id, response)
     }
   }
 
   getCommands(guildId: string) {
-    const commands = [];
+    const commands = []
 
     for (const [key] of this._customCommands) {
-      const [id, commandName] = key.split("-");
+      const [id, commandName] = key.split('-')
       if (id === guildId) {
-        commands.push(commandName);
+        commands.push(commandName)
       }
     }
 
-    return commands;
+    return commands
   }
 
   async create(
@@ -50,19 +50,19 @@ class CustomCommands {
     response: string
   ) {
     if (!this._instance.isConnectedToDB) {
-      return;
+      return
     }
 
-    const _id = `${guildId}-${commandName}`;
+    const _id = `${guildId}-${commandName}`
 
-    this._customCommands.set(_id, response);
+    this._customCommands.set(_id, response)
 
     this._commandHandler.slashCommands.create(
       commandName,
       description,
       [],
       guildId
-    );
+    )
 
     await customCommandSchema.findOneAndUpdate(
       {
@@ -75,21 +75,21 @@ class CustomCommands {
       {
         upsert: true,
       }
-    );
+    )
   }
 
   async delete(guildId: string, commandName: string) {
     if (!this._instance.isConnectedToDB) {
-      return;
+      return
     }
 
-    const _id = `${guildId}-${commandName}`;
+    const _id = `${guildId}-${commandName}`
 
-    this._customCommands.delete(_id);
+    this._customCommands.delete(_id)
 
-    this._commandHandler.slashCommands.delete(commandName, guildId);
+    this._commandHandler.slashCommands.delete(commandName, guildId)
 
-    await customCommandSchema.deleteOne({ _id });
+    await customCommandSchema.deleteOne({ _id })
   }
 
   async run(
@@ -98,23 +98,26 @@ class CustomCommands {
     interaction: CommandInteraction | null
   ) {
     if (!message && !interaction) {
-      return;
+      return
     }
 
-    const guild = message ? message.guild : interaction!.guild;
+    const guild = message ? message.guild : interaction!.guild
     if (!guild) {
-      return;
+      return
     }
 
-    const _id = `${guild.id}-${commandName}`;
-    const response = this._customCommands.get(_id);
+    const _id = `${guild.id}-${commandName}`
+    const response = this._customCommands.get(_id)
     if (!response) {
-      return;
+      return
     }
 
-    if (message) message.channel.send(response).catch(() => {});
-    else if (interaction) interaction.reply(response).catch(() => {});
+    if (message) {
+      message.channel.send(response).catch(() => {})
+    } else if (interaction) {
+      interaction.reply(response).catch(() => {})
+    }
   }
 }
 
-export default CustomCommands;
+export default CustomCommands
