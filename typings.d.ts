@@ -6,6 +6,7 @@ import {
   GuildMember,
   TextChannel,
   User,
+  Message,
 } from 'discord.js'
 
 import CommandType from './src/util/CommandType'
