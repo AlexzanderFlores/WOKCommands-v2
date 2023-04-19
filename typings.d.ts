@@ -67,7 +67,7 @@ export interface Validations {
 }
 
 export class Cooldowns {
-  constructor(instance: WOK, oldownConfig: CooldownConfig) {}
+  constructor(instance: WOK, cooldownConfig: CooldownConfig) {}
 }
 
 export interface CooldownUsage {
