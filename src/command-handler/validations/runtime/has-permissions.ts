@@ -10,17 +10,19 @@ export default async (command: Command, usage: CommandUsage) => {
   const { permissions = [] } = command.commandObject;
   const { instance, guild, member, message, interaction } = usage;
 
-  if (!member || !instance.isConnectedToDB) {
+  if (!member) {
     return true;
   }
 
-  const document = await requiredPermissions.findById(
-    `${guild!.id}-${command.commandName}`
-  );
-  if (document) {
-    for (const permission of document.permissions) {
-      if (!permissions.includes(permission)) {
-        permissions.push(permission);
+  if (instance.isConnectedToDB) {
+    const document = await requiredPermissions.findById(
+      `${guild!.id}-${command.commandName}`
+    );
+    if (document) {
+      for (const permission of document.permissions) {
+        if (!permissions.includes(permission)) {
+          permissions.push(permission);
+        }
       }
     }
   }
