@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, CommandInteraction } from "discord.js";
+import { ApplicationCommandOptionType, CommandInteraction, PermissionFlagsBits } from "discord.js";
 
 import Command from "../Command";
 import CommandType from "../../util/CommandType";
@@ -9,6 +9,7 @@ export default {
 
   type: CommandType.SLASH,
   guildOnly: true,
+  permissions: [PermissionFlagsBits.Administrator],
 
   options: [
     {
