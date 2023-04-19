@@ -5,7 +5,7 @@
   "typings": "./typings.d.ts",
   "scripts": {
     "tsc": "tsc -w --outDir dist --rootDir src --skipLibCheck",
-    "npmp": "tsc -w --outDir dist --rootDir src --skipLibCheck && npm publish"
+    "npmp": "tsc --outDir dist --rootDir src --skipLibCheck && npm publish"
   },
   "keywords": [],
   "author": "Alexzander Flores, WornOffKeys.com",
