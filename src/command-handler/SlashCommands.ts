@@ -31,6 +31,7 @@ class SlashCommands {
     options: ApplicationCommandOption[],
     existingOptions: any[]
   ) {
+    if (options.length < existingOptions.length) return true;
     for (let a = 0; a < options.length; ++a) {
       const option = options[a];
       const existing = existingOptions[a];
