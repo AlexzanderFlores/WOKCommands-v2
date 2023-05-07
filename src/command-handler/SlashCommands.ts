@@ -62,6 +62,8 @@ class SlashCommands {
         })
         continue;
     }
+                                                            
+    return different;
   }
 
   async create(
