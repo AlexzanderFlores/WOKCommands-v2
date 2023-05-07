@@ -27,41 +27,41 @@ class SlashCommands {
     return commands;
   }
 
- areOptionsDifferent(options, existingOptions) {
-      if (options.length !== existingOptions.length) return true;
-      let different = false;
-      for (let a = 0; a < existingOptions.length; ++a) {
-          const option = options[a];
-          const existing = existingOptions[a];
-          Object.entries(existing).forEach(([key, value]) => {
-              const existingElement = existing[key] ? existing[key] : false;
-              const optionElement = option[key] ? option[key] : false;
+  areOptionsDifferent(
+    options: ApplicationCommandOption[], 
+    existingOptions: any
+  ) {
+    if (options.length !== existingOptions.length) return true;
+    let different = false;
+    for (let a = 0; a < existingOptions.length; ++a) {
+        const option: any = options[a];
+        const existing = existingOptions[a];
+        Object.entries(existing).forEach(([key, value]) => {
+            const existingElement = existing[key] ? existing[key] : false;
+            const optionElement = option[key] ? option[key] : false;
 
-              if (
-                  key == "options" &&
-                  existingElement !== false &&
-                  optionElement !== false
-              ) {
-                  for (let i = 0; i < existing.options.length; ++i) {
-                      const existingOption = existing.options[i];
-                      const addOption = option.options[i];
-                      if (
-                          JSON.stringify(existingOption) === JSON.stringify(addOption)
-                      ) {
-                          different = true;
-                      }
-                  }
-              } else if (
-                  String(existingElement) !== String(optionElement)
-              ) {
-                  console.log("have");
-                  different = true;
-              }
-          })
-          continue;
-      }
-      if (different == true) return true;
-      return false;
+            if (
+                key == "options" &&
+                existingElement !== false &&
+                optionElement !== false
+            ) {
+                for (let i = 0; i < existing.options.length; ++i) {
+                    const existingOption = existing.options[i];
+                    const addOption = option.options[i];
+                    if (
+                        JSON.stringify(existingOption) === JSON.stringify(addOption)
+                    ) {
+                        different = true;
+                    }
+                }
+            } else if (
+                String(existingElement) !== String(optionElement)
+            ) {
+                different = true;
+            }
+        })
+        continue;
+    }
   }
 
   async create(
