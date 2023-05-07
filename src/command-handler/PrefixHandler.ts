@@ -4,12 +4,10 @@ import WOK from "../../typings";
 class PrefixHandler {
   // <guildId: prefix>
   private _prefixes = new Map();
-  private _defaultPrefix = "!";
   private _instance: WOK;
 
   constructor(instance: WOK) {
     this._instance = instance;
-
     this.loadPrefixes();
   }
 
@@ -26,7 +24,7 @@ class PrefixHandler {
   }
 
   public get defaultPrefix() {
-    return this._defaultPrefix;
+    return this._instance.defaultPrefix;
   }
 
   public get(guildId?: string) {
