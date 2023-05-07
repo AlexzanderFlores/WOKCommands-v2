@@ -66,7 +66,6 @@ class SlashCommands {
 
       if (
         description !== existingDescription ||
-        options.length !== existingOptions.length ||
         this.areOptionsDifferent(options, existingOptions)
       ) {
         console.log(`Updating the command "${name}"`);
