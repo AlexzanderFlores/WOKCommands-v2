@@ -18,6 +18,7 @@ class WOKCommands {
   private _commandHandler: CommandHandler | undefined
   private _eventHandler!: EventHandler
   private _isConnectedToDB = false
+  private _defaultPrefix = "!"
 
   constructor(options: Options) {
     this.init(options)
@@ -35,6 +36,7 @@ class WOKCommands {
       disabledDefaultCommands = [],
       events = {},
       validations = {},
+      defaultPrefix
     } = options
 
     if (!client) {
@@ -66,6 +68,10 @@ class WOKCommands {
       dbRequired: 300, // 5 minutes
       ...cooldownConfig,
     })
+
+    if (defaultPrefix) {
+      this._defaultPrefix = defaultPrefix
+    }
 
     if (commandsDir) {
       this._commandHandler = new CommandHandler(
@@ -120,6 +126,10 @@ class WOKCommands {
 
   public get isConnectedToDB(): boolean {
     return this._isConnectedToDB
+  }
+
+  public  get defaultPrefix(): string {
+    return this.defaultPrefix
   }
 
   private async connectToMongo(mongoUri: string) {
