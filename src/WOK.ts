@@ -18,7 +18,7 @@ class WOKCommands {
   private _commandHandler: CommandHandler | undefined
   private _eventHandler!: EventHandler
   private _isConnectedToDB = false
-  private _defaultPrefix = "!"
+  private _defaultPrefix = '!'
 
   constructor(options: Options) {
     this.init(options)
@@ -36,7 +36,7 @@ class WOKCommands {
       disabledDefaultCommands = [],
       events = {},
       validations = {},
-      defaultPrefix
+      defaultPrefix,
     } = options
 
     if (!client) {
@@ -128,8 +128,8 @@ class WOKCommands {
     return this._isConnectedToDB
   }
 
-  public  get defaultPrefix(): string {
-    return this.defaultPrefix
+  public get defaultPrefix(): string {
+    return this._defaultPrefix
   }
 
   private async connectToMongo(mongoUri: string) {
