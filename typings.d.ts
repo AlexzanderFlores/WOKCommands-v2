@@ -24,6 +24,7 @@ export default class WOK {
   private _commandHandler: CommandHandler | undefined
   private _eventHandler!: EventHandler
   private _isConnectedToDB = false
+  private _defaultPrefix = "!"
 
   constructor(options: Options)
 
@@ -36,6 +37,7 @@ export default class WOK {
   public get commandHandler(): CommandHandler
   public get eventHandler(): EventHandler
   public get isConnectedToDB(): boolean
+  public get defaultPrefix(): string
 }
 
 export interface Options {
@@ -49,6 +51,7 @@ export interface Options {
   disabledDefaultCommands?: DefaultCommands[]
   events?: Events
   validations?: Validations
+  defaultPrefix?: string
 }
 
 export interface CooldownConfig {
