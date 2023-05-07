@@ -1,12 +1,12 @@
 import {
   ApplicationCommandOption,
   Client,
-  CommandInteraction,
   Guild,
   GuildMember,
   TextChannel,
   User,
   Message,
+  ChatInputCommandInteraction,
 } from 'discord.js'
 
 import CommandType from './src/util/CommandType'
@@ -24,7 +24,7 @@ export default class WOK {
   private _commandHandler: CommandHandler | undefined
   private _eventHandler!: EventHandler
   private _isConnectedToDB = false
-  private _defaultPrefix = "!"
+  private _defaultPrefix = '!'
 
   constructor(options: Options)
 
@@ -93,7 +93,7 @@ export interface CommandUsage {
   client: Client
   instance: WOK
   message?: Message | null
-  interaction?: CommandInteraction | null
+  interaction?: ChatInputCommandInteraction | null
   args: string[]
   text: string
   guild?: Guild | null
