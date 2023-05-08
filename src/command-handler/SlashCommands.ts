@@ -48,11 +48,17 @@ class SlashCommands {
                 for (let i = 0; i < existing.options.length; ++i) {
                     const existingOption = existing.options[i];
                     const addOption = option.options[i];
-                    if (
-                        JSON.stringify(existingOption) === JSON.stringify(addOption)
-                    ) {
+
+                    Object.entries(existingOption).forEach(([optionKey, optionValue]) => {
+                      const existingAddOption = existingOption[optionKey] ? existingOption[optionKey] : false;
+                      const optionAddOption = addOption[optionKey] ? addOption[optionKey] : false;
+
+                      if (
+                        String(existingAddOption) !== String(optionAddOption)
+                      ) {
                         different = true;
-                    }
+                      }
+                    });
                 }
             } else if (
                 String(existingElement) !== String(optionElement)

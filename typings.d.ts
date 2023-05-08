@@ -105,7 +105,7 @@ export interface CommandUsage {
 }
 
 export interface CommandObject {
-  callback: (commandUsage: CommandUsage) => unknown
+  callback: (commandUsage: CommandUsage) => { content?: string, ephemeral?: boolean } | undefined
   type: CommandType
   init?: function
   description?: string
