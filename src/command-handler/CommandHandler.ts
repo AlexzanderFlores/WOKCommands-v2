@@ -82,6 +82,56 @@ class CommandHandler {
   private async readFiles() {
     const defaultCommands = getAllFiles(path.join(__dirname, './commands'))
     const files = getAllFiles(this._commandsDir)
+
+    const client = this._client
+
+    const existingCommands = client.application?.commands;
+    // @ts-ignore
+    await existingCommands?.fetch()
+
+    const existingCommandsLength = (await existingCommands?.fetch())?.size
+
+    if (
+      existingCommands &&
+      existingCommandsLength &&
+      files.length < existingCommandsLength
+    ) {
+      let a = 0
+      let i = 0
+      function findEscape() {
+        if (!existingCommandsLength) return false;
+        if (a < existingCommandsLength) {
+          const slashCommands = new SlashCommands(client)
+          const existingCommand = existingCommands?.cache.at(a)
+          const command = files.at(i)
+          if (!command) {
+            console.log(`Deleting "${existingCommand?.name}" command.`)
+            slashCommands.delete(existingCommand?.name!)
+            i = 0;
+            a++;
+            findEscape()
+            return
+          }
+          const { filePath: commandPath } = command
+          const split = commandPath.split(/[\/\\]/)
+          let commandName = split.pop()!
+          commandName = commandName.split(".")[0]
+
+          if (
+            existingCommand?.name !== commandName
+          ) {
+            i++
+            findEscape();
+          } else {
+            a++;
+            i = 0;
+            findEscape();
+          }
+        }
+      }
+      findEscape()
+    }
+
     const validations = [
       ...this.getValidations(path.join(__dirname, 'validations', 'syntax')),
       ...this.getValidations(this._instance.validations?.syntax),
