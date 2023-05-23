@@ -23,9 +23,9 @@ export default async (interaction: AutocompleteInteraction, instance: WOK) => {
   const choices = await autocomplete(command, focusedOption.name, interaction);
 
   const filtered = choices
-    .filter((c: AutocompleteChoice) => {
-      const choice = c.name || c as string
-      return choice.toLowerCase().startsWith(focusedOption.value.toLowerCase())
+    .filter((choice: AutocompleteChoice) => {
+      const choiceName = choice.name || choice as string
+      return choiceName.toLowerCase().startsWith(focusedOption.value.toLowerCase())
     })
     .slice(0, 25);
 
