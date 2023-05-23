@@ -1,6 +1,6 @@
 import { AutocompleteInteraction } from "discord.js";
 
-import WOK from "../../../../../typings";
+import WOK, { AutocompleteChoice } from "../../../../../typings";
 
 export default async (interaction: AutocompleteInteraction, instance: WOK) => {
   const { commandHandler } = instance;
@@ -23,15 +23,16 @@ export default async (interaction: AutocompleteInteraction, instance: WOK) => {
   const choices = await autocomplete(command, focusedOption.name, interaction);
 
   const filtered = choices
-    .filter((choice: string) =>
-      choice.toLowerCase().startsWith(focusedOption.value.toLowerCase())
-    )
+    .filter((c: AutocompleteChoice) => {
+      const choice = c.name || c as string
+      return choice.toLowerCase().startsWith(focusedOption.value.toLowerCase())
+    })
     .slice(0, 25);
 
   await interaction.respond(
-    filtered.map((choice: string) => ({
-      name: choice,
-      value: choice,
+    filtered.map((choice: AutocompleteChoice) => ({
+      name: choice.name || choice,
+      value: choice.value || choice,
     }))
   );
 };
