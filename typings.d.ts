@@ -131,6 +131,11 @@ export type FileData = {
   fileContents: any
 }
 
+export type AutocompleteChoice = {
+  name?: string,
+  value?: string,
+}
+
 export class Command {
   constructor(instance: WOK, commandName: string, commandObject: CommandObject)
 
