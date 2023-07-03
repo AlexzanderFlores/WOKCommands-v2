@@ -52,6 +52,7 @@ export interface Options {
   events?: Events
   validations?: Validations
   defaultPrefix?: string
+  autoDeleteCommand?: boolean
 }
 
 export interface CooldownConfig {

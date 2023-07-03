@@ -36,8 +36,9 @@ class CommandHandler {
   private _customCommands: CustomCommands
   private _disabledCommands: DisabledCommands
   private _prefixes: PrefixHandler
+  private _autoDeleteCommand: boolean
 
-  constructor(instance: WOK, commandsDir: string, client: Client) {
+  constructor(instance: WOK, commandsDir: string, client: Client, autoDeleteCommand: boolean) {
     this._instance = instance
     this._commandsDir = commandsDir
     this._slashCommands = new SlashCommands(client)
@@ -46,13 +47,14 @@ class CommandHandler {
     this._customCommands = new CustomCommands(instance, this)
     this._disabledCommands = new DisabledCommands(instance)
     this._prefixes = new PrefixHandler(instance)
+    this._autoDeleteCommand = autoDeleteCommand
 
     this._validations = [
       ...this._validations,
       ...this.getValidations(instance.validations?.runtime),
     ]
 
-    this.readFiles()
+    this.readFiles(this._autoDeleteCommand)
   }
 
   public get commands() {
@@ -79,7 +81,7 @@ class CommandHandler {
     return this._prefixes
   }
 
-  private async readFiles() {
+  private async readFiles(autoDelete: boolean) {
     const defaultCommands = getAllFiles(path.join(__dirname, './commands'))
     const files = getAllFiles(this._commandsDir)
 
@@ -105,8 +107,10 @@ class CommandHandler {
           const existingCommand = existingCommands?.cache.at(a)
           const command = files.at(i)
           if (!command) {
-            console.log(`Deleting "${existingCommand?.name}" command.`)
-            slashCommands.delete(existingCommand?.name!)
+            if (autoDelete === true) {
+              console.log(`Deleting "${existingCommand?.name}" command.`)
+              slashCommands.delete(existingCommand?.name!)
+            }
             i = 0;
             a++;
             findEscape()
