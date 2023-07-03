@@ -25,6 +25,7 @@ export default class WOK {
   private _eventHandler!: EventHandler
   private _isConnectedToDB = false
   private _defaultPrefix = '!'
+  private _autoDeleteCommand = false
 
   constructor(options: Options)
 
@@ -38,6 +39,7 @@ export default class WOK {
   public get eventHandler(): EventHandler
   public get isConnectedToDB(): boolean
   public get defaultPrefix(): string
+  public get autoDeleteCommand(): boolean
 }
 
 export interface Options {

@@ -139,6 +139,10 @@ class WOKCommands {
     return this._defaultPrefix
   }
 
+  public get autoDeleteCommand(): boolean {
+    return this._autoDeleteCommand
+  }
+
   private async connectToMongo(mongoUri: string) {
     await mongoose.connect(mongoUri, {
       keepAlive: true,
