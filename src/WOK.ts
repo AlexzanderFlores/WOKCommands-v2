@@ -19,6 +19,7 @@ class WOKCommands {
   private _eventHandler!: EventHandler
   private _isConnectedToDB = false
   private _defaultPrefix = '!'
+  private _autoDeleteCommand = false
 
   constructor(options: Options) {
     this.init(options)
@@ -37,6 +38,7 @@ class WOKCommands {
       events = {},
       validations = {},
       defaultPrefix,
+      autoDeleteCommand
     } = options
 
     if (!client) {
@@ -73,11 +75,16 @@ class WOKCommands {
       this._defaultPrefix = defaultPrefix
     }
 
+    if (autoDeleteCommand) {
+      this._autoDeleteCommand = autoDeleteCommand
+    }
+
     if (commandsDir) {
       this._commandHandler = new CommandHandler(
         this as unknown as WOK,
         commandsDir,
-        client
+        client,
+        this._autoDeleteCommand
       )
     }
 
@@ -130,6 +137,10 @@ class WOKCommands {
 
   public get defaultPrefix(): string {
     return this._defaultPrefix
+  }
+
+  public get autoDeleteCommand(): boolean {
+    return this._autoDeleteCommand
   }
 
   private async connectToMongo(mongoUri: string) {

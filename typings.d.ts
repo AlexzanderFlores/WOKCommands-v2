@@ -25,6 +25,7 @@ export default class WOK {
   private _eventHandler!: EventHandler
   private _isConnectedToDB = false
   private _defaultPrefix = '!'
+  private _autoDeleteCommand = false
 
   constructor(options: Options)
 
@@ -38,6 +39,7 @@ export default class WOK {
   public get eventHandler(): EventHandler
   public get isConnectedToDB(): boolean
   public get defaultPrefix(): string
+  public get autoDeleteCommand(): boolean
 }
 
 export interface Options {
@@ -52,6 +54,7 @@ export interface Options {
   events?: Events
   validations?: Validations
   defaultPrefix?: string
+  autoDeleteCommand?: boolean
 }
 
 export interface CooldownConfig {
@@ -105,7 +108,7 @@ export interface CommandUsage {
 }
 
 export interface CommandObject {
-  callback: (commandUsage: CommandUsage) => unknown
+  callback: (commandUsage: CommandUsage) => { content?: string, ephemeral?: boolean } | undefined
   type: CommandType
   init?: function
   description?: string
