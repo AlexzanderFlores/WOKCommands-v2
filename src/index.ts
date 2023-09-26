@@ -5,3 +5,4 @@ import DefaultCommands from './util/DefaultCommands';
 
 export default WOK;
 export { CommandType, CooldownTypes, DefaultCommands };
+export * from './types';
