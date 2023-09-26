@@ -1,6 +1,7 @@
-import cooldownSchema from "../models/cooldown-schema";
-import CooldownTypes from "../util/CooldownTypes";
-import WOK, { CooldownConfig, InternalCooldownConfig } from "../../typings";
+import cooldownSchema from '../models/cooldown-schema';
+import CooldownTypes from '../util/CooldownTypes';
+import { CooldownConfig, InternalCooldownConfig } from '../types';
+import WOK from '../WOK';
 
 const cooldownDurations = {
   s: 1,
@@ -93,11 +94,11 @@ class Cooldowns {
   }
 
   public verifyCooldown(duration: number | string) {
-    if (typeof duration === "number") {
+    if (typeof duration === 'number') {
       return duration;
     }
 
-    const split = duration.split(" ");
+    const split = duration.split(' ');
 
     if (split.length !== 2) {
       throw new Error(
@@ -158,7 +159,7 @@ class Cooldowns {
       return actionId;
     }
 
-    return "ERROR";
+    return 'ERROR';
   }
 
   public canBypass(userId: string) {
@@ -170,7 +171,7 @@ class Cooldowns {
       cooldownType,
       userId,
       actionId,
-      guildId = "",
+      guildId = '',
       duration,
     } = cooldownUsage;
 
@@ -208,7 +209,7 @@ class Cooldowns {
       cooldownType,
       userId,
       actionId,
-      guildId = "",
+      guildId = '',
       errorMessage = this._errorMessage,
     } = cooldownUsage;
 
@@ -235,13 +236,13 @@ class Cooldowns {
     const m = Math.floor((secondsDiff % 3600) / 60);
     const s = Math.floor(secondsDiff % 60);
 
-    let time = "";
+    let time = '';
     if (d > 0) time += `${d}d `;
     if (h > 0) time += `${h}h `;
     if (m > 0) time += `${m}m `;
     time += `${s}s`;
 
-    return errorMessage.replace("{TIME}", time);
+    return errorMessage.replace('{TIME}', time);
   }
 }
 

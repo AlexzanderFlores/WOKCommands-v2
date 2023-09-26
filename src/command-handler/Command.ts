@@ -1,4 +1,5 @@
-import WOK, { CommandObject } from "../../typings";
+import { CommandObject } from '../types';
+import WOK from '../WOK';
 
 class Command {
   private _instance: WOK;

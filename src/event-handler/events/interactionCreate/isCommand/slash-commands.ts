@@ -1,8 +1,11 @@
-import { CommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction } from 'discord.js';
 
-import WOK from "../../../../../typings";
+import WOK from '../../../../WOK';
 
-export default async (interaction: CommandInteraction, instance: WOK) => {
+export default async (
+  interaction: ChatInputCommandInteraction,
+  instance: WOK
+) => {
   const { commandHandler } = instance;
   if (!commandHandler) {
     return;
@@ -24,7 +27,7 @@ export default async (interaction: CommandInteraction, instance: WOK) => {
 
   if (deferReply) {
     await interaction.deferReply({
-      ephemeral: deferReply === "ephemeral",
+      ephemeral: deferReply === 'ephemeral',
     });
   }
 

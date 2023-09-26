@@ -2,7 +2,7 @@ import { PermissionFlagsBits, ApplicationCommandOptionType } from "discord.js";
 
 import requiredroles from "../../models/required-roles-schema";
 import CommandType from "../../util/CommandType";
-import { CommandObject, CommandUsage } from "../../../typings";
+import { CommandObject, CommandUsage } from "../../types";
 import Command from "../Command";
 
 export default {
@@ -30,7 +30,7 @@ export default {
 	],
 
 	autocomplete: (command: Command) => {
-		return [...command.instance.commandHandler.commands.keys()];
+		return [...command.instance.commandHandler?.commands.keys() ?? []];
 	},
 
 	callback: async (commandUsage: CommandUsage) => {
@@ -45,7 +45,7 @@ export default {
 
 		const [commandName, role] = args;
 
-		const command = instance.commandHandler.commands.get(commandName);
+		const command = instance.commandHandler?.commands.get(commandName);
 		if (!command) {
 			return {
 				content: `The command "${commandName}" does not exist.`,

@@ -2,7 +2,7 @@ import { ApplicationCommandOptionType, ChannelType, CommandInteraction, Permissi
 
 import Command from "../Command";
 import CommandType from "../../util/CommandType";
-import { CommandObject, CommandUsage } from "../../../typings";
+import { CommandObject, CommandUsage } from "../../types";
 
 export default {
 	description: "Specifies what commands can be ran inside of what channels",
@@ -29,7 +29,7 @@ export default {
 	],
 
 	autocomplete: (command: Command) => {
-		return [...command.instance.commandHandler.commands.keys()];
+		return [...command.instance.commandHandler?.commands.keys() ?? []];
 	},
 
 	callback: async (commandUsage: CommandUsage) => {
@@ -49,7 +49,7 @@ export default {
 		// @ts-ignore
 		const channel = interaction.options.getChannel("channel");
 
-		const command = instance.commandHandler.commands.get(commandName.toLowerCase());
+		const command = instance.commandHandler?.commands.get(commandName.toLowerCase());
 		if (!command) {
 			return {
 				content: `The command "${commandName}" does not exist.`,
@@ -57,10 +57,10 @@ export default {
 			};
 		}
 
-		const { channelCommands } = instance.commandHandler;
+		const { channelCommands } = instance.commandHandler!;
 
 		let availableChannels = [];
-		const canRun = (await channelCommands.getAvailableChannels(guild!.id, commandName)).includes(channel.id);
+		const canRun = (await channelCommands.getAvailableChannels(guild!.id, commandName))?.includes(channel.id);
 
 		if (canRun) {
 			availableChannels = await channelCommands.remove(guild!.id, commandName, channel.id);

@@ -3,54 +3,54 @@ import {
   AutocompleteInteraction,
   ChatInputCommandInteraction,
   PermissionFlagsBits,
-} from "discord.js";
+} from 'discord.js';
 
-import CommandType from "../../util/CommandType";
-import { CommandObject, CommandUsage } from "../../../typings";
-import Command from "../Command";
+import CommandType from '../../util/CommandType';
+import { CommandObject, CommandUsage } from '../../types';
+import Command from '../Command';
 
-const noCommands = "No custom commands configured.";
+const noCommands = 'No custom commands configured.';
 
 export default {
-  description: "Creates a custom command",
+  description: 'Creates a custom command',
   type: CommandType.SLASH,
   guildOnly: true,
   permissions: [PermissionFlagsBits.Administrator],
 
   options: [
     {
-      name: "create",
-      description: "Creates a custom command",
+      name: 'create',
+      description: 'Creates a custom command',
       type: ApplicationCommandOptionType.Subcommand,
       options: [
         {
-          name: "command",
-          description: "The name of the command",
+          name: 'command',
+          description: 'The name of the command',
           type: ApplicationCommandOptionType.String,
           required: true,
         },
         {
-          name: "description",
-          description: "The description of the command",
+          name: 'description',
+          description: 'The description of the command',
           type: ApplicationCommandOptionType.String,
           required: true,
         },
         {
-          name: "response",
-          description: "The response of the command",
+          name: 'response',
+          description: 'The response of the command',
           type: ApplicationCommandOptionType.String,
           required: true,
         },
       ],
     },
     {
-      name: "delete",
-      description: "Deletes a custom command",
+      name: 'delete',
+      description: 'Deletes a custom command',
       type: ApplicationCommandOptionType.Subcommand,
       options: [
         {
-          name: "command",
-          description: "The name of the command",
+          name: 'command',
+          description: 'The name of the command',
           type: ApplicationCommandOptionType.String,
           required: true,
           autocomplete: true,
@@ -65,9 +65,9 @@ export default {
     interaction: AutocompleteInteraction
   ) => {
     const results = [
-      ...command.instance.commandHandler.customCommands.getCommands(
-        interaction.guild?.id
-      ),
+      ...(command.instance.commandHandler?.customCommands.getCommands(
+        interaction.guild?.id ?? ''
+      ) ?? []),
     ];
 
     if (results.length === 0) {
@@ -84,19 +84,19 @@ export default {
     if (!instance.isConnectedToDB) {
       return {
         content:
-          "This bot is not connected to a database which is required for this command. Please contact the bot owner.",
+          'This bot is not connected to a database which is required for this command. Please contact the bot owner.',
         ephemeral: true,
       };
     }
 
     const sub = interaction.options.getSubcommand();
 
-    if (sub === "create") {
-      const commandName = interaction.options.getString("command");
-      const description = interaction.options.getString("description");
-      const response = interaction.options.getString("response");
+    if (sub === 'create') {
+      const commandName = interaction.options.getString('command', true);
+      const description = interaction.options.getString('description', true);
+      const response = interaction.options.getString('response', true);
 
-      await instance.commandHandler.customCommands.create(
+      await instance.commandHandler?.customCommands.create(
         guild!.id,
         commandName,
         description,
@@ -107,17 +107,17 @@ export default {
         content: `Custom command "${commandName}" has been created!`,
         ephemeral: true,
       };
-    } else if (sub === "delete") {
-      const commandName = interaction.options.getString("command");
+    } else if (sub === 'delete') {
+      const commandName = interaction.options.getString('command', true);
 
       if (commandName === noCommands) {
         return {
-          content: "There are no custom commands to delete.",
+          content: 'There are no custom commands to delete.',
           ephemeral: true,
         };
       }
 
-      await instance.commandHandler.customCommands.delete(
+      await instance.commandHandler?.customCommands.delete(
         guild!.id,
         commandName
       );

@@ -1,5 +1,5 @@
-import WOK from "../../typings";
-import channelCommands from "../models/channel-commands-schema";
+import WOK from '../WOK';
+import channelCommands from '../models/channel-commands-schema';
 
 class ChannelCommands {
   // `${guildId}-${commandName}`: [channelIds]
@@ -11,7 +11,7 @@ class ChannelCommands {
   }
 
   async action(
-    action: "add" | "remove",
+    action: 'add' | 'remove',
     guildId: string,
     commandName: string,
     channelId: string
@@ -28,7 +28,7 @@ class ChannelCommands {
       },
       {
         _id,
-        [action === "add" ? "$addToSet" : "$pull"]: {
+        [action === 'add' ? '$addToSet' : '$pull']: {
           channels: channelId,
         },
       },
@@ -43,11 +43,11 @@ class ChannelCommands {
   }
 
   async add(guildId: string, commandName: string, channelId: string) {
-    return await this.action("add", guildId, commandName, channelId);
+    return await this.action('add', guildId, commandName, channelId);
   }
 
   async remove(guildId: string, commandName: string, channelId: string) {
-    return await this.action("remove", guildId, commandName, channelId);
+    return await this.action('remove', guildId, commandName, channelId);
   }
 
   async getAvailableChannels(guildId: string, commandName: string) {

@@ -2,7 +2,7 @@
   "name": "wokcommands",
   "version": "2.1.9",
   "main": "./dist/index.js",
-  "typings": "./typings.d.ts",
+  "typings": "./dist/index.d.ts",
   "scripts": {
     "tsc": "tsc -w --outDir dist --rootDir src --skipLibCheck",
     "npmp": "tsc --outDir dist --rootDir src --skipLibCheck && npm publish"
