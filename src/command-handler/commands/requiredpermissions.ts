@@ -2,7 +2,7 @@ import { PermissionFlagsBits, ApplicationCommandOptionType } from "discord.js";
 
 import requiredPermissions from "../../models/required-permissions-schema";
 import CommandType from "../../util/CommandType";
-import { CommandObject, CommandUsage } from "../../../typings";
+import { CommandObject, CommandUsage } from "../../types";
 import Command from "../Command";
 
 const clearAllPermissions = "Clear All Permissions";
@@ -34,7 +34,7 @@ export default {
 
   autocomplete: (command: Command, arg: string) => {
     if (arg === "command") {
-      return [...command.instance.commandHandler.commands.keys()];
+      return [...command.instance.commandHandler?.commands.keys() ?? []];
     } else if (arg === "permission") {
       return [clearAllPermissions, ...Object.keys(PermissionFlagsBits)];
     }
@@ -53,7 +53,7 @@ export default {
 
     const [commandName, permission] = args;
 
-    const command = instance.commandHandler.commands.get(commandName);
+    const command = instance.commandHandler?.commands.get(commandName);
     if (!command) {
       return {
         content: `The command "${commandName}" does not exist.`,

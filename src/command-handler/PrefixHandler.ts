@@ -1,5 +1,5 @@
-import guildPrefixSchema from "../models/guild-prefix-schema";
-import WOK from "../../typings";
+import guildPrefixSchema from '../models/guild-prefix-schema';
+import WOK from '../WOK';
 
 class PrefixHandler {
   // <guildId: prefix>

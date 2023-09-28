@@ -1,5 +1,5 @@
 import Command from "../../Command";
-import { CommandUsage } from "../../../../typings";
+import { CommandUsage } from "../../../types";
 
 export default (command: Command, usage: CommandUsage) => {
   const { instance, commandObject } = command;

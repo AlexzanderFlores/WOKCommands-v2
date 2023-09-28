@@ -1,27 +1,27 @@
-import { Client } from 'discord.js'
-import mongoose from 'mongoose'
+import { Client } from 'discord.js';
+import mongoose from 'mongoose';
 
-import CommandHandler from './command-handler/CommandHandler'
-import EventHandler from './event-handler/EventHandler'
-import WOK, { Events, Options, Validations } from '../typings'
-import Cooldowns from './util/Cooldowns'
-import DefaultCommands from './util/DefaultCommands'
-import FeaturesHandler from './util/FeaturesHandler'
+import CommandHandler from './command-handler/CommandHandler';
+import EventHandler from './event-handler/EventHandler';
+import { Events, Options, Validations } from './types';
+import Cooldowns from './util/Cooldowns';
+import DefaultCommands from './util/DefaultCommands';
+import FeaturesHandler from './util/FeaturesHandler';
 
 class WOKCommands {
-  private _client!: Client
-  private _testServers!: string[]
-  private _botOwners!: string[]
-  private _cooldowns: Cooldowns | undefined
-  private _disabledDefaultCommands!: DefaultCommands[]
-  private _validations!: Validations
-  private _commandHandler: CommandHandler | undefined
-  private _eventHandler!: EventHandler
-  private _isConnectedToDB = false
-  private _defaultPrefix = '!'
+  private _client!: Client;
+  private _testServers!: string[];
+  private _botOwners!: string[];
+  private _cooldowns: Cooldowns | undefined;
+  private _disabledDefaultCommands!: DefaultCommands[];
+  private _validations!: Validations;
+  private _commandHandler: CommandHandler | undefined;
+  private _eventHandler!: EventHandler;
+  private _isConnectedToDB = false;
+  private _defaultPrefix = '!';
 
   constructor(options: Options) {
-    this.init(options)
+    this.init(options);
   }
 
   private async init(options: Options) {
@@ -37,108 +37,100 @@ class WOKCommands {
       events = {},
       validations = {},
       defaultPrefix,
-    } = options
+    } = options;
 
     if (!client) {
-      throw new Error('A client is required.')
+      throw new Error('A client is required.');
     }
 
     if (mongoUri) {
-      await this.connectToMongo(mongoUri)
+      await this.connectToMongo(mongoUri);
     }
 
     // Add the bot owner's ID
     if (botOwners.length === 0) {
-      await client.application?.fetch()
-      const ownerId = client.application?.owner?.id
+      await client.application?.fetch();
+      const ownerId = client.application?.owner?.id;
       if (ownerId && botOwners.indexOf(ownerId) === -1) {
-        botOwners.push(ownerId)
+        botOwners.push(ownerId);
       }
     }
 
-    this._client = client
-    this._testServers = testServers
-    this._botOwners = botOwners
-    this._disabledDefaultCommands = disabledDefaultCommands
-    this._validations = validations
+    this._client = client;
+    this._testServers = testServers;
+    this._botOwners = botOwners;
+    this._disabledDefaultCommands = disabledDefaultCommands;
+    this._validations = validations;
 
-    this._cooldowns = new Cooldowns(this as unknown as WOK, {
+    this._cooldowns = new Cooldowns(this, {
       errorMessage: 'Please wait {TIME} before doing that again.',
       botOwnersBypass: false,
       dbRequired: 300, // 5 minutes
       ...cooldownConfig,
-    })
+    });
 
     if (defaultPrefix) {
-      this._defaultPrefix = defaultPrefix
+      this._defaultPrefix = defaultPrefix;
     }
 
     if (commandsDir) {
-      this._commandHandler = new CommandHandler(
-        this as unknown as WOK,
-        commandsDir,
-        client
-      )
+      this._commandHandler = new CommandHandler(this, commandsDir, client);
     }
 
     if (featuresDir) {
-      new FeaturesHandler(this as unknown as WOK, featuresDir, client)
+      new FeaturesHandler(this, featuresDir, client);
     }
 
-    this._eventHandler = new EventHandler(
-      this as unknown as WOK,
-      events as Events,
-      client
-    )
+    this._eventHandler = new EventHandler(this, events as Events, client);
   }
 
   public get client(): Client {
-    return this._client
+    return this._client;
   }
 
   public get testServers(): string[] {
-    return this._testServers
+    return this._testServers;
   }
 
   public get botOwners(): string[] {
-    return this._botOwners
+    return this._botOwners;
   }
 
   public get cooldowns(): Cooldowns | undefined {
-    return this._cooldowns
+    return this._cooldowns;
   }
 
   public get disabledDefaultCommands(): DefaultCommands[] {
-    return this._disabledDefaultCommands
+    return this._disabledDefaultCommands;
   }
 
   public get commandHandler(): CommandHandler | undefined {
-    return this._commandHandler
+    return this._commandHandler;
   }
 
   public get eventHandler(): EventHandler {
-    return this._eventHandler
+    return this._eventHandler;
   }
 
   public get validations(): Validations {
-    return this._validations
+    return this._validations;
   }
 
   public get isConnectedToDB(): boolean {
-    return this._isConnectedToDB
+    return this._isConnectedToDB;
   }
 
   public get defaultPrefix(): string {
-    return this._defaultPrefix
+    return this._defaultPrefix;
   }
 
   private async connectToMongo(mongoUri: string) {
     await mongoose.connect(mongoUri, {
       keepAlive: true,
-    })
+    });
 
-    this._isConnectedToDB = true
+    this._isConnectedToDB = true;
   }
 }
 
-export default WOKCommands
+export default WOKCommands;

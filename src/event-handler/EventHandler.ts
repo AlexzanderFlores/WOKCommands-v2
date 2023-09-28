@@ -1,8 +1,9 @@
-import { Client, Interaction, InteractionType, Message } from "discord.js";
-import path from "path";
+import { Client, Interaction, InteractionType, Message } from 'discord.js';
+import path from 'path';
 
-import getAllFiles from "../util/get-all-files";
-import WOK, { Events } from "../../typings";
+import getAllFiles from '../util/get-all-files';
+import { Events } from '../types';
+import WOK from '../WOK';
 
 class EventHandler {
   // <eventName, array of [function, dynamic validation functions]>
@@ -37,7 +38,7 @@ class EventHandler {
   }
 
   async readFiles() {
-    const defaultEvents = getAllFiles(path.join(__dirname, "events"), true);
+    const defaultEvents = getAllFiles(path.join(__dirname, 'events'), true);
     const folders = this._eventsDir ? getAllFiles(this._eventsDir, true) : [];
 
     for (const { filePath: folderPath } of [...defaultEvents, ...folders]) {

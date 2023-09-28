@@ -1,5 +1,5 @@
 import Command from '../../Command'
-import { CommandUsage } from '../../../../typings'
+import { CommandUsage } from '../../../types'
 
 export default async (command: Command, usage: CommandUsage) => {
   const { commandName, instance } = command
@@ -10,12 +10,12 @@ export default async (command: Command, usage: CommandUsage) => {
   }
 
   const availableChannels =
-    await instance.commandHandler.channelCommands.getAvailableChannels(
+    await instance.commandHandler?.channelCommands.getAvailableChannels(
       guild.id,
       commandName
     )
 
-  if (availableChannels.length && !availableChannels.includes(channel!.id)) {
+  if (availableChannels?.length && !availableChannels.includes(channel!.id)) {
     const channelNames = availableChannels.map((c: string) => `<#${c}> `)
     const content = `You can only run this command inside of the following channels: ${channelNames}.`
 

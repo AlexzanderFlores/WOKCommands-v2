@@ -2,7 +2,7 @@ import { PermissionFlagsBits, ApplicationCommandOptionType } from "discord.js";
 
 import Command from "../Command";
 import CommandType from "../../util/CommandType";
-import { CommandUsage } from "../../../typings";
+import { CommandUsage } from "../../types";
 
 export default {
   description: "Toggles a command on or off for your guild",
@@ -23,7 +23,7 @@ export default {
   ],
 
   autocomplete: (command: Command) => {
-    return [...command.instance.commandHandler.commands.keys()];
+    return [...command.instance.commandHandler?.commands.keys() ?? []];
   },
 
   callback: async (commandUsage: CommandUsage) => {
@@ -37,7 +37,7 @@ export default {
       };
     }
 
-    const { disabledCommands } = instance.commandHandler;
+    const { disabledCommands } = instance.commandHandler!;
 
     if (disabledCommands.isDisabled(guild!.id, commandName)) {
       await disabledCommands.enable(guild!.id, commandName);

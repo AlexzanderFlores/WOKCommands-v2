@@ -1,5 +1,5 @@
-import disabledCommandSchema from "../models/disabled-commands-schema";
-import WOK from "../../typings";
+import disabledCommandSchema from '../models/disabled-commands-schema';
+import WOK from '../WOK';
 
 class DisabledCommands {
   // array of `${guildId}-${commandName}`

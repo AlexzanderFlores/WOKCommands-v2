@@ -1,7 +1,7 @@
-import fs from "fs";
-import p from "path";
+import fs from 'fs';
+import p from 'path';
 
-import { FileData } from "../../typings";
+import { FileData } from '../types';
 
 const getAllFiles = (path: string, foldersOnly = false) => {
   const files = fs.readdirSync(path, {
@@ -23,7 +23,11 @@ const getAllFiles = (path: string, foldersOnly = false) => {
       }
       continue;
     }
-    if (!file.name.endsWith('.js') && !file.name.endsWith('.ts')) continue
+    if (
+      (!file.name.endsWith('.js') && !file.name.endsWith('.ts')) ||
+      file.name.endsWith('.d.ts')
+    )
+      continue;
 
     const fileContents = require(filePath);
     filesFound.push({

@@ -1,6 +1,6 @@
 import requiredRoles from '../../../models/required-roles-schema'
 import Command from '../../Command'
-import { CommandUsage } from '../../../../typings'
+import { CommandUsage } from '../../../types'
 
 export default async (command: Command, usage: CommandUsage) => {
   const { instance, guild, member, message, interaction } = usage

@@ -1,5 +1,5 @@
 import Command from '../../Command'
-import { CommandUsage } from '../../../../typings'
+import { CommandUsage } from '../../../types'
 
 export default async (command: Command, usage: CommandUsage) => {
   const { commandName, instance } = command
@@ -10,7 +10,7 @@ export default async (command: Command, usage: CommandUsage) => {
   }
 
   if (
-    instance.commandHandler.disabledCommands.isDisabled(guild.id, commandName)
+    instance.commandHandler?.disabledCommands.isDisabled(guild.id, commandName)
   ) {
     const content = 'This command is disabled'
 

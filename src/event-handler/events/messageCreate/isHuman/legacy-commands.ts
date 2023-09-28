@@ -1,6 +1,6 @@
-import { Message } from "discord.js";
+import { Message } from 'discord.js';
 
-import WOK from "../../../../../typings";
+import WOK from '../../../../WOK';
 
 export default async (message: Message, instance: WOK) => {
   const { guild, content } = message;
