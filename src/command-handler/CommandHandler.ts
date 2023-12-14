@@ -179,6 +179,8 @@ class CommandHandler {
       return
     }
 
+
+    const messageOrInteraction = message ? message : interaction;
     const guild = message ? message.guild : interaction?.guild
     const member = (
       message ? message.member : interaction?.member
@@ -199,6 +201,7 @@ class CommandHandler {
       member,
       user: user!,
       channel,
+      messageOrInteraction,
     }
 
     for (const validation of this._validations) {
