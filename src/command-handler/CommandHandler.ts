@@ -219,7 +219,7 @@ class CommandHandler {
 
       const result = this._instance.cooldowns?.canRunAction(cooldownUsage)
 
-      if (typeof result === 'string') {
+      if (typeof result === 'string' && result !== "ERROR") {
         return result
       }
 
